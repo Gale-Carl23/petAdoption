@@ -12,13 +12,16 @@
     <a class="brand" th:href="@{/}">Pet Haven</a>
 
     <nav aria-label="Main navigation">
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/pets}">Our Pets</a>
-        <a th:href="@{/about}">About Us</a>
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/pets}">Our Pets</a>
+    <a th:href="@{/about}">About Us</a>
+
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
         <form th:action="@{/logout}" method="post" class="logout-form">
             <button type="submit">Log Out</button>
         </form>
-    </nav>
+    </span>
+</nav>
 </header>
 
 <main>
@@ -53,7 +56,7 @@
                     <p th:text="${pet.description}">Pet description</p>
 
                     <a class="text-link"
-                       th:href="@{/pets/{id}(id=${pet.id})}">
+                    th:href="@{/pets/{id}(id=${pet.id})}">
                         View Details
                     </a>
                 </div>

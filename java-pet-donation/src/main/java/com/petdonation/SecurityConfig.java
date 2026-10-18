@@ -40,18 +40,18 @@ public class SecurityConfig {
         http
             .authenticationProvider(authenticationProvider)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/",
-                    "/about",
-                    "/pets",
-                    "/pets/**",
-                    "/register",
-                    "/login",
-                    "/css/**",
-                    "/images/**"
-                ).permitAll()
-                .anyRequest().authenticated()
-            )
+            .requestMatchers(
+                "/",
+                "/about",
+                "/pets",
+                "/register",
+                "/login",
+                "/css/**",
+                "/images/**"
+            ).permitAll()
+            .requestMatchers("/pets/**").authenticated()
+            .anyRequest().authenticated()
+        )
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")

@@ -13,24 +13,16 @@
 
     
     <nav aria-label="Main navigation">
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/pets}">Our Pets</a>
-        <a th:href="@{/about}">About Us</a>
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/pets}">Our Pets</a>
+    <a th:href="@{/about}">About Us</a>
 
-        <th:block xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-            <span sec:authorize="isAnonymous()">
-                <a th:href="@{/login}">Login</a>
-                <a th:href="@{/register}">Register</a>
-            </span>
-
-            <form sec:authorize="isAuthenticated()"
-                th:action="@{/logout}"
-                method="post"
-                class="logout-form">
-                <button type="submit">Log Out</button>
-            </form>
-        </th:block>
-    </nav>
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Log Out</button>
+        </form>
+    </span>
+</nav>
 
 </header>
 
