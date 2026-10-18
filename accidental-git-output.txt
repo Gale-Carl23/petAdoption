@@ -1,0 +1,19 @@
+ .gitignore                            |   5 [31m--[m
+ config/__init__.py                    |   0
+ config/asgi.py                        |  16 [31m----[m
+ config/settings.py                    | 135 [31m----------------------------------[m
+ config/urls.py                        |  23 [31m------[m
+ config/wsgi.py                        |  16 [31m----[m
+ donation/__init__.py                  |   0
+ donation/admin.py                     |   3 [31m-[m
+ donation/apps.py                      |   5 [31m--[m
+ donation/migrations/0001_initial.py   |  42 [31m-----------[m
+ donation/migrations/__init__.py       |   0
+ donation/models.py                    |  47 [31m------------[m
+ donation/templates/donation/home.html |  11 [31m---[m
+ donation/tests.py                     |   3 [31m-[m
+ donation/urls.py                      |   6 [31m--[m
+ donation/views.py                     |   5 [31m--[m
+ manage.py                             |  22 [31m------[m
+ requirements.txt                      |   2 [31m-[m
+ 18 files changed, 341 deletions(-)
