@@ -7,76 +7,88 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <header class="site-header">
-        <a class="brand" th:href="@{/}">Pet Haven</a>
 
-        <nav aria-label="Main navigation">
-            <a th:href="@{/}">Home</a>
-            <a href="#pets">Our Pets</a>
-            <a th:href="@{/about}">About Us</a>
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit">Log Out</button>
-            </form>
-        </nav>
-    </header>
+<header class="site-header">
+    <a class="brand" th:href="@{/}">Pet Haven</a>
 
-    <main>
-        <section class="hero">
-            <p class="eyebrow">GIVE A PET A LOVING HOME</p>
-            <h1>Every pet deserves a second chance.</h1>
-            <p>
-                Meet your future companion and help us care for animals
-                waiting for a loving family.
-            </p>
-            <a class="primary-button" href="#pets">Meet Our Pets</a>
-        </section>
+    <nav aria-label="Main navigation">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/pets}">Our Pets</a>
+        <a th:href="@{/about}">About Us</a>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Log Out</button>
+        </form>
+    </nav>
+</header>
 
-        <section class="pets-section" id="pets">
-            <div class="section-heading">
-                <p class="eyebrow">FIND YOUR COMPANION</p>
-                <h2>Pets Looking for a Home</h2>
-                <p>Get to know some of the pets waiting to meet you.</p>
-            </div>
+<main>
+    <section class="hero">
+        <p class="eyebrow">GIVE A PET A LOVING HOME</p>
+        <h1>Every pet deserves a second chance.</h1>
+        <p>
+            Meet your future companion and help us care for animals
+            waiting for a loving family.
+        </p>
+        <a class="primary-button" th:href="@{/pets}">Meet Our Pets</a>
+    </section>
 
-            <div class="pet-grid">
-                <article class="pet-card">
-                    <div class="pet-placeholder" aria-hidden="true">🐕</div>
-                    <div class="pet-info">
-                        <h3>Korgi</h3>
-                        <p>1 year old</p>
-                        <a href="#pets" class="text-link">Meet Korgi</a>
-                    </div>
-                </article>
+    <section class="pets-section" id="pets">
+        <div class="section-heading">
+            <p class="eyebrow">FIND YOUR COMPANION</p>
+            <h2>Pets Looking for a Home</h2>
+            <p>Get to know some of the pets waiting to meet you.</p>
+        </div>
 
-                <article class="pet-card">
-                    <div class="pet-placeholder" aria-hidden="true">🐶</div>
-                    <div class="pet-info">
-                        <h3>Chow</h3>
-                        <p>2 years old</p>
-                        <a href="#pets" class="text-link">Meet Chow</a>
-                    </div>
-                </article>
+        <div th:if="${#lists.isEmpty(pets)}">
+            <p>No pets have been added yet. Please check back later.</p>
+        </div>
 
-                <article class="pet-card">
-                    <div class="pet-placeholder" aria-hidden="true">🐾</div>
-                    <div class="pet-info">
-                        <h3>Chi</h3>
-                        <p>3 years old</p>
-                        <a href="#pets" class="text-link">Meet Chi</a>
-                    </div>
-                </article>
-            </div>
-        </section>
+        <div class="pet-grid" th:unless="${#lists.isEmpty(pets)}">
+            <article class="pet-card"
+                     th:each="pet : ${pets}"
+                     th:if="${pet.status == 'AVAILABLE'}">
 
-        <section class="support-section">
-            <h2>Ready to Welcome a New Best Friend?</h2>
-            <p>Every pet deserves a loving home. Find a companion who fits your family and lifestyle.</p>
-            <a class="secondary-button" href="#pets">Explore Available Pets</a>
-        </section>
-    </main>
+                <div class="pet-placeholder"
+                     th:if="${pet.imageUrl == null or #strings.isEmpty(pet.imageUrl)}"
+                     aria-hidden="true">🐾</div>
 
-    <footer>
-        <p>Pet Haven · Every paw deserves love.</p>
-    </footer>
+                <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
+                     th:src="${pet.imageUrl}"
+                     th:alt="${pet.name}">
+
+                <div class="pet-info">
+                    <h3 th:text="${pet.name}">Pet Name</h3>
+                    <p th:text="${pet.age} + ' year(s) old'">Age</p>
+                    <p th:text="${pet.breed}">Breed</p>
+
+                    <a class="text-link"
+                       th:href="@{/pets/{id}(id=${pet.id})}">
+                        Meet <span th:text="${pet.name}">Pet</span>
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <a class="secondary-button" th:href="@{/pets}">
+            View All Pets
+        </a>
+    </section>
+
+    <section class="support-section">
+        <h2>Ready to Welcome a New Best Friend?</h2>
+        <p>
+            Find a companion who fits your family and lifestyle.
+            Every pet deserves a loving home.
+        </p>
+        <a class="secondary-button" th:href="@{/pets}">
+            Explore Available Pets
+        </a>
+    </section>
+</main>
+
+<footer>
+    <p>Pet Haven · Every paw deserves love.</p>
+</footer>
+
 </body>
 </html>

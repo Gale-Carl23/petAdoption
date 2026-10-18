@@ -1,51 +1,70 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Available Pets | Pet Adoption</title>
+    <title>Our Pets | Pet Haven</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-    <header>
-        <h1>Find Your New Best Friend</h1>
-        <nav>
-            <a th:href="@{/}">Home</a>
-            <a th:href="@{/pets}">Our Pets</a>
-        </nav>
-    </header>
+<header class="site-header">
+    <a class="brand" th:href="@{/}">Pet Haven</a>
 
-    <main>
-        <section>
-            <h2>Available Pets for Adoption</h2>
+    <nav aria-label="Main navigation">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/pets}">Our Pets</a>
+        <a th:href="@{/about}">About Us</a>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Log Out</button>
+        </form>
+    </nav>
+</header>
 
-            <div th:if="${#lists.isEmpty(pets)}">
-                <p>No pets have been added yet. Please check back later.</p>
-            </div>
+<main>
+    <section class="pets-section">
+        <div class="section-heading">
+            <p class="eyebrow">FIND YOUR COMPANION</p>
+            <h1>Available Pets for Adoption</h1>
+            <p>Meet the animals waiting for a loving family.</p>
+        </div>
 
-            <div th:unless="${#lists.isEmpty(pets)}"
-                 class="pet-grid">
+        <div th:if="${#lists.isEmpty(pets)}">
+            <p>No pets have been added yet. Please check back later.</p>
+        </div>
 
-                <article class="pet-card" th:each="pet : ${pets}">
-                    <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
-                         th:src="${pet.imageUrl}"
-                         th:alt="${pet.name}">
+        <div class="pet-grid" th:unless="${#lists.isEmpty(pets)}">
+            <article class="pet-card"
+                     th:each="pet : ${pets}"
+                     th:if="${pet.status == 'AVAILABLE'}">
 
-                    <h3 th:text="${pet.name}">Pet Name</h3>
+                <div class="pet-placeholder"
+                     th:if="${pet.imageUrl == null or #strings.isEmpty(pet.imageUrl)}"
+                     aria-hidden="true">🐾</div>
+
+                <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
+                     th:src="${pet.imageUrl}"
+                     th:alt="${pet.name}">
+
+                <div class="pet-info">
+                    <h2 th:text="${pet.name}">Pet Name</h2>
                     <p th:text="'Breed: ' + ${pet.breed}">Breed</p>
-                    <p th:text="'Age: ' + ${pet.age}">Age</p>
+                    <p th:text="${pet.age} + ' year(s) old'">Age</p>
                     <p th:text="${pet.description}">Pet description</p>
-                    <p th:text="'Status: ' + ${pet.status}">Status</p>
-                    <a th:href="@{/pets/{id}(id=${pet.id})}">
+
+                    <a class="text-link"
+                       th:href="@{/pets/{id}(id=${pet.id})}">
                         View Details
                     </a>
-                </article>
+                </div>
+            </article>
+        </div>
+    </section>
+</main>
 
-            </div>
-        </section>
-    </main>
+<footer>
+    <p>Pet Haven · Every paw deserves love.</p>
+</footer>
 
 </body>
 </html>

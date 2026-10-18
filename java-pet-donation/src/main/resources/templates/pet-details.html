@@ -1,37 +1,63 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Details | Pet Adoption</title>
+    <title>Pet Details | Pet Haven</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-    <header>
-        <h1>Meet Your New Best Friend</h1>
-        <nav>
-            <a th:href="@{/}">Home</a>
-            <a th:href="@{/pets}">Our Pets</a>
-        </nav>
-    </header>
+<header class="site-header">
+    <a class="brand" th:href="@{/}">Pet Haven</a>
 
-    <main>
-        <section>
+    <nav aria-label="Main navigation">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/pets}">Our Pets</a>
+        <a th:href="@{/about}">About Us</a>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Log Out</button>
+        </form>
+    </nav>
+</header>
+
+<main>
+    <section class="pet-details-section">
+        <a class="text-link" th:href="@{/pets}">← Back to Our Pets</a>
+
+        <div class="pet-details-card">
+            <div class="pet-placeholder"
+                 th:if="${pet.imageUrl == null or #strings.isEmpty(pet.imageUrl)}"
+                 aria-hidden="true">🐾</div>
+
             <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
                  th:src="${pet.imageUrl}"
                  th:alt="${pet.name}">
 
-            <h2 th:text="${pet.name}">Pet Name</h2>
-            <p th:text="'Breed: ' + ${pet.breed}">Breed</p>
-            <p th:text="'Age: ' + ${pet.age}">Age</p>
-            <p th:text="${pet.description}">Description</p>
-            <p th:text="'Status: ' + ${pet.status}">Status</p>
+            <div class="pet-info">
+                <p class="eyebrow">MEET YOUR NEW BEST FRIEND</p>
+                <h1 th:text="${pet.name}">Pet Name</h1>
+                <p th:text="'Breed: ' + ${pet.breed}">Breed</p>
+                <p th:text="${pet.age} + ' year(s) old'">Age</p>
+                <p th:text="${pet.description}">Pet description</p>
+                <p>
+                    Status:
+                    <span th:text="${pet.status}">AVAILABLE</span>
+                </p>
 
-            <a th:href="@{/pets}">Back to Pets</a>
-        </section>
-    </main>
+                <a th:if="${pet.status == 'AVAILABLE'}"
+                   class="primary-button"
+                   th:href="@{/adoptions/apply/{petId}(petId=${pet.id})}">
+                    Apply to Adopt
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>Pet Haven · Every paw deserves love.</p>
+</footer>
 
 </body>
 </html>
