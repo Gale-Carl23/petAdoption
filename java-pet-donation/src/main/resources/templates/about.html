@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Pet Haven</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="site-header">
+    <a class="brand" th:href="@{/}">Pet Haven</a>
+
+    <nav aria-label="Main navigation">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/pets}">Our Pets</a>
+        <a th:href="@{/about}" aria-current="page">About Us</a>
+
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Log Out</button>
+        </form>
+    </nav>
+</header>
+
+<main>
+    <section class="hero">
+        <p class="eyebrow">ABOUT PET HAVEN</p>
+        <h1>Every paw deserves love.</h1>
+        <p>
+            Pet Haven connects animals waiting for a home with people
+            ready to give them care, safety, and companionship.
+        </p>
+    </section>
+
+    <section class="pets-section">
+        <div class="section-heading">
+            <p class="eyebrow">OUR PURPOSE</p>
+            <h2>Helping Pets Find Loving Families</h2>
+        </div>
+
+        <div class="support-section">
+            <h2>Our Mission</h2>
+            <p>
+                Our mission is to make pet adoption more accessible by
+                helping prospective adopters discover animals and learn
+                about their needs before applying.
+            </p>
+        </div>
+
+        <div class="support-section">
+            <h2>Our Vision</h2>
+            <p>
+                We envision a community where every adoptable pet has
+                the opportunity to find a safe, caring, and permanent home.
+            </p>
+        </div>
+
+        <div class="support-section">
+            <h2>Ready to Meet Your Companion?</h2>
+            <p>Explore the pets waiting for their new families.</p>
+            <a class="primary-button" th:href="@{/pets}">
+                Meet Our Pets
+            </a>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>Pet Haven · Every paw deserves love.</p>
+</footer>
+
+</body>
+</html>
