@@ -6,7 +6,8 @@ import com.petdonation.service.PetService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.PathVariable;
+import java.util.Optional;
 import java.util.List;
 
 @Controller
@@ -25,5 +26,18 @@ public class PetController {
         model.addAttribute("pets", pets);
 
         return "pets";
+    }
+
+    @GetMapping("/pets/{id}")
+    public String petDetails(@PathVariable Long id, Model model) {
+        Optional<Pet> pet = petService.getPetById(id);
+
+        if (pet.isEmpty()) {
+            return "redirect:/pets";
+        }
+
+        model.addAttribute("pet", pet.get());
+
+        return "pet-details";
     }
 }

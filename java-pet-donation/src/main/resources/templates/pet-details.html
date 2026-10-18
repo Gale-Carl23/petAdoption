@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Details | Pet Adoption</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <header>
+        <h1>Meet Your New Best Friend</h1>
+        <nav>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/pets}">Our Pets</a>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
+                 th:src="${pet.imageUrl}"
+                 th:alt="${pet.name}">
+
+            <h2 th:text="${pet.name}">Pet Name</h2>
+            <p th:text="'Breed: ' + ${pet.breed}">Breed</p>
+            <p th:text="'Age: ' + ${pet.age}">Age</p>
+            <p th:text="${pet.description}">Description</p>
+            <p th:text="'Status: ' + ${pet.status}">Status</p>
+
+            <a th:href="@{/pets}">Back to Pets</a>
+        </section>
+    </main>
+
+</body>
+</html>

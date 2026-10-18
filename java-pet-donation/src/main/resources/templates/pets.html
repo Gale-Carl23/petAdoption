@@ -38,6 +38,9 @@
                     <p th:text="'Age: ' + ${pet.age}">Age</p>
                     <p th:text="${pet.description}">Pet description</p>
                     <p th:text="'Status: ' + ${pet.status}">Status</p>
+                    <a th:href="@{/pets/{id}(id=${pet.id})}">
+                        View Details
+                    </a>
                 </article>
 
             </div>
