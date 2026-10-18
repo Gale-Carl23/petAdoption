@@ -12,7 +12,7 @@
 
         <nav aria-label="Main navigation">
             <a th:href="@{/}">Home</a>
-            <a th:href="@{/donations}">Donations</a>
+            <a href="#pets">Our Pets</a>
             <a th:href="@{/about}">About Us</a>
             <form th:action="@{/logout}" method="post" class="logout-form">
                 <button type="submit">Log Out</button>
@@ -69,9 +69,9 @@
         </section>
 
         <section class="support-section">
-            <h2>Can't adopt right now?</h2>
-            <p>Your donation can help provide food, shelter, and care.</p>
-            <a class="secondary-button" th:href="@{/donations}">Support Our Pets</a>
+            <h2>Ready to Welcome a New Best Friend?</h2>
+            <p>Every pet deserves a loving home. Find a companion who fits your family and lifestyle.</p>
+            <a class="secondary-button" href="#pets">Explore Available Pets</a>
         </section>
     </main>
 
