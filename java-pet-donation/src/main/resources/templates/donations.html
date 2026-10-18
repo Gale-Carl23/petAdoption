@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donations | Pet Haven</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="site-header">
+    <a class="brand" th:href="@{/}">Pet Haven</a>
+
+    <nav aria-label="Main navigation">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/pets}">Our Pets</a>
+        <a th:href="@{/donations}">Donations</a>
+        <a th:href="@{/about}">About Us</a>
+
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <button type="submit">Log Out</button>
+            </form>
+        </span>
+
+        <span th:if="${#authorization.expression('isAnonymous()')}">
+            <a th:href="@{/login}">Login</a>
+            <a th:href="@{/register}">Register</a>
+        </span>
+    </nav>
+</header>
+
+<main>
+    <section class="hero">
+        <p class="eyebrow">SUPPORT ANIMALS IN NEED</p>
+
+        <h1>Every Donation Makes a Difference</h1>
+
+        <p>
+            Your generosity helps Pet Haven provide food, care,
+            and support for animals waiting for loving homes.
+            Every contribution brings us closer to giving them
+            a better life.
+        </p>
+
+        <a class="primary-button" th:href="@{/donations/form}">
+            Click Here to Donate
+        </a>
+    </section>
+
+    <section class="support-section">
+        <h2>How Your Donation Helps</h2>
+
+        <p>
+            Donations help support animal care, food, shelter,
+            and other essential needs. Thank you for being part
+            of our mission to help animals find loving homes.
+        </p>
+
+        <a class="secondary-button" th:href="@{/donations/form}">
+            Donate Now
+        </a>
+    </section>
+</main>
+
+<footer>
+    <p>Pet Haven · Every paw deserves love.</p>
+</footer>
+
+</body>
+</html>
