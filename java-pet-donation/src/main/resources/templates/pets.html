@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Pets | Pet Adoption</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <header>
+        <h1>Find Your New Best Friend</h1>
+        <nav>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/pets}">Our Pets</a>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Available Pets for Adoption</h2>
+
+            <div th:if="${#lists.isEmpty(pets)}">
+                <p>No pets have been added yet. Please check back later.</p>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(pets)}"
+                 class="pet-grid">
+
+                <article class="pet-card" th:each="pet : ${pets}">
+                    <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
+                         th:src="${pet.imageUrl}"
+                         th:alt="${pet.name}">
+
+                    <h3 th:text="${pet.name}">Pet Name</h3>
+                    <p th:text="'Breed: ' + ${pet.breed}">Breed</p>
+                    <p th:text="'Age: ' + ${pet.age}">Age</p>
+                    <p th:text="${pet.description}">Pet description</p>
+                    <p th:text="'Status: ' + ${pet.status}">Status</p>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
