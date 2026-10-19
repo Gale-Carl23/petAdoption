@@ -17,6 +17,8 @@
         <a th:href="@{/donations}">Donations</a>
 
         <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/adoptions/my-applications}">My Applications</a>
+
             <form th:action="@{/logout}" method="post" class="logout-form">
                 <button type="submit">Log Out</button>
             </form>

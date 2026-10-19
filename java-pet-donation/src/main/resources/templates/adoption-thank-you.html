@@ -13,9 +13,18 @@
         <a th:href="@{/about}">About Us</a>
         <a th:href="@{/donations}">Donations</a>
 
-        <form th:action="@{/logout}" method="post">
-            <button type="submit">Log Out</button>
-        </form>
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/adoptions/my-applications}">My Applications</a>
+
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <button type="submit">Log Out</button>
+            </form>
+        </span>
+
+        <span th:unless="${#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/login}">Login</a>
+            <a th:href="@{/register}">Register</a>
+        </span>
     </nav>
 
     <main>
