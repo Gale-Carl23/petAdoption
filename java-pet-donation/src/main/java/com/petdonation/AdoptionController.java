@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import java.util.List;
+
+
 
 @Controller
 public class AdoptionController {
@@ -102,6 +105,23 @@ public class AdoptionController {
     @GetMapping("/adoptions/thank-you")
     public String adoptionThankYou() {
         return "adoption-thank-you";
+    }
+
+    @GetMapping("/adoptions/my-applications")
+    public String myApplications(
+            Authentication authentication,
+            Model model) {
+
+        User applicant = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalStateException(
+                        "Authenticated account not found."));
+
+        model.addAttribute(
+                "applications",
+                applicationService.getApplicationsByApplicant(applicant.getId())
+        );
+
+        return "my-applications";
     }
 
     public static class ApplicationForm {
