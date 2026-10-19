@@ -78,4 +78,13 @@ public class AdoptionApplicationService {
         return applicationRepository
                 .findByApplicantIdOrderBySubmittedAtDesc(applicantId);
     }
+
+    @Transactional(readOnly = true)
+    public boolean hasActiveApplication(Long applicantId, Long petId) {
+        return applicationRepository.existsByApplicantIdAndPetIdAndStatusIn(
+                applicantId,
+                petId,
+                List.of("PENDING", "UNDER_REVIEW", "APPROVED")
+        );
+    }
 }
