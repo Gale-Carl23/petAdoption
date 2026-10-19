@@ -1,11 +1,21 @@
 ﻿:root {
     --olive: #65734b;
     --olive-dark: #3e4b30;
+    --olive-light: #e9eddf;
     --cream: #f8f5ec;
     --yellow: #e8ca75;
     --text: #292c25;
     --muted: #6d7067;
     --white: #ffffff;
+    --border: #e4e3d9;
+    --danger: #b42318;
+    --success: #386641;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+    --shadow-sm: 0 4px 14px rgb(35 40 25 / 6%);
+    --shadow-md: 0 10px 28px rgb(35 40 25 / 9%);
+    --transition: 180ms ease;
 }
 
 * {
@@ -14,6 +24,7 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 24px;
 }
 
 body {
@@ -21,7 +32,13 @@ body {
     background: var(--cream);
     color: var(--text);
     font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.6;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+}
+
+img {
+    display: block;
+    max-width: 100%;
 }
 
 a {
@@ -29,85 +46,123 @@ a {
     text-decoration: none;
 }
 
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input[type="submit"] {
+    cursor: pointer;
+}
+
+:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 3px;
+}
+
+
+/* =========================
+   HEADER AND NAVIGATION
+   ========================= */
+
 .site-header {
+    position: relative;
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
-    padding: 20px 7%;
+    gap: 28px;
+    padding: 18px 7%;
     background: var(--white);
+    border-bottom: 1px solid rgb(62 75 48 / 7%);
 }
 
 .brand {
+    flex-shrink: 0;
     color: var(--olive-dark);
-    font-size: 1.5rem;
+    font-size: 1.65rem;
     font-weight: 800;
+    letter-spacing: -0.04em;
 }
 
-nav {
+.site-header nav {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 24px;
+    gap: 22px;
 }
 
-nav a,
+.site-header nav a,
 .logout-form button {
     color: var(--text);
-    font: inherit;
-    font-size: 0.95rem;
+    font-size: 0.94rem;
+    font-weight: 600;
+    transition: color var(--transition);
 }
 
-nav a:hover,
+.site-header nav a:hover,
 .text-link:hover {
     color: var(--olive);
 }
 
+.site-header nav>span {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 22px;
+}
+
 .logout-form {
+    display: flex;
+    align-items: center;
     margin: 0;
 }
 
 .logout-form button {
     padding: 8px 14px;
     border: 1px solid var(--olive);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     background: transparent;
-    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--transition), color var(--transition);
 }
 
-.hero {
-    padding: 90px 7%;
-    background: var(--olive);
+.logout-form button:hover {
+    background: var(--olive-dark);
     color: var(--white);
 }
 
-.hero h1 {
-    max-width: 700px;
-    margin: 12px 0;
-    font-size: clamp(2.3rem, 5vw, 4.2rem);
-    line-height: 1.1;
-}
 
-.hero > p:not(.eyebrow) {
-    max-width: 560px;
-    color: #f0f0e8;
-}
-
-.eyebrow {
-    margin: 0;
-    color: var(--yellow);
-    font-size: 0.8rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-}
+/* =========================
+   BUTTONS
+   ========================= */
 
 .primary-button,
 .secondary-button {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 46px;
     margin-top: 18px;
-    padding: 12px 22px;
-    border-radius: 8px;
+    padding: 12px 24px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
     font-weight: 700;
+    text-align: center;
+    transition: transform var(--transition), background var(--transition), box-shadow var(--transition);
 }
 
 .primary-button {
@@ -115,12 +170,79 @@ nav a:hover,
     color: var(--olive-dark);
 }
 
+.primary-button:hover {
+    background: #f0d78e;
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+
+.secondary-button {
+    background: var(--olive-dark);
+    color: var(--white);
+}
+
+.secondary-button:hover {
+    background: var(--olive);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-2px);
+}
+
+.text-link {
+    display: inline-block;
+    color: var(--olive-dark);
+    font-weight: 700;
+    transition: color var(--transition);
+}
+
+
+/* =========================
+   HOME HERO
+   ========================= */
+
+.hero {
+    padding: clamp(64px, 9vw, 112px) 7%;
+    background: var(--olive-dark);
+    color: var(--white);
+}
+
+.hero h1 {
+    max-width: 760px;
+    margin: 14px 0 20px;
+    font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+}
+
+.hero>p:not(.eyebrow) {
+    max-width: 570px;
+    margin: 0;
+    color: #f0f0e8;
+    font-size: 1.08rem;
+    line-height: 1.8;
+}
+
+.eyebrow {
+    margin: 0;
+    color: var(--yellow);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+
+/* =========================
+   SECTION HEADINGS
+   ========================= */
+
 .pets-section {
-    padding: 70px 7%;
+    padding: clamp(52px, 7vw, 84px) 7%;
 }
 
 .section-heading {
-    margin-bottom: 32px;
+    max-width: 680px;
+    margin: 0 auto 40px;
     text-align: center;
 }
 
@@ -130,67 +252,435 @@ nav a:hover,
 
 .section-heading h2,
 .support-section h2 {
-    margin: 8px 0;
-    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    margin: 10px 0;
+    font-size: clamp(1.8rem, 3.5vw, 2.65rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
 }
 
-.section-heading > p:last-child,
-.pet-info p {
+.section-heading>p:last-child {
+    margin: 12px 0 0;
     color: var(--muted);
 }
+
+
+/* =========================
+   PET GRID AND CARDS
+   ========================= */
 
 .pet-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
+    align-items: stretch;
+    gap: 26px;
 }
 
 .pet-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
     overflow: hidden;
-    border-radius: 14px;
+    border: 1px solid rgb(62 75 48 / 7%);
+    border-radius: var(--radius-md);
     background: var(--white);
-    box-shadow: 0 4px 18px rgb(35 40 25 / 8%);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.pet-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-5px);
+}
+
+.pet-card>img {
+    width: 100%;
+    height: 235px;
+    object-fit: cover;
+    background: var(--olive-light);
 }
 
 .pet-placeholder {
     display: grid;
-    min-height: 200px;
+    min-height: 235px;
     place-items: center;
     background: #e8e5d7;
+    color: var(--olive-dark);
     font-size: 4rem;
 }
 
 .pet-info {
-    padding: 20px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px;
 }
 
 .pet-info h3 {
-    margin: 0;
+    margin: 0 0 6px;
     font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.3;
 }
 
 .pet-info p {
-    margin: 4px 0 12px;
+    margin: 3px 0;
+    color: var(--muted);
+    font-size: 0.95rem;
 }
 
-.text-link {
-    color: var(--olive-dark);
-    font-weight: 700;
+.pet-info .text-link {
+    margin-top: auto;
+    padding-top: 18px;
 }
+
+
+/* =========================
+   SUPPORT SECTION
+   ========================= */
 
 .support-section {
-    padding: 55px 7%;
+    padding: clamp(48px, 7vw, 76px) 7%;
     background: #eeeadc;
     text-align: center;
 }
 
-.secondary-button {
-    background: var(--olive-dark);
-    color: var(--white);
+.support-section h2 {
+    max-width: 760px;
+    margin: 0 auto 16px;
 }
 
+.support-section>p {
+    max-width: 620px;
+    margin: 0 auto;
+    color: var(--muted);
+}
+
+
+/* =========================
+   GENERAL FORM STYLING
+   Includes donation, login,
+   registration and adoption forms.
+   ========================= */
+
+form label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--text);
+    font-size: 0.93rem;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-control,
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="hidden"]),
+select,
+textarea {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 14px;
+    border: 1px solid #d8d9ce;
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    color: var(--text);
+    font-size: 0.96rem;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+textarea {
+    min-height: 125px;
+    resize: vertical;
+}
+
+input[type="file"] {
+    min-height: auto;
+    padding: 10px;
+    border: 1px dashed #b9bdaa;
+    background: #fbfaf6;
+}
+
+input[type="file"]::file-selector-button {
+    margin-right: 12px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--olive-light);
+    color: var(--olive-dark);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.form-control:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--olive);
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(101 115 75 / 15%);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #96988d;
+}
+
+form button[type="submit"],
+form input[type="submit"] {
+    min-height: 46px;
+    padding: 12px 22px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--olive-dark);
+    color: var(--white);
+    font-weight: 700;
+    transition: background var(--transition), transform var(--transition);
+}
+
+form button[type="submit"]:hover,
+form input[type="submit"]:hover {
+    background: var(--olive);
+    transform: translateY(-1px);
+}
+
+.field-error,
+.error-message,
+.form-error {
+    display: block;
+    margin-top: 6px;
+    color: var(--danger);
+    font-size: 0.88rem;
+}
+
+.success-message {
+    padding: 12px 16px;
+    border: 1px solid #c9dec9;
+    border-radius: var(--radius-sm);
+    background: #eef7ed;
+    color: var(--success);
+}
+
+.form-help,
+.help-text {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.86rem;
+}
+
+
+/* =========================
+   DONATION FORM
+   Works with dedicated classes
+   or the general form selectors.
+   ========================= */
+
+.donation-form-section {
+    width: min(100% - 40px, 780px);
+    margin: 0 auto;
+    padding: 64px 0 80px;
+}
+
+.donation-form-heading {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.donation-form-heading h1 {
+    margin: 8px 0 12px;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+}
+
+.donation-form-heading p {
+    color: var(--muted);
+}
+
+.donation-form-card {
+    padding: clamp(22px, 5vw, 42px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.donation-form-card form {
+    width: 100%;
+}
+
+.donation-form-card .form-group:last-of-type {
+    margin-bottom: 24px;
+}
+
+.donation-form-card button[type="submit"],
+.donation-form-card input[type="submit"] {
+    width: 100%;
+}
+
+.donation-form-card .form-note {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+
+/* =========================
+   TABLES
+   ========================= */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th,
+td {
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+
+th {
+    background: #eeeadc;
+    color: var(--olive-dark);
+    font-size: 0.88rem;
+    font-weight: 800;
+}
+
+td {
+    font-size: 0.93rem;
+}
+
+tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+tbody tr:hover {
+    background: #fbfaf6;
+}
+
+
+/* =========================
+   STATUS AND NOTICES
+   ========================= */
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--olive-light);
+    color: var(--olive-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+
+/* =========================
+   THANK-YOU PAGES
+   ========================= */
+
+.thank-you-card {
+    width: min(100% - 40px, 650px);
+    margin: 64px auto;
+    padding: clamp(28px, 5vw, 48px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.thank-you-card h1 {
+    margin: 12px 0;
+    font-size: clamp(1.9rem, 4vw, 2.5rem);
+    line-height: 1.2;
+}
+
+.thank-you-card p {
+    color: var(--muted);
+}
+
+.thank-you-icon {
+    display: grid;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--olive-light);
+    color: var(--olive-dark);
+    font-size: 2rem;
+}
+
+
+/* =========================
+   AUTHENTICATION PAGES
+   Login and registration
+   ========================= */
+
+.auth-section {
+    display: grid;
+    min-height: 75vh;
+    padding: 56px 20px;
+    place-items: center;
+}
+
+.auth-card {
+    width: min(100%, 480px);
+    padding: clamp(24px, 5vw, 40px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.auth-card h1 {
+    margin: 0 0 10px;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    line-height: 1.2;
+}
+
+.auth-card>p {
+    color: var(--muted);
+}
+
+.auth-card form button[type="submit"],
+.auth-card form input[type="submit"] {
+    width: 100%;
+}
+
+.auth-footer {
+    margin-top: 22px;
+    color: var(--muted);
+    text-align: center;
+}
+
+.auth-footer a {
+    color: var(--olive-dark);
+    font-weight: 700;
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
+
 footer {
-    padding: 22px;
+    padding: 24px 7%;
     background: var(--olive-dark);
     color: var(--white);
     text-align: center;
@@ -200,25 +690,423 @@ footer p {
     margin: 0;
 }
 
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+
+@media (max-width: 900px) {
+    .pet-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+    .site-header {
+        padding-right: 5%;
+        padding-left: 5%;
+    }
+    .site-header nav,
+    .site-header nav>span {
+        gap: 14px;
+    }
+}
+
 @media (max-width: 760px) {
     .site-header {
         align-items: flex-start;
         flex-direction: column;
+        gap: 16px;
+        padding: 18px 6%;
     }
-
-    nav {
-        gap: 14px;
+    .site-header nav {
+        width: 100%;
+        gap: 12px 16px;
     }
-
+    .site-header nav>span {
+        gap: 12px 16px;
+    }
     .hero {
-        padding: 65px 7%;
+        padding: 64px 6%;
     }
+    .hero h1 {
+        font-size: clamp(2.25rem, 9vw, 3.4rem);
+    }
+    .pets-section {
+        padding: 56px 6%;
+    }
+    .pet-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+    .pet-card>img,
+    .pet-placeholder {
+        height: 190px;
+        min-height: 190px;
+    }
+    .pet-info {
+        padding: 16px;
+    }
+    .pet-info h3 {
+        font-size: 1.15rem;
+    }
+    .support-section {
+        padding: 48px 6%;
+    }
+    .donation-form-section {
+        width: min(100% - 28px, 780px);
+        padding: 42px 0 56px;
+    }
+    .donation-form-card {
+        border-radius: var(--radius-md);
+    }
+    th,
+    td {
+        padding: 12px;
+    }
+}
 
+@media (max-width: 480px) {
     .pet-grid {
         grid-template-columns: 1fr;
     }
-
+    .pet-card>img,
     .pet-placeholder {
-        min-height: 180px;
+        height: 230px;
+        min-height: 230px;
+    }
+    .primary-button,
+    .secondary-button {
+        width: 100%;
+    }
+    .donation-form-card {
+        padding: 22px 18px;
+    }
+    .thank-you-card {
+        margin: 36px auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
+
+
+/* ========================================
+   PET HAVEN — DONATION FORM
+   ======================================== */
+
+.donation-form-section {
+    width: min(100% - 40px, 760px);
+    margin: 0 auto;
+    padding: 64px 0 76px;
+}
+
+.donation-form-heading {
+    margin-bottom: 34px;
+    text-align: center;
+}
+
+.donation-form-heading .eyebrow {
+    color: var(--olive);
+}
+
+.donation-form-heading h1 {
+    margin: 10px 0 14px;
+    color: var(--olive-dark);
+    font-size: clamp(2.1rem, 5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+}
+
+.donation-form-heading>p:last-child {
+    max-width: 570px;
+    margin: 0 auto;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+
+/* Form card */
+
+.donation-form-card {
+    padding: clamp(24px, 5vw, 42px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.donation-card-heading {
+    margin-bottom: 30px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+}
+
+.donation-card-heading h2 {
+    margin: 0 0 6px;
+    color: var(--olive-dark);
+    font-size: 1.4rem;
+}
+
+.donation-card-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.93rem;
+}
+
+
+/* Form fields */
+
+.donation-form-card .form-group {
+    margin-bottom: 24px;
+}
+
+.donation-form-card form label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text);
+    font-size: 0.94rem;
+    font-weight: 700;
+}
+
+.optional-label {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 400;
+}
+
+.donation-form-card form input:not([type="file"]),
+.donation-form-card form textarea {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 13px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fffefa;
+    color: var(--text);
+    font-size: 0.95rem;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.donation-form-card form textarea {
+    min-height: 125px;
+    resize: vertical;
+}
+
+.donation-form-card form input:focus,
+.donation-form-card form textarea:focus {
+    border-color: var(--olive);
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(101 115 75 / 14%);
+}
+
+.donation-form-card form input::placeholder,
+.donation-form-card form textarea::placeholder {
+    color: #999b91;
+}
+
+
+/* Currency field */
+
+.amount-input-wrapper {
+    position: relative;
+}
+
+.amount-input-wrapper .currency-symbol {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    z-index: 1;
+    color: var(--olive-dark);
+    font-weight: 800;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.amount-input-wrapper input {
+    padding-left: 38px !important;
+}
+
+
+/* File upload */
+
+.upload-box {
+    padding: 26px 20px;
+    border: 1px dashed #aab19a;
+    border-radius: var(--radius-md);
+    background: #fafaf5;
+    text-align: center;
+}
+
+.upload-icon {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--olive-light);
+    color: var(--olive-dark);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.upload-title {
+    margin: 0 0 4px;
+    color: var(--text);
+    font-weight: 800;
+}
+
+.upload-description {
+    margin: 0 0 16px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.donation-form-card form input[type="file"] {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin: 0 auto 10px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+.donation-form-card form input[type="file"]::file-selector-button {
+    margin-right: 10px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--olive-light);
+    color: var(--olive-dark);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.form-help {
+    margin: 7px 0 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+
+/* Validation */
+
+.donation-form-card .field-error {
+    margin: 7px 0 0;
+    color: var(--danger);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+
+/* Notice */
+
+.donation-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 28px 0 22px;
+    padding: 15px;
+    border: 1px solid #e7dfbf;
+    border-radius: var(--radius-sm);
+    background: #fcf8e9;
+}
+
+.notice-icon {
+    flex-shrink: 0;
+    color: var(--olive-dark);
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.donation-notice p {
+    margin: 0;
+    color: #5f5d4e;
+    font-size: 0.88rem;
+    line-height: 1.65;
+}
+
+
+/* Submit button */
+
+.donation-form-card .donation-submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 52px;
+    padding: 14px 20px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--olive-dark);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 800;
+    transition: background var(--transition), transform var(--transition);
+}
+
+.donation-form-card .donation-submit-button:hover {
+    background: var(--olive);
+    transform: translateY(-1px);
+}
+
+
+/* Back link */
+
+.donation-back {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.donation-back .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--olive-dark);
+    font-weight: 700;
+}
+
+.donation-back .back-link:hover {
+    color: var(--olive);
+    text-decoration: underline;
+}
+
+
+/* Responsive */
+
+@media (max-width: 600px) {
+    .donation-form-section {
+        width: min(100% - 28px, 760px);
+        padding: 42px 0 52px;
+    }
+    .donation-form-heading {
+        margin-bottom: 26px;
+    }
+    .donation-form-card {
+        padding: 22px 18px;
+        border-radius: var(--radius-md);
+    }
+    .donation-card-heading {
+        margin-bottom: 24px;
+    }
+    .upload-box {
+        padding: 20px 12px;
+    }
+    .donation-form-card form input[type="file"] {
+        font-size: 0.78rem;
     }
 }

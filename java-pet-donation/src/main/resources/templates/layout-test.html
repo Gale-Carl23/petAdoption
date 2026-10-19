@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Test | Pet Haven</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{layout/base :: header}"></div>
+
+<main>
+    <h1>Shared Layout Test</h1>
+    <p>If you can see the Pet Haven navigation above, the shared header works.</p>
+</main>
+
+<div th:replace="~{layout/base :: footer}"></div>
+
+</body>
+</html>

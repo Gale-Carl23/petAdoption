@@ -1,64 +1,70 @@
 
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Pet Haven</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 
-<main class="auth-section">
-    <section class="auth-card">
-        <p class="eyebrow">WELCOME BACK</p>
-        <h1>Log In to Pet Haven</h1>
-        <p>Sign in to continue your pet adoption journey.</p>
+    <main class="auth-section">
+        <section class="auth-card">
+            <p class="eyebrow">WELCOME BACK</p>
 
-        <p th:if="${param.registered}">
-            Your account was created successfully. You can now log in.
-        </p>
+            <h1>Log In to Pet Haven</h1>
 
-        <p th:if="${param.error}" role="alert">
-            Invalid email or password. Please try again.
-        </p>
+            <p>Sign in to continue your pet adoption journey.</p>
 
-        <p th:if="${param.logout}">
-            You have been logged out successfully.
-        </p>
+            <p th:if="${param.registered}">
+                Your account was created successfully. You can now log in.
+            </p>
 
-        <form th:action="@{/login}" method="post">
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email"
-                       id="email"
-                       name="email"
-                       autocomplete="email"
-                       required>
-            </div>
+            <p th:if="${param.error}" role="alert">
+                Invalid email or password. Please try again.
+            </p>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password"
-                       id="password"
-                       name="password"
-                       autocomplete="current-password"
-                       required>
-            </div>
+            <p th:if="${param.logout}">
+                You have been logged out successfully.
+            </p>
 
-            <button type="submit" class="primary-button">
-                Log In
-            </button>
-        </form>
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
 
-        <p>
-            Don't have an account?
-            <a th:href="@{/register}">Create an account</a>
-        </p>
+                    <input type="email"
+                           id="email"
+                           name="email"
+                           autocomplete="email"
+                           required>
+                </div>
 
-        <a th:href="@{/}">Back to Home</a>
-    </section>
-</main>
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           autocomplete="current-password"
+                           required>
+                </div>
+
+                <button type="submit" class="primary-button">
+                    Log In
+                </button>
+            </form>
+
+            <p>
+                Don't have an account?
+                <a th:href="@{/register}">Create an account</a>
+            </p>
+
+            <a th:href="@{/}">Back to Home</a>
+        </section>
+    </main>
 
 </body>
 </html>

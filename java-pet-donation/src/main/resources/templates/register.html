@@ -1,76 +1,86 @@
 
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | Pet Haven</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 
-<main class="auth-section">
-    <section class="auth-card">
-        <p class="eyebrow">WELCOME TO PET HAVEN</p>
-        <h1>Create Your Account</h1>
-        <p>Register to begin your pet adoption journey.</p>
+    <main class="auth-section">
+        <section class="auth-card">
+            <p class="eyebrow">WELCOME TO PET HAVEN</p>
 
-        <p th:if="${registrationError}"
-           th:text="${registrationError}"
-           role="alert"></p>
+            <h1>Create Your Account</h1>
 
-        <form th:action="@{/register}"
-              th:object="${registrationForm}"
-              method="post">
+            <p>Register to begin your pet adoption journey.</p>
 
-            <div class="form-group">
-                <label for="fullName">Full Name</label>
-                <input type="text"
-                       id="fullName"
-                       th:field="*{fullName}"
-                       autocomplete="name"
-                       required>
-                <p th:if="${#fields.hasErrors('fullName')}"
-                   th:errors="*{fullName}"></p>
-            </div>
+            <p th:if="${registrationError}"
+               th:text="${registrationError}"
+               role="alert"></p>
 
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email"
-                       id="email"
-                       th:field="*{email}"
-                       autocomplete="email"
-                       required>
-                <p th:if="${#fields.hasErrors('email')}"
-                   th:errors="*{email}"></p>
-            </div>
+            <form th:action="@{/register}"
+                  th:object="${registrationForm}"
+                  method="post">
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password"
-                       id="password"
-                       th:field="*{password}"
-                       autocomplete="new-password"
-                       minlength="8"
-                       maxlength="72"
-                       required>
-                <p th:if="${#fields.hasErrors('password')}"
-                   th:errors="*{password}"></p>
-            </div>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
 
-            <button type="submit" class="primary-button">
-                Create Account
-            </button>
-        </form>
+                    <input type="text"
+                           id="fullName"
+                           th:field="*{fullName}"
+                           autocomplete="name"
+                           required>
 
-        <p>
-            Already have an account?
-            <a th:href="@{/login}">Log in</a>
-        </p>
+                    <p th:if="${#fields.hasErrors('fullName')}"
+                       th:errors="*{fullName}"></p>
+                </div>
 
-        <a th:href="@{/}">Back to Home</a>
-    </section>
-</main>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+
+                    <input type="email"
+                           id="email"
+                           th:field="*{email}"
+                           autocomplete="email"
+                           required>
+
+                    <p th:if="${#fields.hasErrors('email')}"
+                       th:errors="*{email}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <input type="password"
+                           id="password"
+                           th:field="*{password}"
+                           autocomplete="new-password"
+                           minlength="8"
+                           maxlength="72"
+                           required>
+
+                    <p th:if="${#fields.hasErrors('password')}"
+                       th:errors="*{password}"></p>
+                </div>
+
+                <button type="submit" class="primary-button">
+                    Create Account
+                </button>
+            </form>
+
+            <p>
+                Already have an account?
+                <a th:href="@{/login}">Log in</a>
+            </p>
+
+            <a th:href="@{/}">Back to Home</a>
+        </section>
+    </main>
 
 </body>
 </html>

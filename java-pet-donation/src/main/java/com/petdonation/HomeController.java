@@ -20,4 +20,9 @@ public class HomeController {
         model.addAttribute("pets", petService.getAllPets());
         return "home";
     }
+
+    @GetMapping("/layout-test")
+    public String layoutTest() {
+        return "layout-test";
+    }
 }

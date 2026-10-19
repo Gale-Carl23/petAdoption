@@ -1,80 +1,18 @@
 
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thank You | Pet Haven</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f8f5f0;
-            color: #333;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .thank-you-card {
-            background: white;
-            max-width: 520px;
-            width: 100%;
-            padding: 40px 30px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
-            box-sizing: border-box;
-        }
-
-        .checkmark {
-            font-size: 56px;
-            color: #4b8b63;
-            margin-bottom: 12px;
-        }
-
-        h1 {
-            color: #345c43;
-            margin-bottom: 16px;
-        }
-
-        p {
-            line-height: 1.7;
-            color: #555;
-        }
-
-        .notice {
-            background: #fff6df;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            margin: 22px 0;
-        }
-
-        a {
-            display: inline-block;
-            margin: 8px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .primary-button {
-            background: #345c43;
-            color: white;
-        }
-
-        .secondary-button {
-            border: 1px solid #345c43;
-            color: #345c43;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
+
+    <header th:replace="~{layout/base :: header}"></header>
+
     <main class="thank-you-card">
         <div class="checkmark" aria-hidden="true">&#10003;</div>
 
@@ -100,5 +38,8 @@
         <a th:href="@{/}" class="primary-button">Back to Home</a>
         <a th:href="@{/pets}" class="secondary-button">Meet Our Pets</a>
     </main>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+
 </body>
 </html>

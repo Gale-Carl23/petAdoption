@@ -1,68 +1,61 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Applications | Pet Haven</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 
-<nav aria-label="Main navigation">
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/pets}">Our Pets</a>
-        <a th:href="@{/about}">About Us</a>
-        <a th:href="@{/donations}">Donations</a>
+    <header th:replace="~{layout/base :: header}"></header>
 
-        <span th:if="${#authorization.expression('isAuthenticated()')}">
-            <a th:href="@{/adoptions/my-applications}">My Applications</a>
+    <main class="pets-section">
+        <div class="section-heading">
+            <p class="eyebrow">YOUR ADOPTION JOURNEY</p>
+            <h1>My Adoption Applications</h1>
+            <p>Track the status of your pet adoption applications here.</p>
+        </div>
 
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit">Log Out</button>
-            </form>
-        </span>
+        <div th:if="${applications.isEmpty()}">
+            <p>You haven't submitted any adoption applications yet.</p>
+            <a class="primary-button" th:href="@{/pets}">
+                Browse Available Pets
+            </a>
+        </div>
 
-        <span th:unless="${#authorization.expression('isAuthenticated()')}">
-            <a th:href="@{/login}">Login</a>
-            <a th:href="@{/register}">Register</a>
-        </span>
-    </nav>
+        <div class="table-container" th:unless="${applications.isEmpty()}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pet</th>
+                        <th>Reason for Adoption</th>
+                        <th>Housing Type</th>
+                        <th>Pet Experience</th>
+                        <th>Date Submitted</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
 
-<main>
-    <h1>My Adoption Applications</h1>
+                <tbody>
+                    <tr th:each="app : ${applications}">
+                        <td th:text="${app.pet.name}">Pet name</td>
+                        <td th:text="${app.reasonForAdoption}">Reason</td>
+                        <td th:text="${app.housingType}">Housing</td>
+                        <td th:text="${app.petExperience}">Experience</td>
+                        <td th:text="${#temporals.format(app.submittedAt, 'MMM dd, yyyy HH:mm')}">
+                            Submission date
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 
-    <p>Track the status of your pet adoption applications here.</p>
-
-    <div th:if="${applications.isEmpty()}">
-        <p>You haven't submitted any adoption applications yet.</p>
-        <a th:href="@{/pets}">Browse Available Pets</a>
-    </div>
-
-    <table th:unless="${applications.isEmpty()}">
-        <thead>
-        <tr>
-            <th>Pet</th>
-            <th>Reason for Adoption</th>
-            <th>Housing Type</th>
-            <th>Pet Experience</th>
-            <th>Date Submitted</th>
-            <th>Status</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr th:each="application : ${applications}">
-            <td th:text="${application.pet.name}">Pet name</td>
-            <td th:text="${application.reasonForAdoption}">Reason</td>
-            <td th:text="${application.housingType}">Housing</td>
-            <td th:text="${application.petExperience}">Experience</td>
-            <td th:text="${#temporals.format(application.submittedAt, 'MMM dd, yyyy HH:mm')}">
-                Submission date
-            </td>
-            <td th:text="${application.status}">PENDING</td>
-        </tr>
-        </tbody>
-    </table>
-</main>
+    <footer th:replace="~{layout/base :: footer}"></footer>
 
 </body>
 </html>

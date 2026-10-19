@@ -76,7 +76,8 @@ public class AdoptionApplicationService {
     public List<AdoptionApplication> getApplicationsByApplicant(
             Long applicantId) {
         return applicationRepository
-                .findByApplicantIdOrderBySubmittedAtDesc(applicantId);
+                .findApplicationsWithPetByApplicantId(applicantId);
+
     }
 
     @Transactional(readOnly = true)

@@ -1,83 +1,62 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pet Details | Pet Haven</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 
-<header class="site-header">
-    <a class="brand" th:href="@{/}">Pet Haven</a>
+    <header th:replace="~{layout/base :: header}"></header>
 
-    
-    <nav aria-label="Main navigation">
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/pets}">Our Pets</a>
-        <a th:href="@{/about}">About Us</a>
-        <a th:href="@{/donations}">Donations</a>
+    <main>
+        <section class="pet-details-section">
+            <a class="text-link" th:href="@{/pets}">
+                ← Back to Our Pets
+            </a>
 
-        <span th:if="${#authorization.expression('isAuthenticated()')}">
-            <a th:href="@{/adoptions/my-applications}">My Applications</a>
+            <div class="pet-details-card">
+                <div class="pet-placeholder"
+                     th:if="${pet.imageUrl == null or #strings.isEmpty(pet.imageUrl)}"
+                     aria-hidden="true">🐾</div>
 
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit">Log Out</button>
-            </form>
-        </span>
+                <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
+                     th:src="${pet.imageUrl}"
+                     th:alt="${pet.name}">
 
-        <span th:unless="${#authorization.expression('isAuthenticated()')}">
-            <a th:href="@{/login}">Login</a>
-            <a th:href="@{/register}">Register</a>
-        </span>
-    </nav>
+                <div class="pet-info">
+                    <p class="eyebrow">MEET YOUR NEW BEST FRIEND</p>
 
-</header>
+                    <h1 th:text="${pet.name}">Pet Name</h1>
+                    <p th:text="'Breed: ' + ${pet.breed}">Breed</p>
+                    <p th:text="${pet.age} + ' year(s) old'">Age</p>
+                    <p th:text="${pet.description}">Pet description</p>
 
-<main>
-    <section class="pet-details-section">
-        <a class="text-link" th:href="@{/pets}">← Back to Our Pets</a>
+                    <p>
+                        Status:
+                        <span th:text="${pet.status}">AVAILABLE</span>
+                    </p>
 
-        <div class="pet-details-card">
-            <div class="pet-placeholder"
-                 th:if="${pet.imageUrl == null or #strings.isEmpty(pet.imageUrl)}"
-                 aria-hidden="true">🐾</div>
+                    <div th:if="${pet.status == 'AVAILABLE'}">
+                        <span th:if="${hasApplied}">
+                            <button type="button" disabled>Applied</button>
+                        </span>
 
-            <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
-                 th:src="${pet.imageUrl}"
-                 th:alt="${pet.name}">
-
-            <div class="pet-info">
-                <p class="eyebrow">MEET YOUR NEW BEST FRIEND</p>
-                <h1 th:text="${pet.name}">Pet Name</h1>
-                <p th:text="'Breed: ' + ${pet.breed}">Breed</p>
-                <p th:text="${pet.age} + ' year(s) old'">Age</p>
-                <p th:text="${pet.description}">Pet description</p>
-                <p>
-                    Status:
-                    <span th:text="${pet.status}">AVAILABLE</span>
-                </p>
-
-                <div th:if="${pet.status == 'AVAILABLE'}">
-
-                    <span th:if="${hasApplied}">
-                        <button type="button" disabled>Applied</button>
-                    </span>
-
-                    <a th:unless="${hasApplied}"
-                    th:href="@{/adoptions/apply/{petId}(petId=${pet.id})}">
-                        Apply to Adopt
-                    </a>
-
+                        <a th:unless="${hasApplied}"
+                           th:href="@{/adoptions/apply/{petId}(petId=${pet.id})}">
+                            Apply to Adopt
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-</main>
+        </section>
+    </main>
 
-<footer>
-    <p>Pet Haven · Every paw deserves love.</p>
-</footer>
+    <footer th:replace="~{layout/base :: footer}"></footer>
 
 </body>
 </html>

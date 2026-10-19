@@ -1,245 +1,111 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adoption Application | Pet Haven</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f8f5f0;
-            color: #333;
-        }
-
-        nav {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 18px;
-            padding: 18px 6%;
-            background: white;
-        }
-
-        nav a {
-            color: #345c43;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .logout-form {
-            margin-left: auto;
-        }
-
-        .logout-form button {
-            padding: 9px 15px;
-            border: 0;
-            border-radius: 6px;
-            background: #345c43;
-            color: white;
-            cursor: pointer;
-        }
-
-        .container {
-            max-width: 650px;
-            margin: 35px auto;
-            padding: 30px;
-            background: white;
-            border-radius: 14px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
-        }
-
-        h1, h2 {
-            color: #345c43;
-        }
-
-        .pet-summary {
-            margin-bottom: 24px;
-            padding: 15px;
-            background: #f2f6f0;
-            border-radius: 8px;
-        }
-
-        .intro {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        label {
-            display: block;
-            margin: 18px 0 7px;
-            font-weight: bold;
-        }
-
-        textarea, select {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-            font: inherit;
-        }
-
-        textarea {
-            resize: vertical;
-        }
-
-        .hint {
-            color: #666;
-            font-size: 13px;
-        }
-
-        .error {
-            margin-top: 6px;
-            color: #b42318;
-            font-size: 14px;
-        }
-
-        .submit-button {
-            width: 100%;
-            margin-top: 24px;
-            padding: 13px;
-            border: 0;
-            border-radius: 8px;
-            background: #345c43;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 18px;
-            color: #345c43;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                margin: 18px;
-                padding: 22px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<nav aria-label="Main navigation">
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/pets}">Our Pets</a>
-        <a th:href="@{/about}">About Us</a>
-        <a th:href="@{/donations}">Donations</a>
+    <header th:replace="~{layout/base :: header}"></header>
 
-        <span th:if="${#authorization.expression('isAuthenticated()')}">
-            <a th:href="@{/adoptions/my-applications}">My Applications</a>
+    <main class="container">
+        <h1>Adoption Application</h1>
 
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit">Log Out</button>
-            </form>
-        </span>
-
-        <span th:unless="${#authorization.expression('isAuthenticated()')}">
-            <a th:href="@{/login}">Login</a>
-            <a th:href="@{/register}">Register</a>
-        </span>
-    </nav>
-
-<main class="container">
-
-    <h1>Adoption Application</h1>
-
-    <p class="intro">
-        Tell us a little about yourself so our team can review
-        whether you are ready to welcome a pet into your home.
-    </p>
-
-    <section class="pet-summary">
-        <h2>Pet Details</h2>
-
-        <p>
-            <strong>Name:</strong>
-            <span th:text="${pet.name}">Pet name</span>
+        <p class="intro">
+            Tell us a little about yourself so our team can review
+            whether you are ready to welcome a pet into your home.
         </p>
 
-        <p>
-            <strong>Breed:</strong>
-            <span th:text="${pet.breed}">Pet breed</span>
-        </p>
-    </section>
+        <section class="pet-summary">
+            <h2>Pet Details</h2>
 
-    <div class="error"
-         th:if="${applicationError}"
-         th:text="${applicationError}"></div>
+            <p>
+                <strong>Name:</strong>
+                <span th:text="${pet.name}">Pet name</span>
+            </p>
 
-    <form th:action="@{/adoptions/apply/{petId}(petId=${pet.id})}"
-          th:object="${applicationForm}"
-          method="post">
-
-        <label for="reasonForAdoption">
-            Why do you want to adopt this pet?
-        </label>
-
-        <textarea id="reasonForAdoption"
-                  th:field="*{reasonForAdoption}"
-                  rows="5"
-                  maxlength="1000"
-                  required
-                  placeholder="Explain why you want to adopt this pet."></textarea>
+            <p>
+                <strong>Breed:</strong>
+                <span th:text="${pet.breed}">Pet breed</span>
+            </p>
+        </section>
 
         <div class="error"
-             th:if="${#fields.hasErrors('reasonForAdoption')}"
-             th:errors="*{reasonForAdoption}"></div>
+             th:if="${applicationError}"
+             th:text="${applicationError}"></div>
 
-        <label for="housingType">What type of home do you live in?</label>
+        <form th:action="@{/adoptions/apply/{petId}(petId=${pet.id})}"
+              th:object="${applicationForm}"
+              method="post">
 
-        <select id="housingType" th:field="*{housingType}" required>
-            <option value="">Select your housing type</option>
-            <option value="House">House</option>
-            <option value="Apartment">Apartment</option>
-            <option value="Condominium">Condominium</option>
-            <option value="Other">Other</option>
-        </select>
+            <label for="reasonForAdoption">
+                Why do you want to adopt this pet?
+            </label>
 
-        <div class="error"
-             th:if="${#fields.hasErrors('housingType')}"
-             th:errors="*{housingType}"></div>
+            <textarea id="reasonForAdoption"
+                      th:field="*{reasonForAdoption}"
+                      rows="5"
+                      maxlength="1000"
+                      required
+                      placeholder="Explain why you want to adopt this pet."></textarea>
 
-        <label for="petExperience">
-            Do you have experience caring for pets?
-        </label>
+            <div class="error"
+                 th:if="${#fields.hasErrors('reasonForAdoption')}"
+                 th:errors="*{reasonForAdoption}"></div>
 
-        <select id="petExperience" th:field="*{petExperience}" required>
-            <option value="">Select your experience</option>
-            <option value="Beginner">No previous experience</option>
-            <option value="Some experience">Some experience</option>
-            <option value="Experienced">Experienced pet owner</option>
-        </select>
+            <label for="housingType">
+                What type of home do you live in?
+            </label>
 
-        <div class="error"
-             th:if="${#fields.hasErrors('petExperience')}"
-             th:errors="*{petExperience}"></div>
+            <select id="housingType" th:field="*{housingType}" required>
+                <option value="">Select your housing type</option>
+                <option value="House">House</option>
+                <option value="Apartment">Apartment</option>
+                <option value="Condominium">Condominium</option>
+                <option value="Other">Other</option>
+            </select>
 
-        <p class="hint">
-            Your application will be reviewed by the Pet Haven team.
-            Submission does not guarantee adoption approval.
-        </p>
+            <div class="error"
+                 th:if="${#fields.hasErrors('housingType')}"
+                 th:errors="*{housingType}"></div>
 
-        <button type="submit" class="submit-button">
-            Submit Application
-        </button>
-    </form>
+            <label for="petExperience">
+                Do you have experience caring for pets?
+            </label>
 
-    <a class="back-link"
-       th:href="@{/pets/{id}(id=${pet.id})}">
-        Back to Pet Details
-    </a>
+            <select id="petExperience" th:field="*{petExperience}" required>
+                <option value="">Select your experience</option>
+                <option value="Beginner">No previous experience</option>
+                <option value="Some experience">Some experience</option>
+                <option value="Experienced">Experienced pet owner</option>
+            </select>
 
-</main>
+            <div class="error"
+                 th:if="${#fields.hasErrors('petExperience')}"
+                 th:errors="*{petExperience}"></div>
+
+            <p class="hint">
+                Your application will be reviewed by the Pet Haven team.
+                Submission does not guarantee adoption approval.
+            </p>
+
+            <button type="submit" class="submit-button">
+                Submit Application
+            </button>
+        </form>
+
+        <a class="back-link"
+           th:href="@{/pets/{id}(id=${pet.id})}">
+            Back to Pet Details
+        </a>
+    </main>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
 
 </body>
 </html>

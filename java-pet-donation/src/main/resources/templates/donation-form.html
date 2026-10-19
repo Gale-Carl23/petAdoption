@@ -1,222 +1,189 @@
 
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Donation Form | Pet Haven</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f8f5f0;
-            color: #333;
-            margin: 0;
-        }
 
-        nav {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 18px;
-            padding: 18px 6%;
-            background: white;
-        }
-
-        nav a {
-            color: #345c43;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .logout-form {
-            margin-left: auto;
-        }
-
-        .logout-form button {
-            background: #345c43;
-            color: white;
-            border: 0;
-            padding: 9px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 35px auto;
-            padding: 30px;
-            background: white;
-            border-radius: 14px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
-        }
-
-        h1 {
-            color: #345c43;
-            margin-top: 0;
-        }
-
-        .intro {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin: 18px 0 7px;
-        }
-
-        input, textarea {
-            box-sizing: border-box;
-            width: 100%;
-            padding: 11px;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-            font: inherit;
-        }
-
-        textarea {
-            resize: vertical;
-        }
-
-        .hint {
-            color: #666;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-
-        .error {
-            color: #b42318;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .submit-button {
-            width: 100%;
-            margin-top: 24px;
-            padding: 13px;
-            background: #345c43;
-            color: white;
-            border: 0;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .submit-button:hover {
-            background: #294a36;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 18px;
-            color: #345c43;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
 
-<nav aria-label="Main navigation">
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/pets}">Our Pets</a>
-        <a th:href="@{/about}">About Us</a>
-        <a th:href="@{/donations}">Donations</a>
+    <!-- Shared navigation -->
+    <header th:replace="~{layout/base :: header}"></header>
 
-        <span th:if="${#authorization.expression('isAuthenticated()')}">
-            <a th:href="@{/adoptions/my-applications}">My Applications</a>
+    <main class="donation-form-section">
 
-            <form th:action="@{/logout}" method="post" class="logout-form">
-                <button type="submit">Log Out</button>
+        <!-- Page introduction -->
+        <section class="donation-form-heading">
+            <p class="eyebrow">SUPPORT PET HAVEN</p>
+
+            <h1>Make a Donation</h1>
+
+            <p>
+                Every contribution helps us provide food, shelter,
+                and care for animals waiting for a loving home.
+                Thank you for being part of their journey.
+            </p>
+        </section>
+
+        <!-- Donation form card -->
+        <section class="donation-form-card">
+
+            <div class="donation-card-heading">
+                <h2>Donation Details</h2>
+                <p>Complete the information below to submit your donation.</p>
+            </div>
+
+            <form th:action="@{/donations/submit}"
+                  th:object="${donationForm}"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                <!-- Full name -->
+                <div class="form-group">
+                    <label for="fullName">
+                        Full Name
+                        <span class="optional-label">(Optional)</span>
+                    </label>
+
+                    <input type="text"
+                           id="fullName"
+                           th:field="*{fullName}"
+                           maxlength="100"
+                           placeholder="Leave blank to donate anonymously">
+
+                    <p class="field-error"
+                       th:if="${#fields.hasErrors('fullName')}"
+                       th:errors="*{fullName}"></p>
+                </div>
+
+                <!-- Donation amount -->
+                <div class="form-group">
+                    <label for="amount">Donation Amount (PHP)</label>
+
+                    <div class="amount-input-wrapper">
+                        <span class="currency-symbol">₱</span>
+
+                        <input type="number"
+                               id="amount"
+                               th:field="*{amount}"
+                               min="0.01"
+                               step="0.01"
+                               placeholder="0.00"
+                               required>
+                    </div>
+
+                    <p class="form-help">
+                        Enter the amount you sent in Philippine pesos.
+                    </p>
+
+                    <p class="field-error"
+                       th:if="${#fields.hasErrors('amount')}"
+                       th:errors="*{amount}"></p>
+                </div>
+
+                <!-- Date sent -->
+                <div class="form-group">
+                    <label for="dateSent">Date Sent</label>
+
+                    <input type="date"
+                           id="dateSent"
+                           th:field="*{dateSent}"
+                           th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
+                           required>
+
+                    <p class="field-error"
+                       th:if="${#fields.hasErrors('dateSent')}"
+                       th:errors="*{dateSent}"></p>
+                </div>
+
+                <!-- Proof of donation -->
+                <div class="form-group">
+                    <label for="proof">Proof of Donation</label>
+
+                    <div class="upload-box">
+                        <div class="upload-icon" aria-hidden="true">
+                            <span>↑</span>
+                        </div>
+
+                        <p class="upload-title">Upload your payment proof</p>
+
+                        <p class="upload-description">
+                            Select a screenshot, image, or PDF receipt.
+                        </p>
+
+                        <input type="file"
+                               id="proof"
+                               name="proof"
+                               accept=".jpg,.jpeg,.png,.pdf"
+                               aria-describedby="proof-help"
+                               required>
+
+                        <p id="proof-help" class="form-help">
+                            Accepted formats: JPG, PNG, PDF.
+                            Maximum file size: 5 MB.
+                        </p>
+                    </div>
+
+                    <p class="field-error"
+                       th:if="${proofError}"
+                       th:text="${proofError}"></p>
+                </div>
+
+                <!-- Optional message -->
+                <div class="form-group">
+                    <label for="message">
+                        Message
+                        <span class="optional-label">(Optional)</span>
+                    </label>
+
+                    <textarea id="message"
+                              th:field="*{message}"
+                              rows="4"
+                              maxlength="1000"
+                              placeholder="Write a message for our team..."></textarea>
+
+                    <p class="field-error"
+                       th:if="${#fields.hasErrors('message')}"
+                       th:errors="*{message}"></p>
+                </div>
+
+                <!-- Submission notice -->
+                <div class="donation-notice">
+                    <span class="notice-icon" aria-hidden="true">ⓘ</span>
+
+                    <p>
+                        Your donation details and payment proof will be
+                        reviewed by the Pet Haven team before verification.
+                    </p>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="donation-submit-button">
+                    Submit Donation
+                    <span aria-hidden="true">→</span>
+                </button>
+
             </form>
-        </span>
+        </section>
 
-        <span th:unless="${#authorization.expression('isAuthenticated()')}">
-            <a th:href="@{/login}">Login</a>
-            <a th:href="@{/register}">Register</a>
-        </span>
-    </nav>
+        <!-- Back navigation -->
+        <div class="donation-back">
+            <a class="back-link" th:href="@{/donations}">
+                <span aria-hidden="true">←</span>
+                Back to Donations
+            </a>
+        </div>
 
-<main class="container">
-    <h1>Make a Donation</h1>
+    </main>
 
-    <p class="intro">
-        Thank you for supporting Pet Haven! Enter your donation
-        details and upload your payment proof for verification.
-    </p>
-
-    <form th:action="@{/donations/submit}"
-          th:object="${donationForm}"
-          method="post"
-          enctype="multipart/form-data">
-
-        <label for="fullName">Full Name (Optional)</label>
-        <input type="text"
-               id="fullName"
-               th:field="*{fullName}"
-               maxlength="100"
-               placeholder="Leave blank to donate anonymously">
-
-        <div class="error"
-             th:if="${#fields.hasErrors('fullName')}"
-             th:errors="*{fullName}"></div>
-
-        <label for="amount">Donation Amount (PHP)</label>
-        <input type="number"
-               id="amount"
-               th:field="*{amount}"
-               min="0.01"
-               step="0.01"
-               required>
-
-        <div class="error"
-             th:if="${#fields.hasErrors('amount')}"
-             th:errors="*{amount}"></div>
-
-        <label for="dateSent">Date Sent</label>
-        <input type="date"
-               id="dateSent"
-               th:field="*{dateSent}"
-               th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
-               required>
-
-        <div class="error"
-             th:if="${#fields.hasErrors('dateSent')}"
-             th:errors="*{dateSent}"></div>
-
-        <label for="proof">Proof of Donation</label>
-        <input type="file"
-               id="proof"
-               name="proof"
-               accept=".jpg,.jpeg,.png,.pdf"
-               required>
-
-        <p class="hint">Accepted formats: JPG, PNG, PDF. Maximum size: 5 MB.</p>
-
-        <p class="error"
-           th:if="${proofError}"
-           th:text="${proofError}"></p>
-
-        <label for="message">Message (Optional)</label>
-        <textarea id="message"
-                  th:field="*{message}"
-                  rows="4"
-                  maxlength="1000"
-                  placeholder="Leave a message for our team"></textarea>
-
-        <div class="error"
-             th:if="${#fields.hasErrors('message')}"
-             th:errors="*{message}"></div>
-
-        <button type="submit" class="submit-button">
-            Submit Donation
-        </button>
-    </form>
-
-    <a class="back-link" th:href="@{/donations}">
-        Back to Donations
-    </a>
-</main>
+    <!-- Shared footer -->
+    <footer th:replace="~{layout/base :: footer}"></footer>
 
 </body>
 </html>

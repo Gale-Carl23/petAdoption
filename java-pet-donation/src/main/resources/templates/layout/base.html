@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Haven</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+    <header class="site-header" th:fragment="header">
+        <a class="brand" th:href="@{/}">Pet Haven</a>
+
+        <nav aria-label="Main navigation">
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/pets}">Our Pets</a>
+            <a th:href="@{/about}">About Us</a>
+            <a th:href="@{/donations}">Donations</a>
+
+            <span th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/adoptions/my-applications}">
+                    My Applications
+                </a>
+
+                <form th:action="@{/logout}"
+                      method="post"
+                      class="logout-form">
+                    <button type="submit">Log Out</button>
+                </form>
+            </span>
+
+            <span th:unless="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/login}">Login</a>
+                <a th:href="@{/register}">Register</a>
+            </span>
+        </nav>
+    </header>
+
+    <footer th:fragment="footer">
+        <p>Pet Haven · Every paw deserves love.</p>
+    </footer>
+
+</body>
+</html>

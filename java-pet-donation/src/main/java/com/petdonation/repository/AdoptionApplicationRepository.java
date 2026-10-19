@@ -2,7 +2,8 @@ package com.petdonation.repository;
 
 import com.petdonation.model.AdoptionApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface AdoptionApplicationRepository
@@ -18,5 +19,16 @@ public interface AdoptionApplicationRepository
             Long applicantId,
             Long petId,
             List<String> statuses
+    );
+
+    @Query("""
+    SELECT a
+    FROM AdoptionApplication a
+    JOIN FETCH a.pet
+    WHERE a.applicant.id = :applicantId
+    ORDER BY a.submittedAt DESC
+    """)
+    List<AdoptionApplication> findApplicationsWithPetByApplicantId(
+            @Param("applicantId") Long applicantId
     );
 }
