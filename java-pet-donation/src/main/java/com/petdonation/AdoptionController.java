@@ -99,6 +99,11 @@ public class AdoptionController {
         return "redirect:/adoptions/thank-you";
     }
 
+    @GetMapping("/adoptions/thank-you")
+    public String adoptionThankYou() {
+        return "adoption-thank-you";
+    }
+
     public static class ApplicationForm {
 
         @NotBlank(message = "Please explain why you want to adopt this pet.")
