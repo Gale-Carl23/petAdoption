@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications | Pet Haven</title>
+</head>
+<body>
+
+<nav aria-label="Main navigation">
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/pets}">Our Pets</a>
+    <a th:href="@{/about}">About Us</a>
+    <a th:href="@{/donations}">Donations</a>
+    <a th:href="@{/adoptions/my-applications}">My Applications</a>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Log Out</button>
+    </form>
+</nav>
+
+<main>
+    <h1>My Adoption Applications</h1>
+
+    <p>Track the status of your pet adoption applications here.</p>
+
+    <div th:if="${applications.isEmpty()}">
+        <p>You haven't submitted any adoption applications yet.</p>
+        <a th:href="@{/pets}">Browse Available Pets</a>
+    </div>
+
+    <table th:unless="${applications.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Pet</th>
+            <th>Reason for Adoption</th>
+            <th>Housing Type</th>
+            <th>Pet Experience</th>
+            <th>Date Submitted</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="application : ${applications}">
+            <td th:text="${application.pet.name}">Pet name</td>
+            <td th:text="${application.reasonForAdoption}">Reason</td>
+            <td th:text="${application.housingType}">Housing</td>
+            <td th:text="${application.petExperience}">Experience</td>
+            <td th:text="${#temporals.format(application.submittedAt, 'MMM dd, yyyy HH:mm')}">
+                Submission date
+            </td>
+            <td th:text="${application.status}">PENDING</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+</body>
+</html>
