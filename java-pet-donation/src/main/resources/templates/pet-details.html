@@ -56,11 +56,18 @@
                     <span th:text="${pet.status}">AVAILABLE</span>
                 </p>
 
-                <a th:if="${pet.status == 'AVAILABLE'}"
-                   class="primary-button"
-                   th:href="@{/adoptions/apply/{petId}(petId=${pet.id})}">
-                    Apply to Adopt
-                </a>
+                <div th:if="${pet.status == 'AVAILABLE'}">
+
+                    <span th:if="${hasApplied}">
+                        <button type="button" disabled>Applied</button>
+                    </span>
+
+                    <a th:unless="${hasApplied}"
+                    th:href="@{/adoptions/apply/{petId}(petId=${pet.id})}">
+                        Apply to Adopt
+                    </a>
+
+                </div>
             </div>
         </div>
     </section>
