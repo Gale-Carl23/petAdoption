@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Submitted | Pet Haven</title>
+</head>
+<body>
+
+    <nav aria-label="Main navigation">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/pets}">Our Pets</a>
+        <a th:href="@{/about}">About Us</a>
+        <a th:href="@{/donations}">Donations</a>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Log Out</button>
+        </form>
+    </nav>
+
+    <main>
+        <h1>Thank You for Applying!</h1>
+
+        <p>
+            Your adoption application has been submitted successfully.
+        </p>
+
+        <p>
+            Our team will review your application. Submission does not
+            guarantee adoption; we will update you when a decision is made.
+        </p>
+
+        <a th:href="@{/pets}">Browse More Pets</a>
+        <a th:href="@{/}">Return Home</a>
+    </main>
+
+</body>
+</html>
