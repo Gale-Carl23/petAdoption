@@ -40,21 +40,37 @@ public class SecurityConfig {
         http
             .authenticationProvider(authenticationProvider)
             .authorizeHttpRequests(auth -> auth
+
+                // Public pages and static resources
                 .requestMatchers(
                     "/",
                     "/about",
                     "/pets",
+                    "/pets/**",
                     "/register",
                     "/login",
                     "/donations",
                     "/css/**",
                     "/images/**"
                 ).permitAll()
+
+                // Only ADMIN can manage pets.
+                // These patterns reserve the management URL namespace.
                 .requestMatchers(
-                    "/pets/**",
+                    "/admin/**"
+                ).hasRole("ADMIN")
+
+                // Authenticated adopter actions
+                .requestMatchers(
                     "/donations/form",
-                    "/donations/submit"
+                    "/donations/submit",
+                    "/donations/thank-you",
+                    "/adoptions/apply/**",
+                    "/adoptions/my-applications",
+                    "/adoptions/thank-you"
                 ).authenticated()
+
+                // Any other route requires login by default.
                 .anyRequest().authenticated()
             )
 
@@ -65,6 +81,7 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/", true)
                 .permitAll()
             )
+
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
