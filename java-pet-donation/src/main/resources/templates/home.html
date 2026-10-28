@@ -1,87 +1,118 @@
-﻿
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Haven | Adopt a Friend</title>
+    <title>Pawprints of Hope | Adopt, Donate, Give Hope</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Jua&family=Judson&family=Karla&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
+<body class="home-page">
 
-    <header th:replace="~{layout/base :: header}"></header>
+    <header class="home-site-header">
+        <a class="home-brand" th:href="@{/}" aria-label="Pawprints of Hope home">
+            <img class="home-brand__logo" th:src="@{/images/figma-home/pawprints-logo.png}" alt="">
+            <span class="home-brand__copy">
+                <span class="home-brand__name">Pawprints of Hope</span>
+                <span class="home-brand__tagline">Adopt, Donate, Give Hope</span>
+            </span>
+        </a>
+
+        <nav class="home-header-actions" aria-label="Account and adoption">
+            <a class="home-login" th:href="@{/login}"
+               th:unless="${#authorization.expression('isAuthenticated()')}">Log in</a>
+            <form class="home-logout" th:action="@{/logout}" method="post"
+                  th:if="${#authorization.expression('isAuthenticated()')}">
+                <button class="home-login" type="submit">Log out</button>
+            </form>
+            <a class="home-header-paw" th:href="@{/pets}" aria-label="Browse pets available for adoption">
+                <img th:src="@{/images/figma-home/header-paw.png}" alt="">
+            </a>
+        </nav>
+    </header>
 
     <main>
-        <section class="hero">
-            <p class="eyebrow">GIVE A PET A LOVING HOME</p>
-
-            <h1>Every pet deserves a second chance.</h1>
-
-            <p>
-                Meet your future companion and help us care for animals
-                waiting for a loving family.
-            </p>
-
-            <a class="primary-button" th:href="@{/pets}">
-                Meet Our Pets
-            </a>
+        <section class="home-hero" aria-labelledby="home-hero-title">
+            <div class="home-hero__copy">
+                <h1 id="home-hero-title">Small actions,<br><span>Big changes</span></h1>
+                <p>Adopt a pet, give them a second chance, and be part of a kinder tomorrow.</p>
+            </div>
+            <div class="home-hero__art" aria-hidden="true">
+                <div class="home-hero__blob-frame">
+                    <img class="home-hero__blob" th:src="@{/images/figma-home/community-pets.png}" alt="">
+                </div>
+                <img class="home-hero__dogs" th:src="@{/images/figma-home/hero-pets.png}" alt="">
+            </div>
         </section>
 
-        <section class="pets-section" id="pets">
+        <section class="home-help" aria-labelledby="home-help-title">
+            <div class="home-help__intro">
+                <h2 id="home-help-title">How You Can Help</h2>
+                <p>Every pet deserves a safe home and a chance to thrive.</p>
+            </div>
+
+            <div class="home-help__cards">
+                <a class="home-help-card" th:href="@{/pets}">
+                    <span class="home-help-card__icon-wrap" aria-hidden="true">
+                        <img class="home-help-card__circle" th:src="@{/images/figma-home/help-circle.svg}" alt="" width="100" height="100">
+                        <img class="home-help-card__icon home-help-card__icon--paw" th:src="@{/images/figma-home/header-paw.png}" alt="">
+                    </span>
+                    <span class="home-help-card__title">Adopt</span>
+                    <span class="home-help-card__description">Open your heart and give a pet a forever home.</span>
+                </a>
+
+                <a class="home-help-card" th:href="@{/donations}">
+                    <span class="home-help-card__icon-wrap" aria-hidden="true">
+                        <img class="home-help-card__circle" th:src="@{/images/figma-home/help-circle.svg}" alt="" width="100" height="100">
+                        <img class="home-help-card__icon home-help-card__icon--heart" th:src="@{/images/figma-home/donate-heart.png}" alt="">
+                    </span>
+                    <span class="home-help-card__title">Donate</span>
+                    <span class="home-help-card__description">Your support helps provide food, medical care, and shelter.</span>
+                </a>
+
+                <a class="home-help-card" th:href="@{/about}">
+                    <span class="home-help-card__icon-wrap" aria-hidden="true">
+                        <img class="home-help-card__circle" th:src="@{/images/figma-home/help-circle.svg}" alt="" width="100" height="100">
+                        <img class="home-help-card__icon home-help-card__icon--people" th:src="@{/images/figma-home/support-people.png}" alt="">
+                    </span>
+                    <span class="home-help-card__title">Support</span>
+                    <span class="home-help-card__description">Spread the word and be part of our community.</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="pets-section home-pets" id="pets" aria-labelledby="home-pets-title">
             <div class="section-heading">
                 <p class="eyebrow">FIND YOUR COMPANION</p>
-                <h2>Pets Looking for a Home</h2>
+                <h2 id="home-pets-title">Pets Looking for a Home</h2>
                 <p>Get to know some of the pets waiting to meet you.</p>
             </div>
 
-            <div th:if="${#lists.isEmpty(pets)}">
+            <div class="home-pets__empty" th:if="${#lists.isEmpty(pets)}">
                 <p>No pets have been added yet. Please check back later.</p>
             </div>
 
             <div class="pet-grid" th:unless="${#lists.isEmpty(pets)}">
-                <article class="pet-card"
-                         th:each="pet : ${pets}"
-                         th:if="${pet.status == 'AVAILABLE'}">
-
-                    <div class="pet-placeholder"
-                         th:if="${pet.imageUrl == null or #strings.isEmpty(pet.imageUrl)}"
-                         aria-hidden="true">🐾</div>
-
+                <article class="pet-card" th:each="pet : ${pets}" th:if="${pet.status == 'AVAILABLE'}">
+                    <div class="pet-placeholder" th:if="${pet.imageUrl == null or #strings.isEmpty(pet.imageUrl)}" aria-hidden="true">🐾</div>
                     <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
-                         th:src="${pet.imageUrl}"
-                         th:alt="${pet.name}">
-
+                         th:src="${pet.imageUrl}" th:alt="${pet.name}">
                     <div class="pet-info">
                         <h3 th:text="${pet.name}">Pet Name</h3>
                         <p th:text="${pet.age} + ' year(s) old'">Age</p>
                         <p th:text="${pet.breed}">Breed</p>
-
-                        <a class="text-link"
-                           th:href="@{/pets/{id}(id=${pet.id})}">
+                        <a class="text-link" th:href="@{/pets/{id}(id=${pet.id})}">
                             Meet <span th:text="${pet.name}">Pet</span>
                         </a>
                     </div>
                 </article>
             </div>
 
-            <a class="secondary-button" th:href="@{/pets}">
-                View All Pets
-            </a>
-        </section>
-
-        <section class="support-section">
-            <h2>Ready to Welcome a New Best Friend?</h2>
-
-            <p>
-                Find a companion who fits your family and lifestyle.
-                Every pet deserves a loving home.
-            </p>
-
-            <a class="secondary-button" th:href="@{/pets}">
-                Explore Available Pets
-            </a>
+            <a class="secondary-button" th:href="@{/pets}">View All Pets</a>
         </section>
     </main>
 
