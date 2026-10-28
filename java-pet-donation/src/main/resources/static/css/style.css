@@ -1483,6 +1483,90 @@ footer p {
 }
 
 
+/* Pet details return link */
+
+.pet-details-section {
+    width: min(100% - 40px, 1240px);
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 64px) 0 72px;
+}
+
+.pet-details-back {
+    margin-bottom: 24px;
+}
+
+.pet-details-back__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 7px 20px 7px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    color: var(--olive-dark);
+    font-size: 0.96rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: border-color var(--transition), background var(--transition), color var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+
+.pet-details-back__link:hover {
+    transform: translateY(-2px);
+    border-color: var(--olive-dark);
+    background: var(--olive-dark);
+    box-shadow: var(--shadow-md);
+    color: #fff;
+}
+
+.pet-details-back__arrow {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--olive-light);
+    color: var(--olive-dark);
+    font-size: 1.15rem;
+    place-items: center;
+    transition: background var(--transition), transform var(--transition);
+}
+
+.pet-details-back__link:hover .pet-details-back__arrow {
+    transform: translateX(-2px);
+    background: #fff;
+}
+
+.pet-details-back__link:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+    .pet-details-section {
+        width: min(100% - 32px, 1240px);
+        padding: 28px 0 48px;
+    }
+
+    .pet-details-back {
+        margin-bottom: 18px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pet-details-back__link,
+    .pet-details-back__arrow {
+        transition: none;
+    }
+
+    .pet-details-back__link:hover,
+    .pet-details-back__link:hover .pet-details-back__arrow {
+        transform: none;
+    }
+}
+
+
 /* ========================================
    PET HAVEN — DONATION FORM
    ======================================== */

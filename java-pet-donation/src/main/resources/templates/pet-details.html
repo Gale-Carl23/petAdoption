@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Details | Pet Haven</title>
+    <title>Meet a Pet | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
@@ -14,10 +14,13 @@
     <header th:replace="~{layout/base :: header}"></header>
 
     <main>
-        <section class="pet-details-section">
-            <a class="text-link" th:href="@{/pets}">
-                ← Back to Our Pets
-            </a>
+        <section class="pet-details-section" aria-label="Pet details">
+            <div class="pet-details-back">
+                <a class="pet-details-back__link" th:href="@{/pets}">
+                    <span class="pet-details-back__arrow" aria-hidden="true">←</span>
+                    <span>Back to all pets</span>
+                </a>
+            </div>
 
             <div class="pet-details-card">
                 <div class="pet-placeholder"
