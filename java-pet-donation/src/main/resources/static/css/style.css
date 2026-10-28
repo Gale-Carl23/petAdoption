@@ -2791,3 +2791,80 @@ footer p {
     outline: 3px solid var(--yellow);
     outline-offset: 4px;
 }
+
+/* Registration page follows the login form system */
+.register-page .auth-section {
+    min-height: 0;
+    padding: clamp(42px, 7vh, 78px) 20px;
+}
+
+.register-page .auth-card {
+    width: min(100%, 500px);
+    padding: clamp(28px, 5vw, 44px);
+    border-radius: 30px;
+}
+
+.register-page .auth-card h1 {
+    margin: 12px 0;
+    color: var(--olive-dark);
+    font-size: clamp(2rem, 4vw, 2.65rem);
+    letter-spacing: -.04em;
+}
+
+.register-page .auth-card .auth-card__intro {
+    margin: 0 0 27px;
+    line-height: 1.7;
+}
+
+.register-page .auth-card form .form-group {
+    margin-bottom: 19px;
+}
+
+.register-page .auth-card form label {
+    color: var(--text);
+    font-size: .92rem;
+    font-weight: 700;
+}
+
+.register-page .auth-card form input {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fffefa;
+    color: var(--text);
+}
+
+.register-page .auth-card form input:focus-visible {
+    border-color: var(--olive);
+    outline: 3px solid rgb(101 115 75 / 18%);
+    outline-offset: 1px;
+}
+
+.register-page .auth-card form button[type="submit"] {
+    min-height: 50px;
+    margin-top: 3px;
+    border-radius: var(--radius-sm);
+}
+
+.register-page .auth-card .auth-card__switch {
+    margin: 23px 0 15px;
+    font-size: .92rem;
+    text-align: center;
+}
+
+.auth-field-hint,
+.auth-field-error {
+    margin: 6px 0 0;
+    font-size: .83rem;
+    line-height: 1.5;
+}
+
+.auth-field-hint {
+    color: var(--muted);
+}
+
+.auth-field-error {
+    color: #8a3c31;
+}

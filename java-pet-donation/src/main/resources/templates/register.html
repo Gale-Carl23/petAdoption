@@ -5,21 +5,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register | Pet Haven</title>
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Create Account | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
+<body class="register-page">
+    <header th:replace="~{layout/base :: header}"></header>
 
     <main class="auth-section">
         <section class="auth-card">
-            <p class="eyebrow">WELCOME TO PET HAVEN</p>
+            <p class="landing-eyebrow">A NEW CHAPTER STARTS HERE</p>
 
-            <h1>Create Your Account</h1>
+            <h1>Join our community.</h1>
 
-            <p>Register to begin your pet adoption journey.</p>
+            <p class="auth-card__intro">Create an account to apply to adopt and follow your application updates.</p>
 
-            <p th:if="${registrationError}"
+            <p class="auth-message auth-message--error"
+               th:if="${registrationError}"
                th:text="${registrationError}"
                role="alert"></p>
 
@@ -37,6 +40,7 @@
                            required>
 
                     <p th:if="${#fields.hasErrors('fullName')}"
+                       class="auth-field-error"
                        th:errors="*{fullName}"></p>
                 </div>
 
@@ -50,6 +54,7 @@
                            required>
 
                     <p th:if="${#fields.hasErrors('email')}"
+                       class="auth-field-error"
                        th:errors="*{email}"></p>
                 </div>
 
@@ -64,7 +69,10 @@
                            maxlength="72"
                            required>
 
+                    <p class="auth-field-hint">Use at least 8 characters.</p>
+
                     <p th:if="${#fields.hasErrors('password')}"
+                       class="auth-field-error"
                        th:errors="*{password}"></p>
                 </div>
 
@@ -73,14 +81,15 @@
                 </button>
             </form>
 
-            <p>
+            <p class="auth-card__switch">
                 Already have an account?
                 <a th:href="@{/login}">Log in</a>
             </p>
 
-            <a th:href="@{/}">Back to Home</a>
+            <a class="auth-card__home" th:href="@{/}">← Back to home</a>
         </section>
     </main>
 
+    <footer th:replace="~{layout/base :: footer}"></footer>
 </body>
 </html>
