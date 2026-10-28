@@ -1,14 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adopt a Pet | Pawprints of Hope</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Itim&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Our Pets | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
@@ -16,38 +13,64 @@
 
     <header th:replace="~{layout/base :: header}"></header>
 
-    <main>
-        <section class="pets-gallery" aria-label="Pets available for adoption">
-            <div class="pets-gallery__empty" th:if="${#lists.isEmpty(pets)}">
-                <p>No pets are available right now. Please check back soon.</p>
+    <main class="pets-page__main">
+        <section class="pets-listing" aria-labelledby="pets-title">
+            <div class="pets-listing__heading">
+                <div>
+                    <p class="landing-eyebrow">READY FOR A NEW FRIEND?</p>
+                    <h1 id="pets-title">Meet our pets</h1>
+                    <p class="pets-listing__intro">Take a look at the pets waiting for a safe and loving home.</p>
+                </div>
             </div>
 
-            <div class="pets-carousel" th:unless="${#lists.isEmpty(pets)}">
-                <div class="pets-carousel__track" id="pets-carousel-track">
-                    <article class="pets-card" th:each="pet : ${pets}">
-                        <a class="pets-card__link" th:href="@{/pets/{id}(id=${pet.id})}">
-                            <div class="pets-card__photo">
-                                <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
-                                     th:src="${pet.imageUrl}" th:alt="${pet.name}">
-                                <span class="pets-card__placeholder"
-                                      th:unless="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
-                                      aria-hidden="true">🐾</span>
-                            </div>
-                            <div class="pets-card__details">
-                                <h1 th:text="${pet.name}">Korgi the Brownie</h1>
-                                <p>
-                                    <span th:text="${pet.age}">1</span>
-                                    <span th:text="${pet.age == 1 ? 'yr' : 'yrs'}">yr</span> old
-                                </p>
-                            </div>
-                        </a>
-                    </article>
+            <div class="pets-empty-state" th:if="${#lists.isEmpty(pets)}">
+                <span class="pets-empty-state__paw" aria-hidden="true">🐾</span>
+                <h2>Our next story starts soon.</h2>
+                <p>There are no pets available right now. Please check back again.</p>
+            </div>
+
+            <div class="pets-carousel" th:unless="${#lists.isEmpty(pets)}" role="region" aria-label="Our pets carousel">
+                <div class="pets-carousel__viewport" id="pets-carousel-viewport">
+                    <div class="pets-carousel__track" id="pets-carousel-track">
+                        <article class="pets-card" th:each="pet : ${pets}">
+                            <a class="pets-card__link" th:href="@{/pets/{id}(id=${pet.id})}">
+                                <div class="pets-card__photo">
+                                    <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
+                                         th:src="${pet.imageUrl}" th:alt="${pet.name}">
+                                    <span class="pets-card__placeholder"
+                                          th:unless="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
+                                          aria-hidden="true">🐾</span>
+                                </div>
+                                <div class="pets-card__details">
+                                    <div class="pets-card__name-row">
+                                        <h2 th:text="${pet.name}">Korgi the Brownie</h2>
+                                        <span class="pets-card__arrow" aria-hidden="true">↗</span>
+                                    </div>
+                                    <p class="pets-card__meta">
+                                        <span th:text="${pet.breed}">Corgi</span>
+                                        <span aria-hidden="true">·</span>
+                                        <span th:text="${pet.age}">1</span>
+                                        <span th:text="${pet.age == 1 ? 'year' : 'years'}">year</span>
+                                    </p>
+                                </div>
+                            </a>
+                        </article>
+                    </div>
                 </div>
 
-                <button class="pets-carousel__next" type="button" aria-label="Show more pets"
-                        th:disabled="${#lists.size(pets) <= 3}">
-                    <img th:src="@{/images/figma-pets/next-pets.png}" alt="">
-                </button>
+                <div class="pets-carousel__controls">
+                    <p class="pets-carousel__count" id="pets-carousel-count" aria-live="polite"></p>
+                    <div class="pets-carousel__buttons">
+                        <button class="pets-carousel__button" type="button" data-direction="previous"
+                                aria-label="Previous pets" aria-controls="pets-carousel-viewport">
+                            <span aria-hidden="true">←</span>
+                        </button>
+                        <button class="pets-carousel__button" type="button" data-direction="next"
+                                aria-label="Next pets" aria-controls="pets-carousel-viewport">
+                            <span aria-hidden="true">→</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -55,10 +78,57 @@
     <footer th:replace="~{layout/base :: footer}"></footer>
 
     <script>
-        document.querySelector('.pets-carousel__next')?.addEventListener('click', () => {
+        (() => {
+            const viewport = document.querySelector('#pets-carousel-viewport');
             const track = document.querySelector('#pets-carousel-track');
-            if (track) track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
-        });
+            if (!viewport || !track) return;
+
+            const buttons = document.querySelectorAll('.pets-carousel__button');
+            const count = document.querySelector('#pets-carousel-count');
+            const cards = Array.from(track.querySelectorAll('.pets-card'));
+            let updateFrame = 0;
+
+            const visibleCount = () => {
+                if (!cards.length) return 0;
+                const firstCard = cards[0].getBoundingClientRect();
+                const secondCard = cards[1]?.getBoundingClientRect();
+                const gap = secondCard ? secondCard.left - firstCard.right : 0;
+                return Math.max(1, Math.floor((viewport.clientWidth + gap) / (firstCard.width + gap)));
+            };
+
+            const updateControls = () => {
+                const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+                const atStart = viewport.scrollLeft <= 2;
+                const atEnd = viewport.scrollLeft >= maxScroll - 2;
+                buttons.forEach((button) => {
+                    button.disabled = maxScroll <= 2 ||
+                        (button.dataset.direction === 'previous' ? atStart : atEnd);
+                });
+
+                if (count) {
+                    const visible = visibleCount();
+                    const viewportLeft = viewport.getBoundingClientRect().left;
+                    const firstVisible = cards.findIndex((card) =>
+                        card.getBoundingClientRect().right > viewportLeft + 2);
+                    const start = Math.min(cards.length, Math.max(0, firstVisible) + 1);
+                    const end = Math.min(cards.length, start + visible - 1);
+                    count.textContent = `${start}–${end} of ${cards.length} pets`;
+                }
+            };
+
+            buttons.forEach((button) => button.addEventListener('click', () => {
+                const direction = button.dataset.direction === 'next' ? 1 : -1;
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                viewport.scrollBy({ left: direction * viewport.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
+            }));
+
+            viewport.addEventListener('scroll', () => {
+                cancelAnimationFrame(updateFrame);
+                updateFrame = requestAnimationFrame(updateControls);
+            }, { passive: true });
+            window.addEventListener('resize', updateControls);
+            updateControls();
+        })();
     </script>
 
 </body>

@@ -45,7 +45,34 @@ public class DataInitializer {
                 chi.setStatus("AVAILABLE");
                 petRepository.save(chi);
 
-                System.out.println("Sample pets added successfully.");
+                Pet pug = new Pet();
+                pug.setName("Pug the Brownie");
+                pug.setBreed("Pug");
+                pug.setAge(4);
+                pug.setDescription("A cheerful dog hoping to find a caring family.");
+                pug.setImageUrl("/images/figma-pets/pug-card.png");
+                pug.setStatus("AVAILABLE");
+                petRepository.save(pug);
+
+                Pet husk = new Pet();
+                husk.setName("Husk the Brownie");
+                husk.setBreed("Siberian Husky");
+                husk.setAge(5);
+                husk.setDescription("A kind, energetic companion ready for a forever home.");
+                husk.setImageUrl("/images/figma-pets/husk-card.png");
+                husk.setStatus("AVAILABLE");
+                petRepository.save(husk);
+
+                Pet goldi = new Pet();
+                goldi.setName("Goldi the Brownie");
+                goldi.setBreed("Golden Retriever");
+                goldi.setAge(6);
+                goldi.setDescription("A gentle friend waiting to meet a loving family.");
+                goldi.setImageUrl("/images/figma-pets/goldi-card.png");
+                goldi.setStatus("AVAILABLE");
+                petRepository.save(goldi);
+
+                System.out.println("Six sample pets added successfully.");
             }
         };
     }
