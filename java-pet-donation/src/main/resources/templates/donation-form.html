@@ -5,13 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Donation Form | Pet Haven</title>
-
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Donation Form | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
+<body class="donation-form-page">
 
     <!-- Shared navigation -->
     <header th:replace="~{layout/base :: header}"></header>
@@ -20,14 +19,15 @@
 
         <!-- Page introduction -->
         <section class="donation-form-heading">
-            <p class="eyebrow">SUPPORT PET HAVEN</p>
+            <p class="landing-eyebrow">YOUR KINDNESS MATTERS</p>
 
             <h1>Make a Donation</h1>
 
             <p>
-                Every contribution helps us provide food, shelter,
-                and care for animals waiting for a loving home.
-                Thank you for being part of their journey.
+                Your support helps provide daily care for pets waiting for a loving home. Share your donation details below so our team can review your contribution.
+            </p>
+            <p class="donation-form-login-note" th:unless="${#authorization.expression('isAuthenticated()')}">
+                Please <a th:href="@{/login}">sign in</a> before submitting your donation.
             </p>
         </section>
 
@@ -159,7 +159,7 @@
 
                     <p>
                         Your donation details and payment proof will be
-                        reviewed by the Pet Haven team before verification.
+                        reviewed by the Pawprints of Hope team before verification.
                     </p>
                 </div>
 
@@ -176,7 +176,7 @@
         <div class="donation-back">
             <a class="back-link" th:href="@{/donations}">
                 <span aria-hidden="true">←</span>
-                Back to Donations
+                Back to donations
             </a>
         </div>
 

@@ -2534,3 +2534,56 @@ footer p {
         max-width: 520px;
     }
 }
+
+/* Donation form page alignment */
+.donation-form-page .donation-form-section {
+    padding-top: clamp(52px, 7vw, 82px);
+}
+
+.donation-form-page .donation-form-heading .landing-eyebrow {
+    margin-bottom: 8px;
+}
+
+.donation-form-login-note {
+    margin: 15px auto 0;
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+.donation-form-login-note a {
+    color: var(--olive-dark);
+    font-weight: 800;
+    text-underline-offset: 3px;
+}
+
+.donation-form-page .donation-back .back-link {
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--white);
+    text-decoration: none;
+    transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.donation-form-page .donation-back .back-link:hover {
+    border-color: #cbd3bd;
+    background: #f3f5ee;
+    transform: translateX(-2px);
+}
+
+.donation-form-page .donation-back .back-link:focus-visible,
+.donation-form-login-note a:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .donation-form-page .donation-back .back-link {
+        transition: none;
+    }
+
+    .donation-form-page .donation-back .back-link:hover {
+        transform: none;
+    }
+}
