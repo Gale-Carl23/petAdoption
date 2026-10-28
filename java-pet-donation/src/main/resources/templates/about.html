@@ -4,64 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us | Pet Haven</title>
+    <meta name="theme-color" content="#f8f5ec">
+    <title>About Us | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
-
+<body class="about-page">
     <header th:replace="~{layout/base :: header}"></header>
 
     <main>
-        <section class="hero">
-            <p class="eyebrow">ABOUT PET HAVEN</p>
-
-            <h1>Every paw deserves love.</h1>
-
-            <p>
-                Pet Haven connects animals waiting for a home with people
-                ready to give them care, safety, and companionship.
-            </p>
+        <section class="about-intro" aria-labelledby="about-title">
+            <div class="about-intro__copy">
+                <p class="landing-eyebrow">A LITTLE ABOUT US</p>
+                <h1 id="about-title">Good things happen when every pet has a place to call home.</h1>
+                <p class="about-intro__lead">Pawprints of Hope brings adoptable pets and caring people together. We make it easier to find a companion, learn what they need, and take the first step toward a lasting home.</p>
+                <a class="primary-button" th:href="@{/pets}">Meet the pets <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="about-intro__art" aria-hidden="true">
+                <span class="about-intro__sun"></span>
+                <span class="about-intro__paw">🐾</span>
+                <p>Every new beginning starts with a little love.</p>
+            </div>
         </section>
 
-        <section class="pets-section">
-            <div class="section-heading">
-                <p class="eyebrow">OUR PURPOSE</p>
-                <h2>Helping Pets Find Loving Families</h2>
+        <section class="about-purpose" aria-labelledby="purpose-title">
+            <div class="about-section-heading">
+                <p class="landing-eyebrow">WHY WE'RE HERE</p>
+                <h2 id="purpose-title">A thoughtful start to a forever friendship.</h2>
+                <p>Adoption is a big, happy decision. We want every person and pet to feel ready for it.</p>
             </div>
-
-            <div class="support-section">
-                <h2>Our Mission</h2>
-
-                <p>
-                    Our mission is to make pet adoption more accessible by
-                    helping prospective adopters discover animals and learn
-                    about their needs before applying.
-                </p>
+            <div class="about-purpose__grid">
+                <article class="about-purpose__card">
+                    <span class="about-purpose__icon" aria-hidden="true">♡</span>
+                    <h3>Our mission</h3>
+                    <p>Help people discover pets who fit their lives, with the details and guidance to make a confident choice.</p>
+                </article>
+                <article class="about-purpose__card">
+                    <span class="about-purpose__icon about-purpose__icon--warm" aria-hidden="true">⌂</span>
+                    <h3>Our hope</h3>
+                    <p>Build a community where every adoptable pet gets the chance to feel safe, cared for, and truly at home.</p>
+                </article>
             </div>
+        </section>
 
-            <div class="support-section">
-                <h2>Our Vision</h2>
-
-                <p>
-                    We envision a community where every adoptable pet has
-                    the opportunity to find a safe, caring, and permanent home.
-                </p>
+        <section class="about-steps" aria-labelledby="steps-title">
+            <div class="about-steps__heading">
+                <p class="landing-eyebrow">YOUR NEXT CHAPTER</p>
+                <h2 id="steps-title">Finding your new best friend is simple.</h2>
             </div>
-
-            <div class="support-section">
-                <h2>Ready to Meet Your Companion?</h2>
-
-                <p>Explore the pets waiting for their new families.</p>
-
-                <a class="primary-button" th:href="@{/pets}">
-                    Meet Our Pets
-                </a>
-            </div>
+            <ol class="about-steps__list">
+                <li><span>01</span><div><h3>Get to know them</h3><p>Browse the pets and find a personality that feels right.</p></div></li>
+                <li><span>02</span><div><h3>Learn what they need</h3><p>Read each pet's details and picture your life together.</p></div></li>
+                <li><span>03</span><div><h3>Take the first step</h3><p>Reach out and begin the conversation about adoption.</p></div></li>
+            </ol>
         </section>
     </main>
 
     <footer th:replace="~{layout/base :: footer}"></footer>
-
 </body>
 </html>
