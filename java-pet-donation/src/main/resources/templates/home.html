@@ -4,115 +4,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pawprints of Hope | Adopt, Donate, Give Hope</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Jua&family=Judson&family=Karla&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Pawprints of Hope | Find your new best friend</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body class="home-page">
+<body class="landing-page">
 
-    <header class="home-site-header">
-        <a class="home-brand" th:href="@{/}" aria-label="Pawprints of Hope home">
-            <img class="home-brand__logo" th:src="@{/images/figma-home/pawprints-logo.png}" alt="">
-            <span class="home-brand__copy">
-                <span class="home-brand__name">Pawprints of Hope</span>
-                <span class="home-brand__tagline">Adopt, Donate, Give Hope</span>
-            </span>
-        </a>
-
-        <nav class="home-header-actions" aria-label="Account and adoption">
-            <a class="home-login" th:href="@{/login}"
-               th:unless="${#authorization.expression('isAuthenticated()')}">Log in</a>
-            <form class="home-logout" th:action="@{/logout}" method="post"
-                  th:if="${#authorization.expression('isAuthenticated()')}">
-                <button class="home-login" type="submit">Log out</button>
-            </form>
-            <a class="home-header-paw" th:href="@{/pets}" aria-label="Browse pets available for adoption">
-                <img th:src="@{/images/figma-home/header-paw.png}" alt="">
-            </a>
-        </nav>
-    </header>
+    <header th:replace="~{layout/base :: header}"></header>
 
     <main>
-        <section class="home-hero" aria-labelledby="home-hero-title">
-            <div class="home-hero__copy">
-                <h1 id="home-hero-title">Small actions,<br><span>Big changes</span></h1>
-                <p>Adopt a pet, give them a second chance, and be part of a kinder tomorrow.</p>
-            </div>
-            <div class="home-hero__art" aria-hidden="true">
-                <div class="home-hero__blob-frame">
-                    <img class="home-hero__blob" th:src="@{/images/figma-home/community-pets.png}" alt="">
+        <section class="landing-hero" aria-labelledby="landing-title">
+            <div class="landing-hero__copy">
+                <p class="landing-eyebrow">Pawprints of Hope</p>
+                <h1 id="landing-title">A new friend.<br>A brighter future.</h1>
+                <p class="landing-hero__intro">
+                    Meet a pet who needs a home, or help us care for animals still waiting for theirs.
+                </p>
+                <div class="landing-hero__actions">
+                    <a class="primary-button" th:href="@{/pets}">Meet our pets</a>
+                    <a class="landing-text-link" th:href="@{/donations}">Help a pet in need <span aria-hidden="true">→</span></a>
                 </div>
-                <img class="home-hero__dogs" th:src="@{/images/figma-home/hero-pets.png}" alt="">
+                <p class="landing-hero__note">Every paw deserves a safe, loving home.</p>
+            </div>
+
+            <div class="landing-hero__visual" aria-hidden="true">
+                <div class="landing-hero__shape"></div>
+                <img class="landing-hero__pets" th:src="@{/images/figma-home/hero-pets.png}" alt="">
+                <div class="landing-hero__badge">Adopt <span>·</span> Donate <span>·</span> Give hope</div>
             </div>
         </section>
 
-        <section class="home-help" aria-labelledby="home-help-title">
-            <div class="home-help__intro">
-                <h2 id="home-help-title">How You Can Help</h2>
-                <p>Every pet deserves a safe home and a chance to thrive.</p>
+        <section class="landing-help" aria-labelledby="landing-help-title">
+            <div class="landing-section-heading">
+                <p class="landing-eyebrow">MAKE A DIFFERENCE</p>
+                <h2 id="landing-help-title">A little help goes a long way.</h2>
+                <p>There are many ways to make life better for a pet.</p>
             </div>
 
-            <div class="home-help__cards">
-                <a class="home-help-card" th:href="@{/pets}">
-                    <span class="home-help-card__icon-wrap" aria-hidden="true">
-                        <img class="home-help-card__circle" th:src="@{/images/figma-home/help-circle.svg}" alt="" width="100" height="100">
-                        <img class="home-help-card__icon home-help-card__icon--paw" th:src="@{/images/figma-home/header-paw.png}" alt="">
+            <div class="landing-help__grid">
+                <a class="landing-help-card" th:href="@{/pets}">
+                    <span class="landing-help-card__icon landing-help-card__icon--paw" aria-hidden="true">
+                        <img th:src="@{/images/figma-home/header-paw.png}" alt="">
                     </span>
-                    <span class="home-help-card__title">Adopt</span>
-                    <span class="home-help-card__description">Open your heart and give a pet a forever home.</span>
+                    <span class="landing-help-card__title">Adopt</span>
+                    <span class="landing-help-card__copy">Give a pet the loving home they deserve.</span>
+                    <span class="landing-help-card__link">Meet the pets <span aria-hidden="true">→</span></span>
                 </a>
 
-                <a class="home-help-card" th:href="@{/donations}">
-                    <span class="home-help-card__icon-wrap" aria-hidden="true">
-                        <img class="home-help-card__circle" th:src="@{/images/figma-home/help-circle.svg}" alt="" width="100" height="100">
-                        <img class="home-help-card__icon home-help-card__icon--heart" th:src="@{/images/figma-home/donate-heart.png}" alt="">
+                <a class="landing-help-card" th:href="@{/donations}">
+                    <span class="landing-help-card__icon landing-help-card__icon--heart" aria-hidden="true">
+                        <img th:src="@{/images/figma-home/donate-heart.png}" alt="">
                     </span>
-                    <span class="home-help-card__title">Donate</span>
-                    <span class="home-help-card__description">Your support helps provide food, medical care, and shelter.</span>
+                    <span class="landing-help-card__title">Donate</span>
+                    <span class="landing-help-card__copy">Help provide food, shelter, and medical care.</span>
+                    <span class="landing-help-card__link">See how to help <span aria-hidden="true">→</span></span>
                 </a>
 
-                <a class="home-help-card" th:href="@{/about}">
-                    <span class="home-help-card__icon-wrap" aria-hidden="true">
-                        <img class="home-help-card__circle" th:src="@{/images/figma-home/help-circle.svg}" alt="" width="100" height="100">
-                        <img class="home-help-card__icon home-help-card__icon--people" th:src="@{/images/figma-home/support-people.png}" alt="">
+                <a class="landing-help-card" th:href="@{/about}">
+                    <span class="landing-help-card__icon landing-help-card__icon--people" aria-hidden="true">
+                        <img th:src="@{/images/figma-home/support-people.png}" alt="">
                     </span>
-                    <span class="home-help-card__title">Support</span>
-                    <span class="home-help-card__description">Spread the word and be part of our community.</span>
+                    <span class="landing-help-card__title">Get involved</span>
+                    <span class="landing-help-card__copy">Share our work and help more pets find a family.</span>
+                    <span class="landing-help-card__link">About our community <span aria-hidden="true">→</span></span>
                 </a>
             </div>
-        </section>
-
-        <section class="pets-section home-pets" id="pets" aria-labelledby="home-pets-title">
-            <div class="section-heading">
-                <p class="eyebrow">FIND YOUR COMPANION</p>
-                <h2 id="home-pets-title">Pets Looking for a Home</h2>
-                <p>Get to know some of the pets waiting to meet you.</p>
-            </div>
-
-            <div class="home-pets__empty" th:if="${#lists.isEmpty(pets)}">
-                <p>No pets have been added yet. Please check back later.</p>
-            </div>
-
-            <div class="pet-grid" th:unless="${#lists.isEmpty(pets)}">
-                <article class="pet-card" th:each="pet : ${pets}" th:if="${pet.status == 'AVAILABLE'}">
-                    <div class="pet-placeholder" th:if="${pet.imageUrl == null or #strings.isEmpty(pet.imageUrl)}" aria-hidden="true">🐾</div>
-                    <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
-                         th:src="${pet.imageUrl}" th:alt="${pet.name}">
-                    <div class="pet-info">
-                        <h3 th:text="${pet.name}">Pet Name</h3>
-                        <p th:text="${pet.age} + ' year(s) old'">Age</p>
-                        <p th:text="${pet.breed}">Breed</p>
-                        <a class="text-link" th:href="@{/pets/{id}(id=${pet.id})}">
-                            Meet <span th:text="${pet.name}">Pet</span>
-                        </a>
-                    </div>
-                </article>
-            </div>
-
-            <a class="secondary-button" th:href="@{/pets}">View All Pets</a>
         </section>
     </main>
 
