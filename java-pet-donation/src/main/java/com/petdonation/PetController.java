@@ -29,7 +29,9 @@ public class PetController {
 
     @GetMapping("/pets")
     public String listPets(Model model) {
-        model.addAttribute("pets", petService.getAllPets());
+        model.addAttribute("pets", petService.getAllPets().stream()
+                .filter(pet -> "AVAILABLE".equals(pet.getStatus()))
+                .toList());
         return "pets";
     }
 

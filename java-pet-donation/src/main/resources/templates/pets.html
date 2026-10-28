@@ -5,56 +5,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Pets | Pet Haven</title>
+    <title>Adopt a Pet | Pawprints of Hope</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Itim&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
+<body class="pets-page">
 
-    <header th:replace="~{layout/base :: header}"></header>
+    <header th:replace="~{layout/base :: petsHeader}"></header>
 
     <main>
-        <section class="pets-section">
-            <div class="section-heading">
-                <p class="eyebrow">FIND YOUR COMPANION</p>
-                <h1>Available Pets for Adoption</h1>
-                <p>Meet the animals waiting for a loving family.</p>
+        <section class="pets-gallery" aria-label="Pets available for adoption">
+            <div class="pets-gallery__empty" th:if="${#lists.isEmpty(pets)}">
+                <p>No pets are available right now. Please check back soon.</p>
             </div>
 
-            <div th:if="${#lists.isEmpty(pets)}">
-                <p>No pets have been added yet. Please check back later.</p>
-            </div>
-
-            <div class="pet-grid" th:unless="${#lists.isEmpty(pets)}">
-                <article class="pet-card"
-                         th:each="pet : ${pets}"
-                         th:if="${pet.status == 'AVAILABLE'}">
-
-                    <div class="pet-placeholder"
-                         th:if="${pet.imageUrl == null or #strings.isEmpty(pet.imageUrl)}"
-                         aria-hidden="true">🐾</div>
-
-                    <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
-                         th:src="${pet.imageUrl}"
-                         th:alt="${pet.name}">
-
-                    <div class="pet-info">
-                        <h2 th:text="${pet.name}">Pet Name</h2>
-                        <p th:text="'Breed: ' + ${pet.breed}">Breed</p>
-                        <p th:text="${pet.age} + ' year(s) old'">Age</p>
-                        <p th:text="${pet.description}">Pet description</p>
-
-                        <a class="text-link"
-                           th:href="@{/pets/{id}(id=${pet.id})}">
-                            View Details
+            <div class="pets-carousel" th:unless="${#lists.isEmpty(pets)}">
+                <div class="pets-carousel__track" id="pets-carousel-track">
+                    <article class="pets-card" th:each="pet : ${pets}">
+                        <a class="pets-card__link" th:href="@{/pets/{id}(id=${pet.id})}">
+                            <div class="pets-card__photo">
+                                <img th:if="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
+                                     th:src="${pet.imageUrl}" th:alt="${pet.name}">
+                                <span class="pets-card__placeholder"
+                                      th:unless="${pet.imageUrl != null and !#strings.isEmpty(pet.imageUrl)}"
+                                      aria-hidden="true">🐾</span>
+                            </div>
+                            <div class="pets-card__details">
+                                <h1 th:text="${pet.name}">Korgi the Brownie</h1>
+                                <p>
+                                    <span th:text="${pet.age}">1</span>
+                                    <span th:text="${pet.age == 1 ? 'yr' : 'yrs'}">yr</span> old
+                                </p>
+                            </div>
                         </a>
-                    </div>
-                </article>
+                    </article>
+                </div>
+
+                <button class="pets-carousel__next" type="button" aria-label="Show more pets"
+                        th:disabled="${#lists.size(pets) <= 3}">
+                    <img th:src="@{/images/figma-pets/next-pets.png}" alt="">
+                </button>
             </div>
         </section>
     </main>
 
     <footer th:replace="~{layout/base :: footer}"></footer>
+
+    <script>
+        document.querySelector('.pets-carousel__next')?.addEventListener('click', () => {
+            const track = document.querySelector('#pets-carousel-track');
+            if (track) track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
+        });
+    </script>
 
 </body>
 </html>

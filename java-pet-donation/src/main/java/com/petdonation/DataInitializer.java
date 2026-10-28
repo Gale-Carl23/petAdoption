@@ -16,18 +16,36 @@ public class DataInitializer {
             if (petRepository.count() == 0) {
                 Pet pet = new Pet();
 
-                pet.setName("Korgi");
+                pet.setName("Korgi the Brownie");
                 pet.setBreed("Corgi");
                 pet.setAge(1);
                 pet.setDescription(
                     "A friendly dog looking for a loving home."
                 );
-                pet.setImageUrl(null);
+                pet.setImageUrl("/images/figma-pets/korgi-card.png");
                 pet.setStatus("AVAILABLE");
 
                 petRepository.save(pet);
 
-                System.out.println("Sample pet added successfully.");
+                Pet chow = new Pet();
+                chow.setName("Chow the Brownie");
+                chow.setBreed("Mixed Breed");
+                chow.setAge(2);
+                chow.setDescription("A gentle companion ready to meet a loving family.");
+                chow.setImageUrl("/images/figma-pets/chow-card.png");
+                chow.setStatus("AVAILABLE");
+                petRepository.save(chow);
+
+                Pet chi = new Pet();
+                chi.setName("Chi the Brownie");
+                chi.setBreed("Chihuahua Mix");
+                chi.setAge(3);
+                chi.setDescription("A bright, affectionate dog looking for a forever home.");
+                chi.setImageUrl("/images/figma-pets/chi-card.png");
+                chi.setStatus("AVAILABLE");
+                petRepository.save(chi);
+
+                System.out.println("Sample pets added successfully.");
             }
         };
     }

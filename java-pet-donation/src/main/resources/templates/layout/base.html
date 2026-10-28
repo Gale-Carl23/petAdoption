@@ -39,6 +39,25 @@
         </nav>
     </header>
 
+    <header class="site-header figma-pets-header" th:fragment="petsHeader">
+        <a class="figma-pets-brand" th:href="@{/}" aria-label="Pawprints of Hope home">
+            <img th:src="@{/images/figma-pets/pawprints-logo.png}" alt="">
+        </a>
+
+        <nav class="figma-pets-nav" aria-label="Main navigation">
+            <a class="figma-pets-nav__home" th:href="@{/}">Home</a>
+            <a th:href="@{/donations}">Donations</a>
+            <a th:href="@{/about}">About Us</a>
+
+            <form class="figma-pets-logout" th:action="@{/logout}" method="post"
+                  th:if="${#authorization.expression('isAuthenticated()')}">
+                <button type="submit">Log Out</button>
+            </form>
+            <a th:href="@{/login}"
+               th:unless="${#authorization.expression('isAuthenticated()')}">Log In</a>
+        </nav>
+    </header>
+
     <footer th:fragment="footer">
         <p>Pet Haven · Every paw deserves love.</p>
     </footer>

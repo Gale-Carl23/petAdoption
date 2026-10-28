@@ -1234,6 +1234,344 @@ footer p {
 }
 
 
+/* Figma pet adoption listing */
+
+.pets-page {
+    background: #6c6e58;
+    color: #3f421d;
+    font-family: "Itim", cursive;
+}
+
+.pets-page .figma-pets-header {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: 100%;
+    height: clamp(82px, 10vw, 192px);
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: #d9d28b;
+}
+
+.figma-pets-brand {
+    position: absolute;
+    z-index: 1;
+    top: -5.25vw;
+    left: -4.5vw;
+    display: block;
+    width: min(20.6vw, 395px);
+    max-width: none;
+}
+
+.figma-pets-brand img {
+    width: 100%;
+    max-width: none;
+    height: auto;
+}
+
+.pets-page .figma-pets-nav {
+    position: absolute;
+    inset: 0 3vw 0 18.1vw;
+    display: grid;
+    grid-template-columns: 15.6vw 11.8vw 11.8vw 1fr;
+    align-items: center;
+    column-gap: 5.2vw;
+}
+
+.pets-page .figma-pets-nav a,
+.pets-page .figma-pets-logout button {
+    color: #11120d;
+    font-family: "Indie Flower", cursive;
+    font-size: clamp(1rem, 2.08vw, 2.5rem);
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.pets-page .figma-pets-nav a:hover,
+.pets-page .figma-pets-logout button:hover {
+    color: #fffef2;
+}
+
+.pets-page .figma-pets-nav .figma-pets-nav__home {
+    display: grid;
+    width: 15.6vw;
+    height: 4.7vw;
+    min-height: 42px;
+    border-radius: 999px;
+    background: #8e9162;
+    place-items: center;
+}
+
+.pets-page .figma-pets-logout {
+    justify-self: end;
+    margin: 0;
+}
+
+.pets-page .figma-pets-logout button {
+    padding: 10px 0;
+    border: 0;
+    background: transparent;
+    font-size: clamp(0.9rem, 1.56vw, 1.875rem);
+    cursor: pointer;
+}
+
+.pets-page main {
+    min-height: calc(100vh - clamp(82px, 10vw, 192px));
+    background: #6c6e58;
+}
+
+.pets-gallery {
+    position: relative;
+    min-height: calc(100vh - clamp(82px, 10vw, 192px));
+    padding: 8.3vw 1.67vw 4vw;
+    background: #6c6e58;
+}
+
+.pets-gallery__empty {
+    display: grid;
+    min-height: 36vw;
+    color: #f2f0d6;
+    font-family: "Itim", cursive;
+    font-size: clamp(1.2rem, 2vw, 2rem);
+    place-items: center;
+    text-align: center;
+}
+
+.pets-gallery__empty p {
+    margin: 0;
+}
+
+.pets-carousel {
+    position: relative;
+    max-width: 100%;
+}
+
+.pets-carousel__track {
+    display: grid;
+    grid-auto-columns: calc((100% - 4.6vw) / 3);
+    grid-auto-flow: column;
+    gap: 2.3vw;
+    overflow-x: auto;
+    padding-right: 1vw;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+}
+
+.pets-carousel__track::-webkit-scrollbar {
+    display: none;
+}
+
+.pets-card {
+    min-width: 0;
+    height: min(40vw, 767px);
+    overflow: hidden;
+    background: #b2bd7e;
+    scroll-snap-align: start;
+}
+
+.pets-card__link {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.pets-card__photo {
+    width: 100%;
+    height: min(29.7vw, 571px);
+    overflow: hidden;
+    background: #89916b;
+}
+
+.pets-card__photo img {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pets-card__placeholder {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    color: #f2f0d6;
+    font-size: clamp(3rem, 6vw, 7rem);
+    place-items: center;
+}
+
+.pets-card__details {
+    min-height: 10.3vw;
+    padding: 1.45vw;
+    background: #b2bd7e;
+}
+
+.pets-card__details h1 {
+    margin: 0;
+    color: #3f421d;
+    font-family: "Itim", cursive;
+    font-size: clamp(1.25rem, 2.6vw, 3.125rem);
+    font-weight: 400;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.pets-card__details p {
+    margin: 0.15em 0 0;
+    color: #3f421d;
+    font-family: "Itim", cursive;
+    font-size: clamp(1.2rem, 2.6vw, 3.125rem);
+    line-height: 1.2;
+}
+
+.pets-card__link:hover .pets-card__details h1 {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+}
+
+.pets-carousel__next {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    right: 0.45vw;
+    display: grid;
+    width: min(4.7vw, 90px);
+    min-width: 42px;
+    aspect-ratio: 1;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    opacity: 1;
+    place-items: center;
+    transform: translateY(-50%);
+}
+
+.pets-carousel__next:disabled {
+    cursor: default;
+}
+
+.pets-carousel__next img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.pets-page footer {
+    display: none;
+}
+
+@media (max-width: 760px) {
+    .pets-page .figma-pets-header {
+        height: 82px;
+    }
+
+    .figma-pets-brand {
+        top: -42px;
+        left: -38px;
+        width: 156px;
+    }
+
+    .pets-page .figma-pets-nav {
+        inset: 0 12px 0 118px;
+        grid-template-columns: minmax(70px, 1.05fr) minmax(66px, 1fr) minmax(66px, 1fr) minmax(54px, 0.75fr);
+        column-gap: clamp(4px, 1.2vw, 10px);
+    }
+
+    .pets-page .figma-pets-nav a,
+    .pets-page .figma-pets-logout button {
+        font-size: clamp(0.72rem, 1.8vw, 0.95rem);
+    }
+
+    .pets-page .figma-pets-nav .figma-pets-nav__home {
+        width: 100%;
+        height: 42px;
+    }
+
+    .pets-page .figma-pets-logout button {
+        font-size: 0.72rem;
+    }
+
+    .pets-gallery {
+        min-height: calc(100vh - 82px);
+        padding: 38px 16px 48px;
+    }
+
+    .pets-gallery__empty {
+        min-height: 60vh;
+    }
+
+    .pets-carousel__track {
+        grid-auto-columns: min(84vw, 360px);
+        gap: 18px;
+        padding-right: 18px;
+    }
+
+    .pets-card {
+        height: auto;
+        min-height: 0;
+    }
+
+    .pets-card__photo {
+        height: auto;
+        aspect-ratio: 1.03;
+    }
+
+    .pets-card__details {
+        min-height: 104px;
+        padding: 14px 16px;
+    }
+
+    .pets-card__details h1,
+    .pets-card__details p {
+        font-size: clamp(1.25rem, 5.2vw, 1.55rem);
+    }
+
+    .pets-carousel__next {
+        top: 42vw;
+        right: -4px;
+        width: 46px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pets-page .figma-pets-header {
+        height: 126px;
+    }
+
+    .figma-pets-brand {
+        top: -45px;
+        left: -30px;
+        width: 138px;
+    }
+
+    .pets-page .figma-pets-nav {
+        inset: 65px 12px 0;
+        grid-template-columns: 0.9fr 1.05fr 0.95fr 0.72fr;
+    }
+
+    .pets-gallery {
+        min-height: calc(100vh - 126px);
+        padding-top: 26px;
+    }
+
+    .pets-carousel__next {
+        top: 38vw;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pets-carousel__track {
+        scroll-behavior: auto;
+    }
+}
+
+
 /* ========================================
    PET HAVEN — DONATION FORM
    ======================================== */
