@@ -2587,3 +2587,105 @@ footer p {
         transform: none;
     }
 }
+
+/* Donation confirmation page */
+.donation-confirmation {
+    display: grid;
+    min-height: min(78vh, 820px);
+    padding: clamp(42px, 7vw, 80px) 20px;
+    place-items: center;
+}
+
+.donation-confirmation__card {
+    width: min(100%, 680px);
+    padding: clamp(30px, 6vw, 58px);
+    border: 1px solid var(--border);
+    border-radius: 32px;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+.donation-confirmation__icon {
+    display: grid;
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 22px;
+    place-items: center;
+    border-radius: 24px;
+    background: #e9efdc;
+    color: var(--olive-dark);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.donation-confirmation__card h1 {
+    margin: 12px 0;
+    color: var(--olive-dark);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -.045em;
+}
+
+.donation-confirmation__lead {
+    max-width: 520px;
+    margin: 0 auto;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+.donation-confirmation__status {
+    display: flex;
+    gap: 13px;
+    align-items: flex-start;
+    margin: 28px 0;
+    padding: 16px 18px;
+    border: 1px solid #e8dfc1;
+    border-radius: var(--radius-md);
+    background: #fcf8e9;
+    color: #5f5d4e;
+    font-size: .9rem;
+    line-height: 1.65;
+    text-align: left;
+}
+
+.donation-confirmation__status strong {
+    color: var(--olive-dark);
+}
+
+.donation-confirmation__status-dot {
+    flex: 0 0 10px;
+    height: 10px;
+    margin-top: 6px;
+    border-radius: 50%;
+    background: #c39740;
+}
+
+.donation-confirmation__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+.donation-confirmation__actions .primary-button {
+    gap: 12px;
+}
+
+.donation-confirmation__home {
+    color: var(--muted);
+    font-size: .92rem;
+    font-weight: 700;
+    text-underline-offset: 4px;
+}
+
+.donation-confirmation__home:hover {
+    color: var(--olive-dark);
+}
+
+@media (max-width: 520px) {
+    .donation-confirmation {
+        min-height: 0;
+        padding: 38px 14px 48px;
+    }
+}

@@ -1,45 +1,36 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You | Pet Haven</title>
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Thank You | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
-
+<body class="donation-confirmation-page">
     <header th:replace="~{layout/base :: header}"></header>
 
-    <main class="thank-you-card">
-        <div class="checkmark" aria-hidden="true">&#10003;</div>
+    <main class="donation-confirmation" aria-labelledby="donation-thanks-title">
+        <section class="donation-confirmation__card">
+            <div class="donation-confirmation__icon" aria-hidden="true">✓</div>
+            <p class="landing-eyebrow">THANK YOU FOR CARING</p>
+            <h1 id="donation-thanks-title">Your kindness means a lot.</h1>
+            <p class="donation-confirmation__lead">Your donation details have been sent to our team. Your support helps provide care for pets waiting to meet their families.</p>
 
-        <h1>Thank You for Your Donation!</h1>
+            <div class="donation-confirmation__status" role="status">
+                <span class="donation-confirmation__status-dot" aria-hidden="true"></span>
+                <span><strong>Pending verification</strong><br>We’ll review your payment proof before confirming your donation.</span>
+            </div>
 
-        <p>
-            Your generosity helps Pet Haven care for animals
-            and support our pet adoption efforts.
-        </p>
-
-        <div class="notice">
-            Your donation has been submitted and is
-            <strong>pending verification</strong>.
-            We will need to verify your payment proof before
-            confirming the donation.
-        </div>
-
-        <p>
-            Thank you for helping give our furry friends
-            a better future.
-        </p>
-
-        <a th:href="@{/}" class="primary-button">Back to Home</a>
-        <a th:href="@{/pets}" class="secondary-button">Meet Our Pets</a>
+            <div class="donation-confirmation__actions">
+                <a th:href="@{/pets}" class="primary-button">Meet our pets <span aria-hidden="true">→</span></a>
+                <a th:href="@{/}" class="donation-confirmation__home">Back to home</a>
+            </div>
+        </section>
     </main>
 
     <footer th:replace="~{layout/base :: footer}"></footer>
-
 </body>
 </html>
