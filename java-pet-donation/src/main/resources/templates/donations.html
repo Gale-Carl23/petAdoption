@@ -1,52 +1,53 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donations | Pet Haven</title>
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Support the Pets | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
-
+<body class="donations-page">
     <header th:replace="~{layout/base :: header}"></header>
 
     <main>
-        <section class="hero">
-            <p class="eyebrow">SUPPORT ANIMALS IN NEED</p>
-
-            <h1>Every Donation Makes a Difference</h1>
-
-            <p>
-                Your generosity helps Pet Haven provide food, care,
-                and support for animals waiting for loving homes.
-                Every contribution brings us closer to giving them
-                a better life.
-            </p>
-
-            <a class="primary-button" th:href="@{/donations/form}">
-                Click Here to Donate
-            </a>
+        <section class="giving-intro" aria-labelledby="giving-title">
+            <div class="giving-intro__copy">
+                <p class="landing-eyebrow">A LITTLE HELP GOES A LONG WAY</p>
+                <h1 id="giving-title">Help a pet feel cared for while they wait for home.</h1>
+                <p>Your support helps provide the everyday essentials that keep animals safe, comfortable, and ready to meet their future families.</p>
+                <a class="primary-button" th:href="@{/donations/form}">Make a donation <span aria-hidden="true">→</span></a>
+                <p class="giving-intro__note">Every contribution is appreciated. Thank you for being part of their story.</p>
+            </div>
+            <aside class="giving-card" aria-label="Ways your support helps">
+                <div class="giving-card__top"><span aria-hidden="true">♡</span><p>CARE IN ACTION</p></div>
+                <h2>Small acts of kindness make a real difference.</h2>
+                <ul>
+                    <li><span aria-hidden="true">✓</span>Food and daily essentials</li>
+                    <li><span aria-hidden="true">✓</span>A safe, comfortable place to rest</li>
+                    <li><span aria-hidden="true">✓</span>Support while pets wait for a family</li>
+                </ul>
+                <div class="giving-card__paw" aria-hidden="true">🐾</div>
+            </aside>
         </section>
 
-        <section class="support-section">
-            <h2>How Your Donation Helps</h2>
-
-            <p>
-                Donations help support animal care, food, shelter,
-                and other essential needs. Thank you for being part
-                of our mission to help animals find loving homes.
-            </p>
-
-            <a class="secondary-button" th:href="@{/donations/form}">
-                Donate Now
-            </a>
+        <section class="giving-steps" aria-labelledby="giving-steps-title">
+            <div class="about-section-heading">
+                <p class="landing-eyebrow">HOW TO GIVE</p>
+                <h2 id="giving-steps-title">A few simple steps to support a pet.</h2>
+                <p>Share your contribution details with us so our team can verify and record your donation.</p>
+            </div>
+            <ol class="giving-steps__list">
+                <li><span>01</span><div><h3>Sign in</h3><p>Log in to your account to submit a donation.</p></div></li>
+                <li><span>02</span><div><h3>Share the details</h3><p>Enter the amount and date, then attach your proof of donation.</p></div></li>
+                <li><span>03</span><div><h3>We’ll take it from here</h3><p>Our team reviews the details and follows up as needed.</p></div></li>
+            </ol>
+            <a class="giving-steps__link" th:href="@{/donations/form}">Continue to donation form <span aria-hidden="true">→</span></a>
         </section>
     </main>
 
     <footer th:replace="~{layout/base :: footer}"></footer>
-
 </body>
 </html>
