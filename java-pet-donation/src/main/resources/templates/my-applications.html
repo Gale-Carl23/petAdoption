@@ -5,30 +5,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Applications | Pet Haven</title>
+    <meta name="theme-color" content="#f8f5ec">
+    <title>My Applications | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
+<body class="applications-page">
 
     <header th:replace="~{layout/base :: header}"></header>
 
-    <main class="pets-section">
-        <div class="section-heading">
-            <p class="eyebrow">YOUR ADOPTION JOURNEY</p>
-            <h1>My Adoption Applications</h1>
-            <p>Track the status of your pet adoption applications here.</p>
+    <main class="applications-main">
+        <div class="applications-heading">
+            <p class="landing-eyebrow">YOUR ADOPTION JOURNEY</p>
+            <h1>My applications</h1>
+            <p>Keep up with the pets you’ve applied to welcome home.</p>
         </div>
 
-        <div th:if="${applications.isEmpty()}">
-            <p>You haven't submitted any adoption applications yet.</p>
+        <div class="applications-empty" th:if="${applications.isEmpty()}">
+            <span aria-hidden="true">🐾</span>
+            <h2>Your next chapter is waiting.</h2>
+            <p>You haven’t submitted an adoption application yet. Take a look at the pets looking for a home.</p>
             <a class="primary-button" th:href="@{/pets}">
-                Browse Available Pets
+                Browse available pets <span aria-hidden="true">→</span>
             </a>
         </div>
 
-        <div class="table-container" th:unless="${applications.isEmpty()}">
-            <table>
+        <div class="applications-table-wrap table-container" th:unless="${applications.isEmpty()}">
+            <table class="applications-table">
                 <thead>
                     <tr>
                         <th>Pet</th>
@@ -48,6 +51,11 @@
                         <td th:text="${app.petExperience}">Experience</td>
                         <td th:text="${#temporals.format(app.submittedAt, 'MMM dd, yyyy HH:mm')}">
                             Submission date
+                        </td>
+                        <td>
+                            <span class="application-status"
+                                  th:text="${app.status == 'UNDER_REVIEW' ? 'Under review' : (app.status == 'PENDING' ? 'Pending' : 'Approved')}"
+                                  th:classappend="${app.status == 'APPROVED' ? ' application-status--approved' : ''}">Pending</span>
                         </td>
                     </tr>
                 </tbody>
