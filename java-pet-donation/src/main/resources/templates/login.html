@@ -5,29 +5,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Pet Haven</title>
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Log In | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
+<body class="login-page">
+    <header th:replace="~{layout/base :: header}"></header>
 
     <main class="auth-section">
         <section class="auth-card">
-            <p class="eyebrow">WELCOME BACK</p>
+            <p class="landing-eyebrow">WELCOME BACK</p>
 
-            <h1>Log In to Pet Haven</h1>
+            <h1>Welcome home.</h1>
 
-            <p>Sign in to continue your pet adoption journey.</p>
+            <p class="auth-card__intro">Sign in to continue your pet adoption journey.</p>
 
-            <p th:if="${param.registered}">
+            <p class="auth-message auth-message--success" th:if="${param.registered}" role="status">
                 Your account was created successfully. You can now log in.
             </p>
 
-            <p th:if="${param.error}" role="alert">
+            <p class="auth-message auth-message--error" th:if="${param.error}" role="alert">
                 Invalid email or password. Please try again.
             </p>
 
-            <p th:if="${param.logout}">
+            <p class="auth-message auth-message--success" th:if="${param.logout}" role="status">
                 You have been logged out successfully.
             </p>
 
@@ -57,14 +59,15 @@
                 </button>
             </form>
 
-            <p>
+            <p class="auth-card__switch">
                 Don't have an account?
                 <a th:href="@{/register}">Create an account</a>
             </p>
 
-            <a th:href="@{/}">Back to Home</a>
+            <a class="auth-card__home" th:href="@{/}">← Back to home</a>
         </section>
     </main>
 
+    <footer th:replace="~{layout/base :: footer}"></footer>
 </body>
 </html>

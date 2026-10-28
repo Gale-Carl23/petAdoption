@@ -2689,3 +2689,105 @@ footer p {
         padding: 38px 14px 48px;
     }
 }
+
+/* Login page */
+.login-page .auth-section {
+    min-height: 0;
+    padding: clamp(42px, 7vh, 78px) 20px;
+}
+
+.login-page .auth-card {
+    width: min(100%, 500px);
+    padding: clamp(28px, 5vw, 44px);
+    border-radius: 30px;
+}
+
+.login-page .auth-card h1 {
+    margin-top: 12px;
+    color: var(--olive-dark);
+    font-size: clamp(2rem, 4vw, 2.65rem);
+    letter-spacing: -.04em;
+}
+
+.login-page .auth-card .auth-card__intro {
+    margin: 0 0 27px;
+    line-height: 1.7;
+}
+
+.login-page .auth-card form .form-group {
+    margin-bottom: 19px;
+}
+
+.login-page .auth-card form label {
+    color: var(--text);
+    font-size: .92rem;
+    font-weight: 700;
+}
+
+.login-page .auth-card form input {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fffefa;
+    color: var(--text);
+}
+
+.login-page .auth-card form input:focus-visible {
+    border-color: var(--olive);
+    outline: 3px solid rgb(101 115 75 / 18%);
+    outline-offset: 1px;
+}
+
+.login-page .auth-card form button[type="submit"] {
+    min-height: 50px;
+    margin-top: 3px;
+    border-radius: var(--radius-sm);
+}
+
+.auth-message {
+    margin: 0 0 18px !important;
+    padding: 12px 14px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-size: .9rem;
+    line-height: 1.55;
+}
+
+.auth-message--success {
+    border-color: #d8e2c9;
+    background: #f1f5eb;
+    color: var(--olive-dark) !important;
+}
+
+.auth-message--error {
+    border-color: #efcfc9;
+    background: #fff4f1;
+    color: #8a3c31 !important;
+}
+
+.login-page .auth-card .auth-card__switch {
+    margin: 23px 0 15px;
+    font-size: .92rem;
+    text-align: center;
+}
+
+.auth-card__switch a,
+.auth-card__home {
+    color: var(--olive-dark);
+    font-weight: 800;
+    text-underline-offset: 3px;
+}
+
+.auth-card__home {
+    display: block;
+    font-size: .9rem;
+    text-align: center;
+}
+
+.auth-card__switch a:focus-visible,
+.auth-card__home:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 4px;
+}
