@@ -5,41 +5,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adoption Application | Pet Haven</title>
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Adoption Application | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
+<body class="adoption-form-page">
 
     <header th:replace="~{layout/base :: header}"></header>
 
-    <main class="container">
-        <h1>Adoption Application</h1>
-
-        <p class="intro">
-            Tell us a little about yourself so our team can review
-            whether you are ready to welcome a pet into your home.
-        </p>
-
-        <section class="pet-summary">
-            <h2>Pet Details</h2>
-
-            <p>
-                <strong>Name:</strong>
-                <span th:text="${pet.name}">Pet name</span>
-            </p>
-
-            <p>
-                <strong>Breed:</strong>
-                <span th:text="${pet.breed}">Pet breed</span>
-            </p>
+    <main class="adoption-form-layout">
+        <section class="adoption-form-intro" aria-labelledby="adoption-form-title">
+            <p class="landing-eyebrow">A NEW FRIEND COULD BE CLOSE</p>
+            <h1 id="adoption-form-title">Let’s get to know you.</h1>
+            <p>Tell us a little about your home and experience. Our team will review your answers and reach out about next steps.</p>
         </section>
 
-        <div class="error"
+        <section class="adoption-pet-summary" aria-labelledby="adoption-pet-title">
+            <div class="adoption-pet-summary__icon" aria-hidden="true">🐾</div>
+            <div>
+                <p class="adoption-pet-summary__eyebrow">YOU’RE APPLYING TO MEET</p>
+                <h2 id="adoption-pet-title" th:text="${pet.name}">Pet name</h2>
+                <p th:text="${pet.breed}">Pet breed</p>
+            </div>
+        </section>
+
+        <div class="adoption-form-error"
              th:if="${applicationError}"
-             th:text="${applicationError}"></div>
+             th:text="${applicationError}"
+             role="alert"></div>
 
         <form th:action="@{/adoptions/apply/{petId}(petId=${pet.id})}"
+              class="adoption-form-card"
               th:object="${applicationForm}"
               method="post">
 
@@ -54,7 +51,7 @@
                       required
                       placeholder="Explain why you want to adopt this pet."></textarea>
 
-            <div class="error"
+            <div class="adoption-form-error"
                  th:if="${#fields.hasErrors('reasonForAdoption')}"
                  th:errors="*{reasonForAdoption}"></div>
 
@@ -70,7 +67,7 @@
                 <option value="Other">Other</option>
             </select>
 
-            <div class="error"
+            <div class="adoption-form-error"
                  th:if="${#fields.hasErrors('housingType')}"
                  th:errors="*{housingType}"></div>
 
@@ -85,23 +82,22 @@
                 <option value="Experienced">Experienced pet owner</option>
             </select>
 
-            <div class="error"
+            <div class="adoption-form-error"
                  th:if="${#fields.hasErrors('petExperience')}"
                  th:errors="*{petExperience}"></div>
 
-            <p class="hint">
-                Your application will be reviewed by the Pet Haven team.
-                Submission does not guarantee adoption approval.
+            <p class="adoption-form-note">
+                Our Pawprints of Hope team will review your application. Sending an application does not guarantee adoption approval.
             </p>
 
-            <button type="submit" class="submit-button">
-                Submit Application
+            <button type="submit" class="adoption-form-submit">
+                Send application <span aria-hidden="true">→</span>
             </button>
         </form>
 
-        <a class="back-link"
+        <a class="adoption-form-back"
            th:href="@{/pets/{id}(id=${pet.id})}">
-            Back to Pet Details
+            <span aria-hidden="true">←</span> Back to pet details
         </a>
     </main>
 

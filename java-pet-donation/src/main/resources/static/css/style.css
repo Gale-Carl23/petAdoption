@@ -2868,3 +2868,202 @@ footer p {
 .auth-field-error {
     color: #8a3c31;
 }
+
+/* Adoption application form */
+.adoption-form-layout {
+    width: min(100% - 32px, 820px);
+    margin: 0 auto;
+    padding: clamp(48px, 7vw, 84px) 0 68px;
+}
+
+.adoption-form-intro {
+    max-width: 680px;
+    margin: 0 auto 30px;
+    text-align: center;
+}
+
+.adoption-form-intro h1 {
+    margin: 12px 0;
+    color: var(--olive-dark);
+    font-size: clamp(2.2rem, 5vw, 3.45rem);
+    line-height: 1.08;
+    letter-spacing: -.05em;
+}
+
+.adoption-form-intro>p:last-child {
+    max-width: 600px;
+    margin: 0 auto;
+    color: var(--muted);
+    line-height: 1.75;
+}
+
+.adoption-pet-summary {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 18px 22px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #f3f5ee;
+}
+
+.adoption-pet-summary__icon {
+    display: grid;
+    flex: 0 0 52px;
+    height: 52px;
+    place-items: center;
+    border-radius: 18px;
+    background: #e3ead7;
+    font-size: 1.6rem;
+}
+
+.adoption-pet-summary__eyebrow {
+    margin: 0 0 4px !important;
+    color: var(--olive) !important;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+}
+
+.adoption-pet-summary h2 {
+    margin: 0 0 3px;
+    color: var(--olive-dark);
+    font-size: 1.15rem;
+}
+
+.adoption-pet-summary p:last-child {
+    margin: 0;
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+.adoption-form-card {
+    display: grid;
+    gap: 8px;
+    padding: clamp(24px, 5vw, 42px);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.adoption-form-card label {
+    margin: 12px 0 2px;
+    color: var(--text);
+    font-size: .94rem;
+    font-weight: 700;
+}
+
+.adoption-form-card textarea,
+.adoption-form-card select {
+    width: 100%;
+    min-height: 50px;
+    padding: 13px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fffefa;
+    color: var(--text);
+    font: inherit;
+    font-size: .95rem;
+}
+
+.adoption-form-card textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+.adoption-form-card textarea:focus-visible,
+.adoption-form-card select:focus-visible {
+    border-color: var(--olive);
+    outline: 3px solid rgb(101 115 75 / 18%);
+    outline-offset: 1px;
+}
+
+.adoption-form-error {
+    margin: 4px 0 8px;
+    color: #8a3c31;
+    font-size: .88rem;
+    line-height: 1.55;
+}
+
+.adoption-form-note {
+    margin: 14px 0 8px;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    background: #fcf8e9;
+    color: #5f5d4e;
+    font-size: .88rem;
+    line-height: 1.65;
+}
+
+.adoption-form-submit {
+    display: inline-flex;
+    min-height: 52px;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--olive-dark);
+    color: var(--white);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background var(--transition), transform var(--transition);
+}
+
+.adoption-form-submit:hover {
+    background: var(--olive);
+    transform: translateY(-1px);
+}
+
+.adoption-form-submit:focus-visible,
+.adoption-form-back:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 4px;
+}
+
+.adoption-form-back {
+    display: inline-flex;
+    min-height: 44px;
+    gap: 9px;
+    align-items: center;
+    margin-top: 20px;
+    padding: 9px 15px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--olive-dark);
+    font-size: .9rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background var(--transition), transform var(--transition);
+}
+
+.adoption-form-back:hover {
+    background: #f3f5ee;
+    transform: translateX(-2px);
+}
+
+@media (max-width: 600px) {
+    .adoption-form-layout {
+        width: min(100% - 24px, 820px);
+    }
+
+    .adoption-pet-summary {
+        padding: 15px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .adoption-form-submit,
+    .adoption-form-back {
+        transition: none;
+    }
+
+    .adoption-form-submit:hover,
+    .adoption-form-back:hover {
+        transform: none;
+    }
+}
