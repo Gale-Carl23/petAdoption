@@ -1,40 +1,36 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Submitted | Pet Haven</title>
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Application Submitted | Pawprints of Hope</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
-<body>
-
+<body class="adoption-confirmation-page">
     <header th:replace="~{layout/base :: header}"></header>
 
-    <main class="thank-you-card">
-        <h1>Thank You for Applying!</h1>
+    <main class="adoption-confirmation" aria-labelledby="adoption-thanks-title">
+        <section class="adoption-confirmation__card">
+            <div class="adoption-confirmation__icon" aria-hidden="true">✓</div>
+            <p class="landing-eyebrow">APPLICATION RECEIVED</p>
+            <h1 id="adoption-thanks-title">The first step is done.</h1>
+            <p class="adoption-confirmation__lead">Thanks for taking the time to tell us about yourself. Our team will review your application and follow up with you about next steps.</p>
 
-        <p>
-            Your adoption application has been submitted successfully.
-        </p>
+            <div class="adoption-confirmation__note" role="status">
+                <strong>Your application is being reviewed.</strong>
+                <span>Submitting an application does not guarantee adoption approval. We’ll share an update when a decision is made.</span>
+            </div>
 
-        <p>
-            Our team will review your application. Submission does not
-            guarantee adoption; we will update you when a decision is made.
-        </p>
-
-        <a class="primary-button" th:href="@{/pets}">
-            Browse More Pets
-        </a>
-
-        <a class="secondary-button" th:href="@{/}">
-            Return Home
-        </a>
+            <div class="adoption-confirmation__actions">
+                <a th:href="@{/adoptions/my-applications}" class="primary-button">View my applications <span aria-hidden="true">→</span></a>
+                <a th:href="@{/pets}" class="adoption-confirmation__link">Meet more pets</a>
+            </div>
+        </section>
     </main>
 
     <footer th:replace="~{layout/base :: footer}"></footer>
-
 </body>
 </html>

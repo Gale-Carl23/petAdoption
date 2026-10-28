@@ -3175,3 +3175,96 @@ footer p {
         width: min(100% - 28px, 1240px);
     }
 }
+
+/* Adoption application confirmation */
+.adoption-confirmation {
+    display: grid;
+    min-height: min(78vh, 820px);
+    padding: clamp(42px, 7vw, 80px) 20px;
+    place-items: center;
+}
+
+.adoption-confirmation__card {
+    width: min(100%, 680px);
+    padding: clamp(30px, 6vw, 58px);
+    border: 1px solid var(--border);
+    border-radius: 32px;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+.adoption-confirmation__icon {
+    display: grid;
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 22px;
+    place-items: center;
+    border-radius: 24px;
+    background: #e9efdc;
+    color: var(--olive-dark);
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.adoption-confirmation__card h1 {
+    margin: 12px 0;
+    color: var(--olive-dark);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -.045em;
+}
+
+.adoption-confirmation__lead {
+    max-width: 520px;
+    margin: 0 auto;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+.adoption-confirmation__note {
+    display: grid;
+    gap: 5px;
+    margin: 28px 0;
+    padding: 16px 18px;
+    border: 1px solid #e8dfc1;
+    border-radius: var(--radius-md);
+    background: #fcf8e9;
+    color: #5f5d4e;
+    font-size: .9rem;
+    line-height: 1.65;
+    text-align: left;
+}
+
+.adoption-confirmation__note strong {
+    color: var(--olive-dark);
+}
+
+.adoption-confirmation__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+.adoption-confirmation__actions .primary-button {
+    gap: 12px;
+}
+
+.adoption-confirmation__link {
+    color: var(--muted);
+    font-size: .92rem;
+    font-weight: 700;
+    text-underline-offset: 4px;
+}
+
+.adoption-confirmation__link:hover {
+    color: var(--olive-dark);
+}
+
+@media (max-width: 520px) {
+    .adoption-confirmation {
+        min-height: 0;
+        padding: 38px 14px 48px;
+    }
+}
