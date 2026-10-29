@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Donation Submissions | Pawprints of Hope</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="admin-page admin-review-page">
+    <header th:replace="~{layout/base :: header}"></header>
+
+    <main class="admin-main">
+        <a class="admin-form-back" th:href="@{/admin}"><span aria-hidden="true">←</span> Back to overview</a>
+        <section class="admin-heading admin-review-heading" aria-labelledby="admin-donations-title">
+            <div>
+                <p class="landing-eyebrow">ADMINISTRATION</p>
+                <h1 id="admin-donations-title">Donation submissions</h1>
+                <p>Review contribution details and open the proof shared with each submission.</p>
+            </div>
+        </section>
+
+        <section class="admin-panel" aria-labelledby="donations-list-title">
+            <div class="admin-panel__heading">
+                <div>
+                    <h2 id="donations-list-title">Submitted donations</h2>
+                    <p th:text="|${#lists.size(donations)} submissions, newest first|">0 submissions</p>
+                </div>
+            </div>
+
+            <div class="admin-empty" th:if="${#lists.isEmpty(donations)}">
+                <span aria-hidden="true">✳</span>
+                <h3>No donations yet</h3>
+                <p>Donation submissions will appear here when supporters share their details.</p>
+            </div>
+
+            <div class="admin-table-wrap" th:unless="${#lists.isEmpty(donations)}">
+                <table class="admin-table admin-review-table admin-donation-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Donor</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Date sent</th>
+                            <th scope="col">Submitted</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Message</th>
+                            <th scope="col">Proof</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="donation : ${donations}">
+                            <td data-label="Donor">
+                                <span class="admin-review-applicant"
+                                      th:text="${donation.fullName != null and !#strings.isEmpty(donation.fullName) ? donation.fullName : donation.donor.fullName}">Donor</span>
+                                <span class="admin-review-secondary" th:text="${donation.donor.email}">email</span>
+                            </td>
+                            <td data-label="Amount" th:text="|₱${donation.amount}|">₱0.00</td>
+                            <td data-label="Date sent" th:text="${#temporals.format(donation.dateSent, 'MMM d, yyyy')}">Date</td>
+                            <td data-label="Submitted" th:text="${#temporals.format(donation.submittedAt, 'MMM d, yyyy')}">Date</td>
+                            <td data-label="Status"><span class="application-status" th:text="${donation.status == 'PENDING_VERIFICATION' ? 'Pending review' : donation.status}">Pending review</span></td>
+                            <td class="admin-review-reason" data-label="Message" th:text="${donation.message != null and !#strings.isEmpty(donation.message) ? donation.message : '—'}">Message</td>
+                            <td data-label="Proof">
+                                <a class="admin-proof-link" th:href="@{/admin/donations/{id}/proof(id=${donation.id})}" target="_blank" rel="noopener">Open proof <span aria-hidden="true">↗</span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+</body>
+</html>
