@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation payment status | Pawprints of Hope</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="donation-form-page">
+<header th:replace="~{layout/base :: header}"></header>
+<main class="donation-form-section">
+    <section class="donation-form-card" aria-labelledby="payment-result-title">
+        <p class="landing-eyebrow">DONATION CHECKOUT</p>
+        <h1 id="payment-result-title" th:text="${donation.status == 'VERIFIED' ? 'Payment confirmed' : 'Waiting for payment confirmation'}">Waiting for payment confirmation</h1>
+        <p th:if="${donation.status == 'VERIFIED'}">Your QR Ph payment has been confirmed securely. Thank you for supporting the pets.</p>
+        <p th:if="${donation.status != 'VERIFIED'}">PayMongo has returned you to the site. We are waiting for its secure payment notification; this page does not mark a donation paid by itself.</p>
+        <p><strong>Donation:</strong> <span th:text="|₱${donation.amount}|">₱0.00</span></p>
+        <p><strong>Status:</strong> <span th:text="${donation.status == 'VERIFIED' ? 'Paid · confirmed' : 'Awaiting payment confirmation'}">Awaiting payment confirmation</span></p>
+        <p th:if="${donation.status == 'PAYMENT_PENDING' and donation.paymongoCheckoutUrl != null}"><a th:href="${donation.paymongoCheckoutUrl}" rel="noopener">Return to secure checkout</a></p>
+        <a class="back-link" th:if="${donation.status == 'PAYMENT_PENDING'}" th:href="@{/donations/payment-result(id=${donation.id})}">Refresh payment status</a>
+        <a class="primary-button" th:href="@{/donations/my-donations}">View my donations <span aria-hidden="true">→</span></a>
+    </section>
+</main>
+<footer th:replace="~{layout/base :: footer}"></footer>
+</body>
+</html>

@@ -39,21 +39,24 @@
                         <th>Submitted</th>
                         <th>Message</th>
                         <th>Review status</th>
+                        <th>Payment</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="donation : ${donations}">
                         <td th:text="|₱${donation.amount}|">₱0.00</td>
-                        <td th:text="${donation.paymentMethod == 'BANK_TRANSFER' ? 'Bank transfer' : (donation.paymentMethod == 'QR_PH' ? 'QR Ph' : (donation.paymentMethod == 'GCASH' ? 'GCash' : 'Other'))}">Payment method</td>
+                        <td th:text="${donation.paymentMethod == 'BANK_TRANSFER' ? 'Bank transfer' : (donation.paymentMethod == 'QR_PH' ? 'QR Ph' : (donation.paymentMethod == 'PAYMONGO_QR' ? 'PayMongo · QR Ph' : (donation.paymentMethod == 'GCASH' ? 'GCash' : 'Other')))}">Payment method</td>
                         <td th:text="${donation.paymentReference != null and !#strings.isEmpty(donation.paymentReference) ? donation.paymentReference : '—'}">—</td>
-                        <td th:text="${#temporals.format(donation.dateSent, 'MMM d, yyyy')}">Date sent</td>
+                        <td th:text="${donation.dateSent != null ? #temporals.format(donation.dateSent, 'MMM d, yyyy') : '—'}">Date sent</td>
                         <td th:text="${#temporals.format(donation.submittedAt, 'MMM d, yyyy HH:mm')}">Submitted</td>
                         <td th:text="${donation.message != null and !#strings.isEmpty(donation.message) ? donation.message : '—'}">Message</td>
                         <td>
                             <span class="application-status"
-                                  th:text="${donation.status == 'PENDING_VERIFICATION' ? 'Pending review' : (donation.status == 'VERIFIED' ? 'Verified' : 'Not verified')}"
+                                  th:text="${donation.status == 'PENDING_VERIFICATION' ? 'Pending review' : (donation.status == 'PAYMENT_PENDING' ? 'Awaiting payment' : (donation.status == 'VERIFIED' ? 'Paid · confirmed' : (donation.status == 'PAYMENT_FAILED' ? 'Payment not started' : 'Not verified')))}"
                                   th:classappend="${donation.status == 'VERIFIED' ? ' application-status--approved' : (donation.status == 'REJECTED' ? ' application-status--rejected' : '')}">Pending review</span>
                         </td>
+                        <td><a th:if="${donation.status == 'PAYMENT_PENDING' and donation.paymongoCheckoutUrl != null}"
+                               th:href="${donation.paymongoCheckoutUrl}" rel="noopener">Continue payment</a><span th:unless="${donation.status == 'PAYMENT_PENDING' and donation.paymongoCheckoutUrl != null}">—</span></td>
                     </tr>
                 </tbody>
             </table>

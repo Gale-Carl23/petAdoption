@@ -43,8 +43,9 @@ public class SecurityConfig {
 
         http
             .authenticationProvider(authenticationProvider)
-            .csrf(Customizer.withDefaults())
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/webhooks/**"))
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/webhooks/**").permitAll()
 
                 // Public pages and static resources
                 .requestMatchers(
@@ -80,6 +81,7 @@ public class SecurityConfig {
                     "/donations/form",
                     "/donations/submit",
                     "/donations/thank-you",
+                    "/donations/payment-result",
                     "/donations/my-donations",
                     "/donations/*/survey",
                     "/adoptions/apply/**",

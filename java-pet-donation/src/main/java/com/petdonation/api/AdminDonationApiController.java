@@ -73,7 +73,8 @@ public class AdminDonationApiController {
                     donation.getStatus(),
                     donation.getMessage(),
                     donation.getSubmittedAt(),
-                    "/api/admin/donations/" + donation.getId() + "/proof",
+                    donation.getProofFilePath() == null ? null
+                            : "/api/admin/donations/" + donation.getId() + "/proof",
                     donation.getReviewedBy(),
                     donation.getReviewedAt(),
                     donation.getPaymentMethod(),

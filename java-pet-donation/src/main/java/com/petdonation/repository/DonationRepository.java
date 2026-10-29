@@ -31,4 +31,7 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     java.util.Optional<Donation> findByIdWithDonor(@Param("id") Long id);
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    java.util.Optional<Donation> findByPaymongoSessionId(String paymongoSessionId);
+
 }

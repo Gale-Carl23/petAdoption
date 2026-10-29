@@ -62,15 +62,17 @@
                                 <span class="admin-review-secondary" th:text="${donation.donor.email}">email</span>
                             </td>
                             <td data-label="Amount" th:text="|₱${donation.amount}|">₱0.00</td>
-                            <td data-label="Date sent" th:text="${#temporals.format(donation.dateSent, 'MMM d, yyyy')}">Date</td>
+                            <td data-label="Date sent" th:text="${donation.dateSent != null ? #temporals.format(donation.dateSent, 'MMM d, yyyy') : 'Online checkout'}">Date</td>
                             <td data-label="Submitted" th:text="${#temporals.format(donation.submittedAt, 'MMM d, yyyy')}">Date</td>
-                            <td data-label="Status"><span class="application-status" th:classappend="${donation.status == 'VERIFIED' ? ' application-status--approved' : (donation.status == 'REJECTED' ? ' application-status--rejected' : '')}" th:text="${donation.status == 'PENDING_VERIFICATION' ? 'Pending review' : (donation.status == 'VERIFIED' ? 'Verified' : 'Declined')}">Pending review</span></td>
+                            <td data-label="Status"><span class="application-status" th:classappend="${donation.status == 'VERIFIED' ? ' application-status--approved' : (donation.status == 'REJECTED' or donation.status == 'PAYMENT_FAILED' ? ' application-status--rejected' : '')}" th:text="${donation.status == 'PENDING_VERIFICATION' ? 'Pending review' : (donation.status == 'PAYMENT_PENDING' ? 'Awaiting payment' : (donation.status == 'PAYMENT_FAILED' ? 'Checkout failed' : (donation.status == 'VERIFIED' ? 'Paid · confirmed' : 'Declined')))}">Pending review</span></td>
                             <td data-label="Reviewed" th:text="${donation.reviewedAt != null ? donation.reviewedBy + ' · ' + #temporals.format(donation.reviewedAt, 'MMM d, yyyy h:mm a') : '—'}">—</td>
-                            <td data-label="Payment method" th:text="${donation.paymentMethod == 'BANK_TRANSFER' ? 'Bank transfer' : (donation.paymentMethod == 'QR_PH' ? 'QR Ph' : (donation.paymentMethod == 'GCASH' ? 'GCash' : 'Other'))}">Payment method</td>
+                            <td data-label="Payment method" th:text="${donation.paymentMethod == 'BANK_TRANSFER' ? 'Bank transfer' : (donation.paymentMethod == 'PAYMONGO_QR' ? 'PayMongo · QR Ph' : (donation.paymentMethod == 'QR_PH' ? 'QR Ph' : (donation.paymentMethod == 'GCASH' ? 'GCash' : 'Other')))}">Payment method</td>
                             <td data-label="Transfer reference" th:text="${donation.paymentReference != null and !#strings.isEmpty(donation.paymentReference) ? donation.paymentReference : '—'}">—</td>
                             <td class="admin-review-reason" data-label="Message" th:text="${donation.message != null and !#strings.isEmpty(donation.message) ? donation.message : '—'}">Message</td>
                             <td data-label="Proof">
-                                <a class="admin-proof-link" th:href="@{/admin/donations/{id}/proof(id=${donation.id})}" target="_blank" rel="noopener">Open proof <span aria-hidden="true">↗</span></a>
+                                <a class="admin-proof-link" th:if="${donation.proofFilePath != null}" th:href="@{/admin/donations/{id}/proof(id=${donation.id})}" target="_blank" rel="noopener">Open proof <span aria-hidden="true">↗</span></a>
+                                <span class="admin-review-secondary" th:if="${donation.proofFilePath == null and donation.status == 'VERIFIED'}">Confirmed by PayMongo</span>
+                                <span class="admin-review-secondary" th:if="${donation.proofFilePath == null and donation.status != 'VERIFIED' and donation.paymentMethod == 'PAYMONGO_QR'}">Online checkout</span>
                             </td>
                             <td data-label="Decision">
                                 <div class="admin-review-actions" th:if="${donation.status == 'PENDING_VERIFICATION'}">

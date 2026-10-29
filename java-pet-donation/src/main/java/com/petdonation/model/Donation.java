@@ -35,7 +35,7 @@ public class Donation {
     @Column(nullable = false)
     private LocalDate dateSent;
 
-    @Column(nullable = false, length = 500)
+    @Column(length = 500)
     private String proofFilePath;
 
     @Column(nullable = false, length = 30)
@@ -43,6 +43,15 @@ public class Donation {
 
     @Column(length = 100)
     private String paymentReference;
+
+    @Column(name = "paymongo_session_id", length = 100, unique = true)
+    private String paymongoSessionId;
+
+    @Column(name = "paymongo_checkout_url", length = 1000)
+    private String paymongoCheckoutUrl;
+
+    @Column(name = "payment_idempotency_key", length = 36, unique = true)
+    private String paymentIdempotencyKey;
 
     @Column(length = 1000)
     private String message;
@@ -120,6 +129,13 @@ public class Donation {
     public void setPaymentReference(String paymentReference) {
         this.paymentReference = paymentReference;
     }
+
+    public String getPaymongoSessionId() { return paymongoSessionId; }
+    public void setPaymongoSessionId(String paymongoSessionId) { this.paymongoSessionId = paymongoSessionId; }
+    public String getPaymongoCheckoutUrl() { return paymongoCheckoutUrl; }
+    public void setPaymongoCheckoutUrl(String paymongoCheckoutUrl) { this.paymongoCheckoutUrl = paymongoCheckoutUrl; }
+    public String getPaymentIdempotencyKey() { return paymentIdempotencyKey; }
+    public void setPaymentIdempotencyKey(String paymentIdempotencyKey) { this.paymentIdempotencyKey = paymentIdempotencyKey; }
 
     public String getMessage() {
         return message;

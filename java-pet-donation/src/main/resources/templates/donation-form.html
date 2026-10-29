@@ -24,7 +24,7 @@
             <h1>Make a Donation</h1>
 
             <p>
-                Your support helps provide daily care for pets waiting for a loving home. Share your donation details below so our team can review your contribution.
+                Your support helps provide daily care for pets waiting for a loving home. Choose a secure QR Ph checkout or a manual transfer.
             </p>
             <p class="donation-form-login-note" th:unless="${#authorization.expression('isAuthenticated()')}">
                 Please <a th:href="@{/login}">sign in</a> before submitting your donation.
@@ -40,7 +40,7 @@
 
             <div class="donation-card-heading">
                 <h2>Donation Details</h2>
-                <p>Complete the information below to submit your donation.</p>
+                <p>Choose QR Ph for secure checkout, or enter details for a manual transfer.</p>
             </div>
 
             <form th:action="@{/donations/submit}"
@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="paymentMethod">How did you send your donation?</label>
+                    <label for="paymentMethod">How would you like to donate?</label>
                     <select id="paymentMethod" th:field="*{paymentMethod}" required>
                         <option value="">Choose a payment method</option>
                         <option th:each="paymentOption : ${paymentOptions}"
@@ -77,7 +77,7 @@
                     <p class="field-error" th:if="${#fields.hasErrors('paymentMethod')}"
                        th:errors="*{paymentMethod}"></p>
                     <p class="field-error" th:if="${paymentUnavailable}" role="alert">
-                        That payment destination is not currently configured. Choose one of the available methods.
+                        <span th:text="${paymentError != null ? paymentError : 'That payment destination is not currently configured. Choose one of the available methods.'}">That payment destination is not currently configured.</span>
                     </p>
                 </div>
 
@@ -106,9 +106,7 @@
                                required>
                     </div>
 
-                    <p class="form-help">
-                        Enter the amount you sent in Philippine pesos.
-                    </p>
+                    <p id="amount-help" class="form-help">Enter your donation amount in Philippine pesos.</p>
 
                     <p class="field-error"
                        th:if="${#fields.hasErrors('amount')}"
@@ -117,13 +115,13 @@
 
                 <!-- Date sent -->
                 <div class="form-group">
-                    <label for="dateSent">Date Sent</label>
+                    <label for="dateSent">Date sent</label>
 
                     <input type="date"
                            id="dateSent"
                            th:field="*{dateSent}"
                            th:attr="max=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
-                           required>
+                           >
 
                     <p class="field-error"
                        th:if="${#fields.hasErrors('dateSent')}"
@@ -150,7 +148,7 @@
                                name="proof"
                                accept=".jpg,.jpeg,.png,.pdf"
                                aria-describedby="proof-help"
-                               required>
+                               >
 
                         <p id="proof-help" class="form-help">
                             Accepted formats: JPG, PNG, PDF.
@@ -185,15 +183,12 @@
                 <div class="donation-notice">
                     <span class="notice-icon" aria-hidden="true">ⓘ</span>
 
-                    <p>
-                        Your donation details and payment proof will be
-                        reviewed by the Pawprints of Hope team before verification. We will never ask for your wallet PIN, password, or one-time code.
-                    </p>
+                    <p id="donation-payment-notice">Manual transfers are reviewed by the team. Online QR Ph payments are confirmed automatically by PayMongo. We will never ask for your wallet PIN, password, or one-time code.</p>
                 </div>
 
                 <!-- Submit -->
-                <button type="submit" class="donation-submit-button">
-                    Submit Donation
+                <button id="donation-submit" type="submit" class="donation-submit-button">
+                    Continue to secure payment
                     <span aria-hidden="true">→</span>
                 </button>
 
@@ -212,6 +207,41 @@
 
     <!-- Shared footer -->
     <footer th:replace="~{layout/base :: footer}"></footer>
+
+    <script>
+        (() => {
+            const method = document.getElementById('paymentMethod');
+            const proof = document.getElementById('proof');
+            const proofGroup = proof?.closest('.form-group');
+            const date = document.getElementById('dateSent');
+            const dateGroup = date?.closest('.form-group');
+            const reference = document.getElementById('paymentReference');
+            const referenceGroup = reference?.closest('.form-group');
+            const notice = document.getElementById('donation-payment-notice');
+            const amount = document.getElementById('amount');
+            const amountHelp = document.getElementById('amount-help');
+            const submit = document.getElementById('donation-submit');
+            const online = () => method?.value === 'PAYMONGO_QR';
+            const update = () => {
+                if (!method) return;
+                proof.required = !online();
+                proofGroup.hidden = online();
+                date.required = !online();
+                dateGroup.hidden = online();
+                referenceGroup.hidden = online();
+                amount.min = online() ? '1.00' : '0.01';
+                amountHelp.textContent = online()
+                    ? 'QR Ph requires at least ₱1.00. The exact amount is encoded into your unique checkout.'
+                    : 'Enter the amount you sent in Philippine pesos.';
+                submit.firstChild.textContent = online() ? 'Continue to QR Ph checkout ' : 'Submit transfer for review ';
+                notice.textContent = online()
+                    ? 'You will be sent to PayMongo secure checkout. Scan the unique QR Ph code with a participating e-wallet or bank app; successful payments update automatically.'
+                    : 'Manual transfers require payment proof and are reviewed by the team. We will never ask for your wallet PIN, password, or one-time code.';
+            };
+            method?.addEventListener('change', update);
+            update();
+        })();
+    </script>
 
 </body>
 </html>

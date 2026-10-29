@@ -8,6 +8,8 @@ import com.petdonation.service.DonationProofStorageService;
 import com.petdonation.service.DonationService;
 import com.petdonation.service.DonationPaymentSettings;
 import com.petdonation.service.ReferralSurveyService;
+import com.petdonation.service.PayMongoCheckoutService;
+import com.petdonation.service.PayMongoWebhookService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
@@ -32,6 +34,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 public class DonationController {
@@ -41,18 +45,24 @@ public class DonationController {
     private final DonationProofStorageService proofStorageService;
     private final ReferralSurveyService referralSurveyService;
     private final DonationPaymentSettings paymentSettings;
+    private final PayMongoCheckoutService payMongoCheckoutService;
+    private final PayMongoWebhookService payMongoWebhookService;
 
     public DonationController(
             DonationService donationService,
             UserRepository userRepository,
             DonationProofStorageService proofStorageService,
             ReferralSurveyService referralSurveyService,
-            DonationPaymentSettings paymentSettings) {
+            DonationPaymentSettings paymentSettings,
+            PayMongoCheckoutService payMongoCheckoutService,
+            PayMongoWebhookService payMongoWebhookService) {
         this.donationService = donationService;
         this.userRepository = userRepository;
         this.proofStorageService = proofStorageService;
         this.referralSurveyService = referralSurveyService;
         this.paymentSettings = paymentSettings;
+        this.payMongoCheckoutService = payMongoCheckoutService;
+        this.payMongoWebhookService = payMongoWebhookService;
     }
 
     @GetMapping("/donations")
@@ -60,7 +70,9 @@ public class DonationController {
         boolean administrator = authentication != null && authentication.getAuthorities().stream()
                 .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
         model.addAttribute("administrator", administrator);
-        model.addAttribute("paymentOptions", paymentSettings.options());
+        var options = paymentSettings.options();
+        model.addAttribute("paymentOptions", options);
+        model.addAttribute("onlinePaymentsEnabled", options.stream().anyMatch(DonationPaymentSettings.PaymentOption::onlineCheckout));
         return "donations";
     }
 
@@ -95,6 +107,55 @@ public class DonationController {
                 || !authentication.isAuthenticated()
                 || authentication.getName().equals("anonymousUser")) {
             return "redirect:/login";
+        }
+
+        if ("PAYMONGO_QR".equals(form.getPaymentMethod())) {
+            if (form.getAmount().compareTo(new BigDecimal("1.00")) < 0) {
+                model.addAttribute("paymentOptions", paymentSettings.options());
+                model.addAttribute("paymentUnavailable", true);
+                model.addAttribute("paymentError", "QR Ph donations must be at least ₱1.00.");
+                return "donation-form";
+            }
+            if (!payMongoCheckoutService.isConfigured()) {
+                model.addAttribute("paymentOptions", paymentSettings.options());
+                model.addAttribute("paymentUnavailable", true);
+                return "donation-form";
+            }
+            User donor = userRepository.findByEmail(authentication.getName())
+                    .orElseThrow(() -> new IllegalStateException("Authenticated account not found."));
+            Donation onlineDonation = new Donation();
+            onlineDonation.setDonor(donor);
+            onlineDonation.setFullName(form.getFullName() == null || form.getFullName().isBlank()
+                    ? null : form.getFullName().trim());
+            onlineDonation.setAmount(form.getAmount());
+            onlineDonation.setDateSent(LocalDate.now());
+            onlineDonation.setPaymentMethod("PAYMONGO_QR");
+            onlineDonation.setMessage(form.getMessage() == null || form.getMessage().isBlank()
+                    ? null : form.getMessage().trim());
+            onlineDonation.setStatus("PAYMENT_PENDING");
+            onlineDonation.setSubmittedAt(LocalDateTime.now());
+            onlineDonation.setPaymentIdempotencyKey(UUID.randomUUID().toString());
+            onlineDonation = donationService.saveDonation(onlineDonation);
+            try {
+                String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+                String checkoutUrl = payMongoCheckoutService.createQrCheckout(onlineDonation, baseUrl);
+                donationService.saveDonation(onlineDonation);
+                return "redirect:" + checkoutUrl;
+            } catch (IOException | InterruptedException | RuntimeException exception) {
+                if (exception instanceof InterruptedException) Thread.currentThread().interrupt();
+                onlineDonation.setStatus("PAYMENT_FAILED");
+                donationService.saveDonation(onlineDonation);
+                model.addAttribute("paymentOptions", paymentSettings.options());
+                model.addAttribute("paymentUnavailable", true);
+                model.addAttribute("paymentError", "Secure checkout could not be started. No payment was taken. Please try again.");
+                return "donation-form";
+            }
+        }
+
+        if (form.getDateSent() == null) {
+            model.addAttribute("paymentOptions", paymentSettings.options());
+            model.addAttribute("proofError", "Date sent is required for manual transfers.");
+            return "donation-form";
         }
 
         if (proof == null || proof.isEmpty()) {
@@ -158,6 +219,27 @@ public class DonationController {
         return "redirect:/donations/thank-you?donationId=" + donation.getId();
     }
 
+    @GetMapping("/donations/payment-result")
+    public String paymentResult(@RequestParam Long id, Authentication authentication, Model model) {
+        User donor = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalStateException("Authenticated account not found."));
+        Donation donation = donationService.getDonationsByDonor(donor.getId()).stream()
+                .filter(item -> item.getId().equals(id)).findFirst().orElse(null);
+        if (donation == null || !"PAYMONGO_QR".equals(donation.getPaymentMethod())) return "redirect:/donations/my-donations";
+        if ("PAYMENT_PENDING".equals(donation.getStatus()) && donation.getPaymongoSessionId() != null) {
+            try {
+                var session = payMongoCheckoutService.retrieveCheckout(donation.getPaymongoSessionId());
+                payMongoWebhookService.reconcileCheckout(donation.getId(), session);
+                donation = donationService.getDonationsByDonor(donor.getId()).stream()
+                        .filter(item -> item.getId().equals(id)).findFirst().orElse(donation);
+            } catch (IOException | InterruptedException | RuntimeException ignored) {
+                if (ignored instanceof InterruptedException) Thread.currentThread().interrupt();
+            }
+        }
+        model.addAttribute("donation", donation);
+        return "donation-payment-result";
+    }
+
     @GetMapping("/donations/thank-you")
     public String thankYou(
             @RequestParam(required = false) Long donationId,
@@ -199,7 +281,7 @@ public class DonationController {
         private String fullName;
 
         @NotBlank(message = "Choose the payment method you used.")
-        @Pattern(regexp = "GCASH|BANK_TRANSFER|QR_PH",
+        @Pattern(regexp = "GCASH|BANK_TRANSFER|QR_PH|PAYMONGO_QR",
                 message = "Choose one of the listed payment methods.")
         private String paymentMethod;
 
@@ -213,7 +295,6 @@ public class DonationController {
                 message = "Amount can have at most 2 decimal places.")
         private BigDecimal amount;
 
-        @NotNull(message = "Date sent is required.")
         @PastOrPresent(message = "Date sent cannot be in the future.")
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         private LocalDate dateSent;

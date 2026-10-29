@@ -16,6 +16,8 @@ public class DonationPaymentSettings {
     private final String bankAccountName;
     private final String bankAccountNumber;
     private final String qrPhImageUrl;
+    private final boolean payMongoEnabled;
+    private final boolean manualTransfersEnabled;
 
     public DonationPaymentSettings(
             @Value("${app.payment.gcash.recipient-name:}") String gcashRecipientName,
@@ -23,17 +25,29 @@ public class DonationPaymentSettings {
             @Value("${app.payment.bank.name:}") String bankName,
             @Value("${app.payment.bank.account-name:}") String bankAccountName,
             @Value("${app.payment.bank.account-number:}") String bankAccountNumber,
-            @Value("${app.payment.qrph.image-url:}") String qrPhImageUrl) {
+            @Value("${app.payment.qrph.image-url:}") String qrPhImageUrl,
+            @Value("${app.paymongo.secret-key:}") String payMongoSecretKey,
+            @Value("${app.paymongo.webhook-secret:}") String payMongoWebhookSecret,
+            @Value("${app.payment.manual-enabled:false}") boolean manualTransfersEnabled) {
         this.gcashRecipientName = clean(gcashRecipientName);
         this.gcashRecipientNumber = clean(gcashRecipientNumber);
         this.bankName = clean(bankName);
         this.bankAccountName = clean(bankAccountName);
         this.bankAccountNumber = clean(bankAccountNumber);
         this.qrPhImageUrl = safeQrImageUrl(qrPhImageUrl);
+        this.payMongoEnabled = payMongoSecretKey != null && !payMongoSecretKey.isBlank()
+                && payMongoWebhookSecret != null && !payMongoWebhookSecret.isBlank();
+        this.manualTransfersEnabled = manualTransfersEnabled;
     }
 
     public List<PaymentOption> options() {
         List<PaymentOption> options = new ArrayList<>();
+        if (payMongoEnabled) {
+            options.add(new PaymentOption("PAYMONGO_QR", "Scan to pay · QR Ph", "PayMongo secure checkout",
+                    "", "Create a unique QR Ph payment for this donation. Payment is confirmed automatically."));
+            return List.copyOf(options);
+        }
+        if (!manualTransfersEnabled) return List.of();
         if (!gcashRecipientName.isBlank() && !gcashRecipientNumber.isBlank()) {
             options.add(new PaymentOption("GCASH", "GCash transfer", gcashRecipientName,
                     gcashRecipientNumber, "Send to this GCash account, then enter your transfer reference."));
@@ -74,5 +88,6 @@ public class DonationPaymentSettings {
         public boolean qrCode() {
             return "QR_PH".equals(code);
         }
+        public boolean onlineCheckout() { return "PAYMONGO_QR".equals(code); }
     }
 }

@@ -38,7 +38,7 @@
             <div class="about-section-heading">
                 <p class="landing-eyebrow">PAYMENT METHODS</p>
                 <h2 id="payment-options-title">Choose a way to support the pets.</h2>
-                <p>Send your contribution using one of the verified destinations below. We confirm every transfer before marking it complete.</p>
+                <p>Pay with the available method below. Hosted PayMongo QR Ph checkouts are matched and confirmed automatically; manual transfers need proof review.</p>
             </div>
             <p class="payment-setup-note" th:if="${#lists.isEmpty(paymentOptions)}" role="status">
                 Donation destinations are being configured. Please do not send money until the verified details appear here.
@@ -47,10 +47,12 @@
                 <article class="payment-option-card" th:each="paymentOption : ${paymentOptions}">
                     <p class="landing-eyebrow" th:text="${paymentOption.label}">Payment method</p>
                     <h3 th:text="${paymentOption.recipientName}">Recipient</h3>
+                    <a class="giving-steps__link" th:if="${paymentOption.onlineCheckout() and !administrator}" th:href="@{/donations/form}">Create a donation QR <span aria-hidden="true">→</span></a>
+                    <a class="giving-steps__link" th:if="${paymentOption.onlineCheckout() and administrator}" th:href="@{/admin}">Admin workspace <span aria-hidden="true">→</span></a>
                     <img class="payment-option-qr" th:if="${paymentOption.qrCode()}"
                          th:src="${paymentOption.accountOrImage}"
                          alt="Official QR Ph merchant payment code">
-                    <code class="payment-option-account" th:unless="${paymentOption.qrCode()}"
+                    <code class="payment-option-account" th:if="${!paymentOption.qrCode() and !paymentOption.onlineCheckout()}"
                           th:text="${paymentOption.accountOrImage}">Account number</code>
                     <p th:text="${paymentOption.instructions}">Payment instructions</p>
                 </article>
@@ -61,12 +63,12 @@
             <div class="about-section-heading">
                 <p class="landing-eyebrow">HOW TO GIVE</p>
                 <h2 id="giving-steps-title">A few simple steps to support a pet.</h2>
-                <p>Share your contribution details with us so our team can verify and record your donation.</p>
+                <p>Use PayMongo QR Ph checkout for automatic confirmation, or submit a manual transfer for review.</p>
             </div>
             <ol class="giving-steps__list">
                 <li><span>01</span><div><h3>Sign in</h3><p>Log in to your account to submit a donation.</p></div></li>
-                <li><span>02</span><div><h3>Share the details</h3><p>Enter the amount and date, then attach your proof of donation.</p></div></li>
-                <li><span>03</span><div><h3>We’ll take it from here</h3><p>Our team reviews the details and follows up as needed.</p></div></li>
+                <li><span>02</span><div><h3 th:text="${onlinePaymentsEnabled ? 'Scan to pay' : 'Share transfer details'}">Scan to pay</h3><p th:text="${onlinePaymentsEnabled ? 'PayMongo creates a unique QR Ph code for your donation.' : 'Enter the amount and date, then attach your transfer proof.'}">Payment details</p></div></li>
+                <li><span>03</span><div><h3 th:text="${onlinePaymentsEnabled ? 'Automatic confirmation' : 'Admin review'}">Automatic confirmation</h3><p th:text="${onlinePaymentsEnabled ? 'PayMongo securely notifies the site when payment clears.' : 'The team reviews your payment details before marking it complete.'}">Payment confirmation</p></div></li>
             </ol>
             <a class="giving-steps__link" th:if="${!administrator}" th:href="@{/donations/form}">Continue to donation form <span aria-hidden="true">→</span></a>
             <a class="giving-steps__link" th:if="${administrator}" th:href="@{/admin}">Return to the admin workspace <span aria-hidden="true">→</span></a>
