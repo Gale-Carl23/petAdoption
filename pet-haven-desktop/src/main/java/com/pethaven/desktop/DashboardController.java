@@ -1,12 +1,14 @@
 package com.pethaven.desktop;
 
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -151,6 +153,8 @@ public final class DashboardController {
     private void renderPets(List<DesktopApiClient.PetRecord> pets) {
         VBox panel = panel("Pet profiles", pets.size() + " profiles");
         Button addButton = actionButton("＋ Add a pet", () -> openPetDialog(null));
+        Button refreshButton = actionButton("Refresh", this::showPets);
+        HBox toolbar = new HBox(10, addButton, refreshButton);
         TableView<DesktopApiClient.PetRecord> table = new TableView<>();
         table.getStyleClass().add("data-table");
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
@@ -186,8 +190,10 @@ public final class DashboardController {
             }
         });
         table.getColumns().add(edit);
-        table.setItems(FXCollections.observableArrayList(pets));
-        panel.getChildren().addAll(addButton, table);
+        TextField search = searchableTable(panel, table, pets,
+                pet -> String.join(" ", safe(pet.name()), safe(pet.breed()), safe(pet.status())),
+                "Search by pet name, breed, or status");
+        panel.getChildren().addAll(toolbar, search, table);
         VBox.setVgrow(table, Priority.ALWAYS);
         setContent(panel);
     }
@@ -232,8 +238,14 @@ public final class DashboardController {
                 }
             });
             table.getColumns().add(decision);
-            table.setItems(FXCollections.observableArrayList(applications));
-            panel.getChildren().add(table);
+            TextField search = searchableTable(panel, table, applications,
+                    application -> String.join(" ", safe(application.applicantName()),
+                            safe(application.applicantEmail()), safe(application.petName()),
+                            safe(application.status()), safe(application.housingType()),
+                            safe(application.petExperience()), safe(application.reason())),
+                    "Search by applicant, pet, status, or application details");
+            Button refresh = actionButton("Refresh", this::showApplications);
+            panel.getChildren().addAll(new HBox(10, search, refresh), table);
             VBox.setVgrow(table, Priority.ALWAYS);
         }
         setContent(panel);
@@ -294,8 +306,13 @@ public final class DashboardController {
                 }
             });
             table.getColumns().add(decision);
-            table.setItems(FXCollections.observableArrayList(donations));
-            panel.getChildren().add(table);
+            TextField search = searchableTable(panel, table, donations,
+                    donation -> String.join(" ", safe(donation.donorName()), safe(donation.donorEmail()),
+                            safe(donation.status()), safe(donation.paymentMethod()),
+                            safe(donation.paymentReference()), safe(donation.message())),
+                    "Search by donor, status, payment method, or reference");
+            Button refresh = actionButton("Refresh", this::showDonations);
+            panel.getChildren().addAll(new HBox(10, search, refresh), table);
             VBox.setVgrow(table, Priority.ALWAYS);
         }
         setContent(panel);
@@ -400,6 +417,10 @@ public final class DashboardController {
     }
 
     private void reviewApplication(DesktopApiClient.ApplicationRecord application, String status) {
+        String decision = "APPROVED".equals(status) ? "approve" : "decline";
+        if (!confirmDecision("Review adoption application",
+                "Are you sure you want to " + decision + " this application?",
+                application.applicantName() + " · " + application.petName())) return;
         load(() -> apiClient.reviewApplication(application.id(), status), updated -> {
             String outcome;
             if ("APPROVED".equals(updated.status())) {
@@ -413,6 +434,10 @@ public final class DashboardController {
     }
 
     private void reviewDonation(DesktopApiClient.DonationRecord donation, String status) {
+        String decision = "VERIFIED".equals(status) ? "verify" : "decline";
+        if (!confirmDecision("Review donation",
+                "Are you sure you want to " + decision + " this donation?",
+                donation.donorName() + " · PHP " + donation.amount().toPlainString())) return;
         load(() -> apiClient.reviewDonation(donation.id(), status), updated -> {
             String outcome = "VERIFIED".equals(updated.status())
                     ? "Donation from " + updated.donorName() + " verified."
@@ -420,6 +445,31 @@ public final class DashboardController {
             showDonations();
             showStatus(outcome, false);
         });
+    }
+
+    private <T> TextField searchableTable(VBox panel, TableView<T> table, List<T> rows,
+                                          Function<T, String> searchableText, String prompt) {
+        FilteredList<T> filtered = new FilteredList<>(FXCollections.observableArrayList(rows), item -> true);
+        table.setItems(filtered);
+        table.setPlaceholder(new Label("No records match your search."));
+        TextField search = new TextField();
+        search.setPromptText(prompt);
+        search.getStyleClass().add("table-search");
+        search.textProperty().addListener((observable, previous, value) -> {
+            String query = value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+            filtered.setPredicate(item -> query.isEmpty()
+                    || searchableText.apply(item).toLowerCase(Locale.ROOT).contains(query));
+        });
+        return search;
+    }
+
+    private boolean confirmDecision(String title, String header, String details) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.initOwner(contentArea.getScene().getWindow());
+        confirmation.setTitle(title);
+        confirmation.setHeaderText(header);
+        confirmation.setContentText(details);
+        return confirmation.showAndWait().filter(ButtonType.OK::equals).isPresent();
     }
 
     private static String applicationPlacement(DesktopApiClient.ApplicationRecord application) {

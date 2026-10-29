@@ -413,6 +413,21 @@
     -fx-fixed-cell-size: 40px;
 }
 
+.table-search {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8px;
+    -fx-border-color: #dfe4d8;
+    -fx-border-radius: 8px;
+    -fx-padding: 9px 11px;
+    -fx-font-size: 11px;
+    -fx-prompt-text-fill: #899187;
+}
+
+.table-search:focused {
+    -fx-border-color: #65734b;
+    -fx-effect: dropshadow(gaussian, rgba(52, 75, 59, 0.12), 8, 0, 0, 1);
+}
+
 .data-table .column-header-background {
     -fx-background-color: #f5f5ee;
     -fx-background-radius: 9px 9px 0 0;
