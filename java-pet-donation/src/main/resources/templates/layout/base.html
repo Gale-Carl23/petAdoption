@@ -27,7 +27,7 @@
             <a th:href="@{/donations}">Donations</a>
             <a class="admin-nav-link"
                th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
-               th:href="@{/admin/pets}">Admin</a>
+               th:href="@{/admin}">Admin</a>
 
             <span th:if="${#authorization.expression('isAuthenticated()')}">
                 <a th:href="@{/adoptions/my-applications}">
