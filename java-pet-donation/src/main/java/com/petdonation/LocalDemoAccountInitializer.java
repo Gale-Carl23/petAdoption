@@ -26,4 +26,19 @@ public class LocalDemoAccountInitializer {
                     return userRepository.save(user);
                 });
     }
+
+    @Bean
+    CommandLineRunner createLocalDemoAdmin(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
+        return args -> userRepository.findByEmail("demo-admin@pawprints.test")
+                .orElseGet(() -> {
+                    User user = new User();
+                    user.setFullName("Pawprints Admin");
+                    user.setEmail("demo-admin@pawprints.test");
+                    user.setPassword(passwordEncoder.encode("AdminPaw123!"));
+                    user.setRole("ADMIN");
+                    return userRepository.save(user);
+                });
+    }
 }
