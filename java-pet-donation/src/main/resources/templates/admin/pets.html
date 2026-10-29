@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Manage Pets | Pawprints of Hope</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="admin-page">
+    <header th:replace="~{layout/base :: header}"></header>
+
+    <main class="admin-main">
+        <section class="admin-heading" aria-labelledby="admin-pets-title">
+            <div>
+                <p class="landing-eyebrow">ADMINISTRATION</p>
+                <h1 id="admin-pets-title">Pet management</h1>
+                <p>Keep pet profiles up to date for families looking to adopt.</p>
+            </div>
+            <a class="admin-primary-action" th:href="@{/admin/pets/new}">
+                <span aria-hidden="true">＋</span> Add a pet
+            </a>
+        </section>
+
+        <div class="admin-feedback admin-feedback--success" th:if="${successMessage}" role="status" th:text="${successMessage}"></div>
+        <div class="admin-feedback admin-feedback--error" th:if="${errorMessage}" role="alert" th:text="${errorMessage}"></div>
+
+        <section class="admin-panel" aria-labelledby="pet-list-title">
+            <div class="admin-panel__heading">
+                <div>
+                    <h2 id="pet-list-title">All pets</h2>
+                    <p th:text="|${#lists.size(pets)} profiles|">0 profiles</p>
+                </div>
+            </div>
+
+            <div class="admin-empty" th:if="${#lists.isEmpty(pets)}">
+                <span aria-hidden="true">🐾</span>
+                <h3>No pet profiles yet</h3>
+                <p>Add the first profile to help a pet find their future family.</p>
+                <a class="admin-primary-action" th:href="@{/admin/pets/new}">Add a pet</a>
+            </div>
+
+            <div class="admin-table-wrap" th:unless="${#lists.isEmpty(pets)}">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Pet</th>
+                            <th scope="col">Breed</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"><span class="visually-hidden">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pet : ${pets}">
+                            <td class="admin-table__pet" data-label="Pet">
+                                <span class="admin-pet-mark" aria-hidden="true">🐾</span>
+                                <span th:text="${pet.name}">Pet name</span>
+                            </td>
+                            <td data-label="Breed" th:text="${pet.breed}">Breed</td>
+                            <td data-label="Age" th:text="${pet.age == 1 ? '1 year' : pet.age + ' years'}">1 year</td>
+                            <td data-label="Status"><span class="admin-status" th:text="${pet.status}">AVAILABLE</span></td>
+                            <td class="admin-table__action" data-label="Action">
+                                <a th:href="@{/admin/pets/{id}/edit(id=${pet.id})}">Edit <span aria-hidden="true">→</span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+</body>
+</html>
