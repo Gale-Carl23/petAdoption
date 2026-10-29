@@ -2,6 +2,10 @@ package com.petdonation.api;
 
 import com.petdonation.model.Donation;
 import com.petdonation.repository.DonationRepository;
+import com.petdonation.service.AdminReviewService;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,9 +20,12 @@ import java.util.List;
 public class AdminDonationApiController {
 
     private final DonationRepository donationRepository;
+    private final AdminReviewService reviewService;
 
-    public AdminDonationApiController(DonationRepository donationRepository) {
+    public AdminDonationApiController(DonationRepository donationRepository,
+                                      AdminReviewService reviewService) {
         this.donationRepository = donationRepository;
+        this.reviewService = reviewService;
     }
 
     @GetMapping
@@ -26,6 +33,14 @@ public class AdminDonationApiController {
         return donationRepository.findAllWithDonorOrderBySubmittedAtDesc()
                 .stream().map(DonationResponse::from).toList();
     }
+
+    @PatchMapping("/{id}/status")
+    public DonationResponse updateStatus(@PathVariable Long id,
+                                         @RequestBody ReviewDecision decision) {
+        return DonationResponse.from(reviewService.reviewDonation(id, decision.status()));
+    }
+
+    public record ReviewDecision(String status) { }
 
     public record DonationResponse(
             Long id,

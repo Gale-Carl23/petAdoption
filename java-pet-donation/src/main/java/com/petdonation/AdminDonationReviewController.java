@@ -2,6 +2,7 @@ package com.petdonation;
 
 import com.petdonation.model.Donation;
 import com.petdonation.repository.DonationRepository;
+import com.petdonation.service.AdminReviewService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ContentDisposition;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,13 +28,16 @@ import java.util.Locale;
 public class AdminDonationReviewController {
 
     private final DonationRepository donationRepository;
+    private final AdminReviewService reviewService;
     private final Path proofDirectory;
 
     public AdminDonationReviewController(
             DonationRepository donationRepository,
+            AdminReviewService reviewService,
             @Value("${app.upload.donation-proof-dir:uploads/donation-proofs}")
             String proofDirectory) {
         this.donationRepository = donationRepository;
+        this.reviewService = reviewService;
         this.proofDirectory = Paths.get(proofDirectory).toAbsolutePath().normalize();
     }
 
@@ -39,6 +46,16 @@ public class AdminDonationReviewController {
         model.addAttribute("donations",
                 donationRepository.findAllWithDonorOrderBySubmittedAtDesc());
         return "admin/donations";
+    }
+
+    @PostMapping("/admin/donations/{id}/decision")
+    public String decideDonation(@PathVariable Long id,
+                                 @RequestParam String status,
+                                 RedirectAttributes redirectAttributes) {
+        reviewService.reviewDonation(id, status);
+        redirectAttributes.addFlashAttribute("reviewMessage",
+                "Donation decision recorded: " + status.toLowerCase() + ".");
+        return "redirect:/admin/donations";
     }
 
     @GetMapping({
