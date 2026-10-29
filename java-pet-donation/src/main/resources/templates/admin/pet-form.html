@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8f5ec">
+    <title th:text="${pageTitle + ' | Pawprints of Hope'}">Pet Profile | Pawprints of Hope</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="admin-page admin-form-page">
+    <header th:replace="~{layout/base :: header}"></header>
+
+    <main class="admin-form-layout">
+        <a class="admin-form-back" th:href="@{/admin/pets}"><span aria-hidden="true">←</span> Back to pet management</a>
+
+        <section class="admin-form-heading" aria-labelledby="admin-form-title">
+            <p class="landing-eyebrow">PET PROFILE</p>
+            <h1 id="admin-form-title" th:text="${pageTitle}">Add New Pet</h1>
+            <p>Add the details families need to get to know this pet.</p>
+        </section>
+
+        <form class="admin-form-card" th:action="${formAction}" th:object="${pet}" method="post">
+            <div class="admin-form-section-heading">
+                <h2>About the pet</h2>
+                <p>Fields marked required must be completed.</p>
+            </div>
+
+            <div class="admin-form-field">
+                <label for="name">Pet name <span aria-hidden="true">*</span></label>
+                <input id="name" type="text" th:field="*{name}" maxlength="100" autocomplete="off" required placeholder="e.g. Korgi the Brownie">
+                <p class="admin-form-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+            </div>
+
+            <div class="admin-form-grid">
+                <div class="admin-form-field">
+                    <label for="breed">Breed <span aria-hidden="true">*</span></label>
+                    <input id="breed" type="text" th:field="*{breed}" maxlength="100" required placeholder="e.g. Corgi">
+                    <p class="admin-form-error" th:if="${#fields.hasErrors('breed')}" th:errors="*{breed}"></p>
+                </div>
+                <div class="admin-form-field">
+                    <label for="age">Age in years <span aria-hidden="true">*</span></label>
+                    <input id="age" type="number" th:field="*{age}" min="0" max="99" required placeholder="e.g. 2">
+                    <p class="admin-form-error" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></p>
+                </div>
+            </div>
+
+            <div class="admin-form-field">
+                <label for="description">Description</label>
+                <textarea id="description" th:field="*{description}" rows="5" maxlength="1000" placeholder="Share a little about this pet’s personality and needs."></textarea>
+                <p class="admin-form-help">A warm, clear introduction helps adopters find the right match.</p>
+                <p class="admin-form-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+            </div>
+
+            <div class="admin-form-field">
+                <label for="imageUrl">Photo URL</label>
+                <input id="imageUrl" type="text" th:field="*{imageUrl}" maxlength="500" placeholder="/images/figma-pets/example-card.png">
+                <p class="admin-form-help">Use an image path from this site or a full image URL.</p>
+                <p class="admin-form-error" th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"></p>
+            </div>
+
+            <div class="admin-form-actions">
+                <a class="admin-form-cancel" th:href="@{/admin/pets}">Cancel</a>
+                <button class="admin-primary-action" type="submit">Save pet profile <span aria-hidden="true">→</span></button>
+            </div>
+        </form>
+    </main>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+</body>
+</html>

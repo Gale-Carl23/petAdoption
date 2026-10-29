@@ -3583,3 +3583,202 @@ footer p {
         transform: none;
     }
 }
+
+/* Pet profile editor */
+.admin-form-layout {
+    width: min(100% - 32px, 820px);
+    margin: 0 auto;
+    padding: clamp(42px, 6vw, 70px) 0 76px;
+}
+
+.admin-form-back {
+    display: inline-flex;
+    min-height: 42px;
+    gap: 9px;
+    align-items: center;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--white);
+    color: var(--olive-dark);
+    font-size: .88rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background var(--transition), transform var(--transition);
+}
+
+.admin-form-back:hover {
+    background: #f3f5ee;
+    transform: translateX(-2px);
+}
+
+.admin-form-back:focus-visible,
+.admin-form-cancel:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 4px;
+}
+
+.admin-form-heading {
+    margin: 26px 0 24px;
+}
+
+.admin-form-heading h1 {
+    margin: 10px 0 7px;
+    color: var(--olive-dark);
+    font-size: clamp(2.15rem, 5vw, 3.3rem);
+    line-height: 1.08;
+    letter-spacing: -.05em;
+}
+
+.admin-form-heading>p:last-child {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.admin-form-card {
+    display: grid;
+    gap: 22px;
+    padding: clamp(22px, 5vw, 40px);
+    border: 1px solid var(--border);
+    border-radius: 26px;
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-form-section-heading {
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.admin-form-section-heading h2 {
+    margin: 0 0 5px;
+    color: var(--olive-dark);
+    font-size: 1.2rem;
+}
+
+.admin-form-section-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .84rem;
+}
+
+.admin-form-field {
+    min-width: 0;
+}
+
+.admin-form-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text);
+    font-size: .92rem;
+    font-weight: 800;
+}
+
+.admin-form-field label span {
+    color: #a75d45;
+}
+
+.admin-form-field input,
+.admin-form-field textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fffefa;
+    color: var(--text);
+    font: inherit;
+    font-size: .94rem;
+}
+
+.admin-form-field textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+.admin-form-field input:focus-visible,
+.admin-form-field textarea:focus-visible {
+    border-color: var(--olive);
+    outline: 3px solid rgb(101 115 75 / 18%);
+    outline-offset: 1px;
+}
+
+.admin-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.admin-form-help {
+    margin: 7px 0 0;
+    color: var(--muted);
+    font-size: .83rem;
+    line-height: 1.55;
+}
+
+.admin-form-error {
+    margin: 7px 0 0;
+    color: #8a3c31;
+    font-size: .85rem;
+}
+
+.admin-form-actions {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 4px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.admin-form-actions .admin-primary-action {
+    border: 0;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.admin-form-cancel {
+    color: var(--muted);
+    font-size: .9rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.admin-form-cancel:hover {
+    color: var(--olive-dark);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+@media (max-width: 560px) {
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .admin-form-actions .admin-primary-action {
+        width: 100%;
+    }
+
+    .admin-form-cancel {
+        padding: 8px;
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-form-back {
+        transition: none;
+    }
+
+    .admin-form-back:hover {
+        transform: none;
+    }
+}
