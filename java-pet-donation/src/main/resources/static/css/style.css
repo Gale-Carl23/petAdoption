@@ -3951,3 +3951,73 @@ footer p {
         width: 100%;
     }
 }
+
+/* Adoption application review queue */
+.admin-review-heading {
+    align-items: flex-end;
+    margin-top: 22px;
+}
+
+.admin-review-table {
+    min-width: 1180px;
+}
+
+.admin-review-table th,
+.admin-review-table td {
+    padding: 14px 16px;
+}
+
+.admin-review-applicant,
+.admin-review-secondary {
+    display: block;
+}
+
+.admin-review-applicant {
+    color: var(--olive-dark);
+    font-weight: 800;
+}
+
+.admin-review-secondary {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: .78rem;
+}
+
+.admin-review-reason {
+    min-width: 240px;
+    max-width: 340px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 720px) {
+    .admin-review-table {
+        display: table;
+        width: auto;
+        min-width: 1180px;
+    }
+
+    .admin-review-table tbody {
+        display: table-row-group;
+    }
+
+    .admin-review-table tr {
+        display: table-row;
+        padding: 0;
+        border: 0;
+    }
+
+    .admin-review-table td,
+    .admin-review-table td:first-child {
+        display: table-cell;
+        width: auto;
+        min-width: 0;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+    }
+
+    .admin-review-table td::before {
+        content: none;
+    }
+}

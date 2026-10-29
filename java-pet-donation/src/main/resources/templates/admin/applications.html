@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Adoption Applications | Pawprints of Hope</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="admin-page admin-review-page">
+    <header th:replace="~{layout/base :: header}"></header>
+
+    <main class="admin-main">
+        <a class="admin-form-back" th:href="@{/admin}"><span aria-hidden="true">←</span> Back to overview</a>
+        <section class="admin-heading admin-review-heading" aria-labelledby="admin-applications-title">
+            <div>
+                <p class="landing-eyebrow">ADMINISTRATION</p>
+                <h1 id="admin-applications-title">Adoption applications</h1>
+                <p>Review the details adopters shared about their home and experience.</p>
+            </div>
+        </section>
+
+        <section class="admin-panel" aria-labelledby="applications-list-title">
+            <div class="admin-panel__heading">
+                <div>
+                    <h2 id="applications-list-title">Submitted applications</h2>
+                    <p th:text="|${#lists.size(applications)} applications, newest first|">0 applications</p>
+                </div>
+            </div>
+
+            <div class="admin-empty" th:if="${#lists.isEmpty(applications)}">
+                <span aria-hidden="true">♡</span>
+                <h3>No applications yet</h3>
+                <p>When someone applies to adopt, their application will appear here.</p>
+            </div>
+
+            <div class="admin-table-wrap" th:unless="${#lists.isEmpty(applications)}">
+                <table class="admin-table admin-review-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Applicant</th>
+                            <th scope="col">Pet</th>
+                            <th scope="col">Submitted</th>
+                            <th scope="col">Home</th>
+                            <th scope="col">Experience</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Why they want to adopt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="application : ${applications}">
+                            <td data-label="Applicant">
+                                <span class="admin-review-applicant" th:text="${application.applicant.fullName}">Applicant</span>
+                                <span class="admin-review-secondary" th:text="${application.applicant.email}">email</span>
+                            </td>
+                            <td data-label="Pet" th:text="${application.pet.name}">Pet</td>
+                            <td data-label="Submitted" th:text="${#temporals.format(application.submittedAt, 'MMM d, yyyy')}">Date</td>
+                            <td data-label="Home" th:text="${application.housingType}">House</td>
+                            <td data-label="Experience" th:text="${application.petExperience}">Experience</td>
+                            <td data-label="Status"><span class="application-status" th:text="${application.status == 'UNDER_REVIEW' ? 'Under review' : (application.status == 'PENDING' ? 'Pending' : application.status)}">Pending</span></td>
+                            <td class="admin-review-reason" data-label="Reason" th:text="${application.reasonForAdoption}">Reason</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+</body>
+</html>

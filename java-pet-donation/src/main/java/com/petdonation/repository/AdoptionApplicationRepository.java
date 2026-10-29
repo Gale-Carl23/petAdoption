@@ -31,4 +31,13 @@ public interface AdoptionApplicationRepository
     List<AdoptionApplication> findApplicationsWithPetByApplicantId(
             @Param("applicantId") Long applicantId
     );
+
+    @Query("""
+    SELECT a
+    FROM AdoptionApplication a
+    JOIN FETCH a.pet
+    JOIN FETCH a.applicant
+    ORDER BY a.submittedAt DESC
+    """)
+    List<AdoptionApplication> findAllWithPetAndApplicantOrderBySubmittedAtDesc();
 }
