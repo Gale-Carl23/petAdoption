@@ -10,15 +10,19 @@ The web application can run as a Vercel container function using the Java Docker
 4. Set the production environment variable `PORT` to `8080`. Spring Boot reads this value from `application-production.properties`.
 5. Set `SPRING_PROFILES_ACTIVE=production` and add the application's runtime variables through Vercel's Environment Variables settings. Do not add credentials to Git, this file, deployment logs, or chat.
 
-## Required services before the first deployment
+## Connect the production services
 
-- A PostgreSQL database reachable from Vercel over TLS. The AWS Terraform design in `infra/aws` places RDS in private subnets, and Vercel container functions currently cannot use Secure Compute or static egress IPs. Do not make that database publicly reachable to work around the network boundary. Use a managed PostgreSQL service with a TLS endpoint reachable from Vercel, or keep the entire Spring Boot service on AWS.
-- Provide `DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` as production environment variables. The database must support the Flyway migrations used by the app and JDBC-backed HTTP sessions.
-- Private donation-proof storage. The app currently uses AWS S3. If retaining S3, provide a dedicated AWS identity with write/read access only to this application's proof prefix and store its credentials as encrypted Vercel environment variables. Never use root or broad administrator credentials. Alternatively, replace the storage adapter with a Vercel-compatible object store before deployment.
-- Configure the application’s admin bootstrap email and password through the project's secret settings. Rotate the bootstrap password immediately after first login.
+The production app needs persistent Postgres and private file storage. The current repository supports Neon Postgres and private Vercel Blob, so AWS credentials are not required.
+
+1. In the Vercel project, open **Storage** and add a Neon Postgres database. Choose a plan that fits your account. Connect it to the `Production` environment; Vercel adds `DATABASE_URL` for you. The application reads that URL directly and extracts its database credentials at startup. Do not copy its value into Git or chat.
+2. In **Storage**, create a **private** Vercel Blob store and connect it to this project. Make sure the production runtime receives either `BLOB_READ_WRITE_TOKEN`, or both `VERCEL_OIDC_TOKEN` and `BLOB_STORE_ID`. Donation proofs are uploaded and served only through authenticated app endpoints; the stored Blob is not made public.
+3. In **Settings → Environment Variables**, set `SPRING_PROFILES_ACTIVE` to `production` and add `ADMIN_BOOTSTRAP_EMAIL` plus a unique `ADMIN_BOOTSTRAP_PASSWORD` (16–72 bytes). Keep these values private. The first deployment seeds this administrator account if it does not already exist.
+4. Save the settings, then open **Deployments** and redeploy the latest `main` deployment so the container starts with the new variables. Check its runtime logs if the deployment still reports an error; the application no longer requires AWS S3.
+
+`DB_URL`, `DB_USERNAME`, and `DB_PASSWORD` are also accepted if you use a database other than Neon. The database must allow TLS connections from Vercel and support the Flyway migrations and JDBC-backed HTTP sessions.
 
 ## Deployment boundary
 
-This repository contains the Vercel container configuration, but deployment cannot complete until the Vercel project is connected and the required database and storage endpoints are configured. Container functions scale to zero and have temporary local storage, so durable state must remain in external services. The Vercel container runtime is currently documented as beta; check its plan-specific function limits before production use.
+The Vercel project must be connected to the database and private Blob store before the production app can start. Container functions scale to zero and have temporary local storage, so durable state must remain in external services. Review Vercel's plan-specific container function limits before production use.
 
 PayMongo configuration remains deferred. The app will continue to show that donation destinations are unavailable until a payment method is intentionally configured.
