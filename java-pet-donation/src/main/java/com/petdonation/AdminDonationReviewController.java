@@ -3,13 +3,12 @@ package com.petdonation;
 import com.petdonation.model.Donation;
 import com.petdonation.repository.DonationRepository;
 import com.petdonation.service.AdminReviewService;
-import org.springframework.beans.factory.annotation.Value;
+import com.petdonation.service.DonationProofStorageService;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,26 +18,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
 import java.util.Locale;
+import java.util.Optional;
 
 @Controller
 public class AdminDonationReviewController {
 
     private final DonationRepository donationRepository;
     private final AdminReviewService reviewService;
-    private final Path proofDirectory;
+    private final DonationProofStorageService proofStorageService;
 
     public AdminDonationReviewController(
             DonationRepository donationRepository,
             AdminReviewService reviewService,
-            @Value("${app.upload.donation-proof-dir:uploads/donation-proofs}")
-            String proofDirectory) {
+            DonationProofStorageService proofStorageService) {
         this.donationRepository = donationRepository;
         this.reviewService = reviewService;
-        this.proofDirectory = Paths.get(proofDirectory).toAbsolutePath().normalize();
+        this.proofStorageService = proofStorageService;
     }
 
     @GetMapping("/admin/donations")
@@ -62,30 +59,15 @@ public class AdminDonationReviewController {
             "/admin/donations/{id}/proof",
             "/api/admin/donations/{id}/proof"
     })
-    public ResponseEntity<Resource> viewProof(@PathVariable Long id) {
+    public ResponseEntity<Resource> viewProof(@PathVariable Long id) throws IOException {
         Donation donation = donationRepository.findById(id).orElse(null);
         if (donation == null || donation.getProofFilePath() == null) {
             return ResponseEntity.notFound().build();
         }
 
-        final Path submittedPath;
-        try {
-            submittedPath = Paths.get(donation.getProofFilePath());
-        } catch (RuntimeException ex) {
-            return ResponseEntity.notFound().build();
-        }
-
-        if (submittedPath.isAbsolute() || submittedPath.getNameCount() != 1) {
-            return ResponseEntity.notFound().build();
-        }
-
-        Path proofFile = proofDirectory.resolve(submittedPath).normalize();
-        if (!proofFile.startsWith(proofDirectory)
-                || !Files.isRegularFile(proofFile)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        String fileName = submittedPath.getFileName().toString();
+        String fileName = donation.getProofFilePath();
+        Optional<Resource> proof = proofStorageService.load(fileName);
+        if (proof.isEmpty()) return ResponseEntity.notFound().build();
         String extension = fileName.substring(fileName.lastIndexOf('.') + 1)
                 .toLowerCase(Locale.ROOT);
         MediaType mediaType = switch (extension) {
@@ -100,6 +82,6 @@ public class AdminDonationReviewController {
                 .contentType(mediaType)
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         ContentDisposition.inline().filename(fileName).build().toString())
-                .body(new FileSystemResource(proofFile));
+                .body(proof.get());
     }
 }

@@ -53,6 +53,10 @@ public class SecurityConfig {
                     "/login",
                     "/donations",
                     "/api/auth/csrf",
+                    "/actuator/health",
+                    "/actuator/health/**",
+                    "/livez",
+                    "/readyz",
                     "/css/**",
                     "/images/**"
                 ).permitAll()
