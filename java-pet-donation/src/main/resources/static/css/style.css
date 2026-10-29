@@ -3478,6 +3478,60 @@ footer p {
     overflow-x: auto;
 }
 
+.admin-table-toolbar {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 18px 22px 0;
+}
+
+.admin-table-search {
+    display: grid;
+    width: min(100%, 440px);
+    gap: 6px;
+    color: var(--muted);
+    font-size: .78rem;
+    font-weight: 750;
+}
+
+.admin-table-search input {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    font-weight: 500;
+}
+
+.admin-table-search input:focus-visible {
+    border-color: var(--olive);
+    outline: 3px solid color-mix(in srgb, var(--olive) 20%, transparent);
+    outline-offset: 1px;
+}
+
+.admin-filter-count {
+    margin: 0 0 11px;
+    color: var(--muted);
+    font-size: .8rem;
+    white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+    .admin-table-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+        gap: .35rem;
+    }
+
+    .admin-filter-count {
+        margin: 0;
+    }
+}
+
 .admin-table {
     width: 100%;
     border-collapse: collapse;
