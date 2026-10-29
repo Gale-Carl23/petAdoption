@@ -4,12 +4,14 @@ This stack describes an AWS production baseline for the Spring Boot web app and 
 
 ## Architecture
 
-- Public Application Load Balancer in two availability zones. HTTP redirects to HTTPS, and AWS WAF applies managed common-input rules plus an IP rate limit.
+- Public Application Load Balancer in two availability zones. HTTP redirects to HTTPS, and AWS WAF applies managed common-input rules, a focused login rate limit, and an application-wide IP rate limit.
 - Spring Boot runs as non-root Fargate tasks in private subnets. ECS keeps at least two tasks, scales on CPU and memory, and rolls back failed deployments.
 - Amazon RDS for PostgreSQL runs privately with Multi-AZ failover, encrypted gp3 storage, 14-day point-in-time recovery, Performance Insights, and an RDS Proxy connection pool.
 - Donation receipts live in a versioned, KMS-encrypted S3 bucket with public access blocked. The task role can read/write only the donation-proof prefix.
+- Donation destinations are injected from Secrets Manager at runtime; the repository and Terraform variables contain no recipient account number. GCash and bank transfers remain pending until an administrator checks the submitted reference and proof.
 - Secrets Manager holds the generated database credential. CloudWatch retains application logs and sends infrastructure alarms to an optional SNS email subscription.
 - Flyway creates and versions the database schema. Hibernate validates mappings rather than changing production tables at startup.
+- JDBC-backed Spring sessions are shared through PostgreSQL so authentication survives requests routed to different Fargate tasks.
 
 ## Before deployment
 
@@ -35,6 +37,25 @@ terraform init `
 ```
 
 ## Build and deploy
+
+### Configure donation destinations
+
+Create a Secrets Manager JSON secret outside the repository. Encrypt it with the application key alias (`alias/pawprints-production` for the default resource name), and include all keys even when a method is unused:
+
+```json
+{
+  "gcashRecipientName": "RECIPIENT NAME",
+  "gcashRecipientNumber": "GCASH NUMBER",
+  "bankName": "",
+  "bankAccountName": "",
+  "bankAccountNumber": "",
+  "qrPhImageUrl": ""
+}
+```
+
+Set `payment_details_secret_arn` in the untracked `terraform.tfvars` to this secret's ARN. The app displays only complete methods. For QR payments, use the official QR Ph merchant-presented code issued by the merchant's bank or payment service provider; QR Ph is the BSP national standard aligned with EMVCo. Do not generate or alter a payment QR from an account number. The QR image URL may be an HTTPS image URL or a site path such as `/images/qrph-merchant.png`.
+
+The current donation workflow records transfer details and proof for manual review. It does not initiate or automatically settle payments. Never ask donors for wallet PINs, passwords, or one-time codes.
 
 The ECR repository must exist before the image can be pushed. First create only that repository with Terraform, supplying temporary valid-shaped values for required full-stack variables; this targeted bootstrap does not create the database or load balancer:
 

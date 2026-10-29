@@ -450,15 +450,24 @@ resource "aws_iam_role_policy" "task_secret" {
   role = aws_iam_role.task_execution.id
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Action = ["secretsmanager:GetSecretValue", "kms:Decrypt"]
-      Resource = [
-        aws_secretsmanager_secret.database.arn,
-        aws_secretsmanager_secret.admin_bootstrap.arn,
-        aws_kms_key.app.arn
-      ]
-    }]
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = ["secretsmanager:GetSecretValue"]
+        Resource = concat(
+          [
+            aws_secretsmanager_secret.database.arn,
+            aws_secretsmanager_secret.admin_bootstrap.arn
+          ],
+          var.payment_details_secret_arn == "" ? [] : [var.payment_details_secret_arn]
+        )
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["kms:Decrypt"]
+        Resource = aws_kms_key.app.arn
+      }
+    ]
   })
 }
 
@@ -529,13 +538,41 @@ resource "aws_ecs_task_definition" "app" {
       { name = "DONATION_PROOF_PREFIX", value = "donation-proofs" },
       { name = "AWS_REGION", value = var.aws_region }
     ]
-    secrets = [{
-      name      = "DB_PASSWORD"
-      valueFrom = "${aws_secretsmanager_secret.database.arn}:password::"
-      }, {
-      name      = "ADMIN_BOOTSTRAP_PASSWORD"
-      valueFrom = "${aws_secretsmanager_secret.admin_bootstrap.arn}:password::"
-    }]
+    secrets = concat([
+      {
+        name      = "DB_PASSWORD"
+        valueFrom = "${aws_secretsmanager_secret.database.arn}:password::"
+      },
+      {
+        name      = "ADMIN_BOOTSTRAP_PASSWORD"
+        valueFrom = "${aws_secretsmanager_secret.admin_bootstrap.arn}:password::"
+      }
+      ], var.payment_details_secret_arn == "" ? [] : [
+      {
+        name      = "GCASH_RECIPIENT_NAME"
+        valueFrom = "${var.payment_details_secret_arn}:gcashRecipientName::"
+      },
+      {
+        name      = "GCASH_RECIPIENT_NUMBER"
+        valueFrom = "${var.payment_details_secret_arn}:gcashRecipientNumber::"
+      },
+      {
+        name      = "BANK_NAME"
+        valueFrom = "${var.payment_details_secret_arn}:bankName::"
+      },
+      {
+        name      = "BANK_ACCOUNT_NAME"
+        valueFrom = "${var.payment_details_secret_arn}:bankAccountName::"
+      },
+      {
+        name      = "BANK_ACCOUNT_NUMBER"
+        valueFrom = "${var.payment_details_secret_arn}:bankAccountNumber::"
+      },
+      {
+        name      = "QRPH_IMAGE_URL"
+        valueFrom = "${var.payment_details_secret_arn}:qrPhImageUrl::"
+      }
+    ])
     healthCheck = {
       command     = ["CMD-SHELL", "wget -q -O - http://127.0.0.1:8080/readyz >/dev/null || exit 1"]
       interval    = 30
@@ -681,14 +718,45 @@ resource "aws_appautoscaling_policy" "ecs_memory" {
 resource "aws_wafv2_web_acl" "app" {
   count       = var.enable_waf ? 1 : 0
   name        = "${local.prefix}-web-acl"
-  description = "Managed common web protections and per-IP rate limit"
+  description = "Managed protections plus focused per-IP rate limits for login and application traffic"
   scope       = "REGIONAL"
   default_action {
     allow {}
   }
   rule {
-    name     = "RateLimitByIp"
+    name     = "RateLimitLoginByIp"
     priority = 0
+    action {
+      block {}
+    }
+    statement {
+      rate_based_statement {
+        limit              = 100
+        aggregate_key_type = "IP"
+        scope_down_statement {
+          byte_match_statement {
+            search_string         = "/login"
+            positional_constraint = "EXACTLY"
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+      }
+    }
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "${local.prefix}-login-rate-limit"
+      sampled_requests_enabled   = true
+    }
+  }
+  rule {
+    name     = "RateLimitByIp"
+    priority = 1
     action {
       block {}
     }
@@ -706,7 +774,7 @@ resource "aws_wafv2_web_acl" "app" {
   }
   rule {
     name     = "AWSManagedCommonRules"
-    priority = 1
+    priority = 2
     override_action {
       none {}
     }
@@ -730,7 +798,7 @@ resource "aws_wafv2_web_acl" "app" {
   }
   rule {
     name     = "AWSManagedKnownBadInputs"
-    priority = 2
+    priority = 3
     override_action {
       none {}
     }

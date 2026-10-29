@@ -37,6 +37,12 @@ variable "admin_email" {
   type        = string
 }
 
+variable "payment_details_secret_arn" {
+  description = "Optional Secrets Manager ARN containing public donation destinations and QR image URL."
+  type        = string
+  default     = ""
+}
+
 variable "db_instance_class" {
   description = "RDS PostgreSQL instance size; adjust after load testing."
   type        = string
