@@ -169,6 +169,27 @@ public final class DashboardController {
             table.getColumns().add(textColumn("Status", DesktopApiClient.ApplicationRecord::status, 110));
             table.getColumns().add(textColumn("Submitted", this::dateOnly, 120));
             table.getColumns().add(textColumn("Reason", DesktopApiClient.ApplicationRecord::reason, 260));
+            TableColumn<DesktopApiClient.ApplicationRecord, DesktopApiClient.ApplicationRecord> decision =
+                    objectColumn("Decision", application -> application);
+            decision.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
+                private final HBox actions = new HBox(6);
+                private final Button approve = new Button("Approve");
+                private final Button decline = new Button("Decline");
+                {
+                    approve.getStyleClass().addAll("table-action-button", "review-approve-button");
+                    decline.getStyleClass().addAll("table-action-button", "review-reject-button");
+                    approve.setOnAction(event -> reviewApplication(
+                            getTableView().getItems().get(getIndex()), "APPROVED"));
+                    decline.setOnAction(event -> reviewApplication(
+                            getTableView().getItems().get(getIndex()), "REJECTED"));
+                    actions.getChildren().addAll(approve, decline);
+                }
+                @Override protected void updateItem(DesktopApiClient.ApplicationRecord item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setGraphic(empty ? null : isApplicationPending(item) ? actions : reviewedLabel());
+                }
+            });
+            table.getColumns().add(decision);
             table.setItems(FXCollections.observableArrayList(applications));
             panel.getChildren().add(table);
             VBox.setVgrow(table, Priority.ALWAYS);
@@ -204,6 +225,28 @@ public final class DashboardController {
                 }
             });
             table.getColumns().add(proof);
+            TableColumn<DesktopApiClient.DonationRecord, DesktopApiClient.DonationRecord> decision =
+                    objectColumn("Decision", donation -> donation);
+            decision.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
+                private final HBox actions = new HBox(6);
+                private final Button verify = new Button("Verify");
+                private final Button decline = new Button("Decline");
+                {
+                    verify.getStyleClass().addAll("table-action-button", "review-approve-button");
+                    decline.getStyleClass().addAll("table-action-button", "review-reject-button");
+                    verify.setOnAction(event -> reviewDonation(
+                            getTableView().getItems().get(getIndex()), "VERIFIED"));
+                    decline.setOnAction(event -> reviewDonation(
+                            getTableView().getItems().get(getIndex()), "REJECTED"));
+                    actions.getChildren().addAll(verify, decline);
+                }
+                @Override protected void updateItem(DesktopApiClient.DonationRecord item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setGraphic(empty ? null : "PENDING_VERIFICATION".equals(item.status())
+                            ? actions : reviewedLabel());
+                }
+            });
+            table.getColumns().add(decision);
             table.setItems(FXCollections.observableArrayList(donations));
             panel.getChildren().add(table);
             VBox.setVgrow(table, Priority.ALWAYS);
@@ -290,6 +333,30 @@ public final class DashboardController {
             Desktop.getDesktop().open(proof.toFile());
             return null;
         }, ignored -> showStatus("Payment proof opened.", false));
+    }
+
+    private void reviewApplication(DesktopApiClient.ApplicationRecord application, String status) {
+        load(() -> apiClient.reviewApplication(application.id(), status), updated -> {
+            showStatus("Application " + status.toLowerCase(Locale.ROOT) + ".", false);
+            showApplications();
+        });
+    }
+
+    private void reviewDonation(DesktopApiClient.DonationRecord donation, String status) {
+        load(() -> apiClient.reviewDonation(donation.id(), status), updated -> {
+            showStatus("Donation marked " + status.toLowerCase(Locale.ROOT) + ".", false);
+            showDonations();
+        });
+    }
+
+    private static boolean isApplicationPending(DesktopApiClient.ApplicationRecord application) {
+        return "PENDING".equals(application.status()) || "UNDER_REVIEW".equals(application.status());
+    }
+
+    private static Label reviewedLabel() {
+        Label label = new Label("Recorded");
+        label.getStyleClass().add("panel-copy");
+        return label;
     }
 
     private <T> void load(ApiCall<T> call, Consumer<T> success) {

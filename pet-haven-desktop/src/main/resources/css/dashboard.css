@@ -344,6 +344,25 @@
     -fx-background-color: #f0f3eb;
 }
 
+.review-approve-button {
+    -fx-background-color: #f1f5eb;
+    -fx-border-color: #d8e2c9;
+}
+
+.review-approve-button:hover {
+    -fx-background-color: #e5edda;
+}
+
+.review-reject-button {
+    -fx-background-color: #fff8f5;
+    -fx-border-color: #eed2ca;
+    -fx-text-fill: #8a3c31;
+}
+
+.review-reject-button:hover {
+    -fx-background-color: #fff1ed;
+}
+
 .content-area {
     -fx-background-color: transparent;
 }

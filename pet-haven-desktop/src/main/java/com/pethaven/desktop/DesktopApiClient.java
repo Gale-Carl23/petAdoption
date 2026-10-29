@@ -103,6 +103,18 @@ public final class DesktopApiClient {
         return getList("/api/admin/donations", DONATION_LIST);
     }
 
+    public ApplicationRecord reviewApplication(long id, String status)
+            throws IOException, InterruptedException {
+        return sendJson("PATCH", "/api/admin/applications/" + id + "/status",
+                new ReviewDecision(status), ApplicationRecord.class);
+    }
+
+    public DonationRecord reviewDonation(long id, String status)
+            throws IOException, InterruptedException {
+        return sendJson("PATCH", "/api/admin/donations/" + id + "/status",
+                new ReviewDecision(status), DonationRecord.class);
+    }
+
     public PetRecord createPet(PetPayload pet) throws IOException, InterruptedException {
         return sendJson("POST", "/api/admin/pets", pet, PetRecord.class);
     }
@@ -258,4 +270,6 @@ public final class DesktopApiClient {
     public record DonationRecord(Long id, String donorName, String donorEmail,
                                  BigDecimal amount, String dateSent, String status,
                                  String message, String submittedAt, String proofPath) { }
+
+    private record ReviewDecision(String status) { }
 }
