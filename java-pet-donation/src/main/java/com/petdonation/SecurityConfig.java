@@ -52,12 +52,17 @@ public class SecurityConfig {
                     "/register",
                     "/login",
                     "/donations",
+                    "/api/auth/csrf",
                     "/css/**",
                     "/images/**"
                 ).permitAll()
 
                 // Only ADMIN can manage pets.
                 // These patterns reserve the management URL namespace.
+                .requestMatchers(
+                    "/api/admin/**"
+                ).hasRole("ADMIN")
+
                 .requestMatchers(
                     "/admin/**"
                 ).hasRole("ADMIN")

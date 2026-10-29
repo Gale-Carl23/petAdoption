@@ -41,7 +41,10 @@ public class AdminDonationReviewController {
         return "admin/donations";
     }
 
-    @GetMapping("/admin/donations/{id}/proof")
+    @GetMapping({
+            "/admin/donations/{id}/proof",
+            "/api/admin/donations/{id}/proof"
+    })
     public ResponseEntity<Resource> viewProof(@PathVariable Long id) {
         Donation donation = donationRepository.findById(id).orElse(null);
         if (donation == null || donation.getProofFilePath() == null) {
