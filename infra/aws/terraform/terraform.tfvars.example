@@ -1,5 +1,6 @@
 aws_region       = "ap-southeast-1"
 certificate_arn  = "arn:aws:acm:ap-southeast-1:123456789012:certificate/replace-me"
+admin_email      = "admin@example.org"
 image_uri        = "123456789012.dkr.ecr.ap-southeast-1.amazonaws.com/pawprints-production@sha256:replace-me"
 alarm_email      = "ops@example.org"
 

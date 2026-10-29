@@ -32,6 +32,11 @@ variable "db_username" {
   default     = "petdonation_app"
 }
 
+variable "admin_email" {
+  description = "Email address for the initial production administrator."
+  type        = string
+}
+
 variable "db_instance_class" {
   description = "RDS PostgreSQL instance size; adjust after load testing."
   type        = string

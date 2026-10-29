@@ -20,6 +20,11 @@ output "proof_bucket_name" {
   value = aws_s3_bucket.proofs.bucket
 }
 
+output "admin_bootstrap_secret_arn" {
+  value       = aws_secretsmanager_secret.admin_bootstrap.arn
+  description = "Secrets Manager entry holding the initial administrator password."
+}
+
 output "database_proxy_endpoint" {
   value       = aws_db_proxy.app.endpoint
   description = "Private RDS Proxy endpoint; never publish this address."

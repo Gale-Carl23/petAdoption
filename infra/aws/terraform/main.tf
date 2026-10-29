@@ -310,6 +310,24 @@ resource "aws_secretsmanager_secret_version" "database" {
   })
 }
 
+resource "random_password" "admin_bootstrap" {
+  length           = 40
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}:?,."
+}
+
+resource "aws_secretsmanager_secret" "admin_bootstrap" {
+  name                    = "${local.prefix}/admin/bootstrap"
+  description             = "Initial production administrator password; change after first login."
+  kms_key_id              = aws_kms_key.app.arn
+  recovery_window_in_days = 30
+}
+
+resource "aws_secretsmanager_secret_version" "admin_bootstrap" {
+  secret_id     = aws_secretsmanager_secret.admin_bootstrap.id
+  secret_string = jsonencode({ password = random_password.admin_bootstrap.result })
+}
+
 resource "aws_db_instance" "app" {
   identifier                            = "${local.prefix}-postgres"
   engine                                = "postgres"
@@ -433,9 +451,13 @@ resource "aws_iam_role_policy" "task_secret" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Effect   = "Allow"
-      Action   = ["secretsmanager:GetSecretValue", "kms:Decrypt"]
-      Resource = [aws_secretsmanager_secret.database.arn, aws_kms_key.app.arn]
+      Effect = "Allow"
+      Action = ["secretsmanager:GetSecretValue", "kms:Decrypt"]
+      Resource = [
+        aws_secretsmanager_secret.database.arn,
+        aws_secretsmanager_secret.admin_bootstrap.arn,
+        aws_kms_key.app.arn
+      ]
     }]
   })
 }
@@ -500,6 +522,7 @@ resource "aws_ecs_task_definition" "app" {
       { name = "SPRING_PROFILES_ACTIVE", value = "production" },
       { name = "DB_URL", value = "jdbc:postgresql://${aws_db_proxy.app.endpoint}:5432/petdonation?sslmode=require" },
       { name = "DB_USERNAME", value = var.db_username },
+      { name = "ADMIN_BOOTSTRAP_EMAIL", value = var.admin_email },
       { name = "DB_POOL_MAX_SIZE", value = "10" },
       { name = "DB_POOL_MIN_IDLE", value = "2" },
       { name = "DONATION_PROOF_BUCKET", value = aws_s3_bucket.proofs.bucket },
@@ -509,6 +532,9 @@ resource "aws_ecs_task_definition" "app" {
     secrets = [{
       name      = "DB_PASSWORD"
       valueFrom = "${aws_secretsmanager_secret.database.arn}:password::"
+      }, {
+      name      = "ADMIN_BOOTSTRAP_PASSWORD"
+      valueFrom = "${aws_secretsmanager_secret.admin_bootstrap.arn}:password::"
     }]
     healthCheck = {
       command     = ["CMD-SHELL", "wget -q -O - http://127.0.0.1:8080/readyz >/dev/null || exit 1"]

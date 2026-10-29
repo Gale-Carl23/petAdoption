@@ -41,14 +41,15 @@ The ECR repository must exist before the image can be pushed. First create only 
 ```powershell
 terraform apply -target=aws_ecr_repository.app `
   -var="certificate_arn=arn:aws:acm:ap-southeast-1:111122223333:certificate/bootstrap" `
-  -var="image_uri=public.ecr.aws/docker/library/alpine:latest"
+  -var="image_uri=public.ecr.aws/docker/library/alpine:latest" `
+  -var="admin_email=admin@example.org"
 ```
 
 Log in to the ECR URL shown by `terraform output ecr_repository_url`, build from the `java-pet-donation` directory, tag the image with a unique release name, and push it. Use the pushed image digest for `image_uri`; immutable digests make rollbacks reproducible.
 
 Create an untracked `terraform.tfvars` using `terraform.tfvars.example`, replacing the certificate ARN and image URI. Restrict `allowed_web_cidrs` if the site should only be reachable from selected networks. Run `terraform plan -out=production.tfplan`, inspect the plan and estimated costs, then apply that saved plan. Never commit tfvars, plans, local Terraform state, or AWS credentials.
 
-After apply, add a DNS alias for the load balancer output, confirm the SNS email subscription, and create the first administrator through the approved account-provisioning process. Do not use the local demo login in production. New blank databases apply `V1__create_pet_adoption_schema.sql` automatically. Existing databases need a reviewed backup and one-time Flyway baseline/migration plan before this application version is deployed.
+After apply, add a DNS alias for the load balancer output and confirm the SNS email subscription. Terraform creates a random initial administrator password in Secrets Manager; retrieve it from the `admin_bootstrap_secret_arn` output and sign in at `/login` with the configured `admin_email`. The production app creates that account once, and a matching existing admin account is left unchanged. Keep the credential in an approved secret manager. Do not use the local demo login in production. Establish an audited password change and administrator lifecycle before go-live. New blank databases apply `V1__create_pet_adoption_schema.sql` automatically. Existing databases need a reviewed backup and one-time Flyway baseline/migration plan before this application version is deployed.
 
 Set `PET_HAVEN_API_BASE_URL` on each JavaFX admin workstation to the HTTPS site hostname (for example, `https://pets.example.org`). The desktop client keeps its own session cookie and sends review, pet-management, and proof requests to the same protected Spring APIs.
 
