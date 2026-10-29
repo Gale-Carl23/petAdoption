@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Choose the right workspace | Pawprints of Hope</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="applications-page">
+    <header th:replace="~{layout/base :: header}"></header>
+    <main class="applications-main">
+        <section class="applications-empty" aria-labelledby="workspace-title">
+            <span aria-hidden="true">🐾</span>
+            <p class="landing-eyebrow">ACCOUNT WORKSPACE</p>
+            <h1 id="workspace-title">This action uses a different account role.</h1>
+            <p th:if="${administrator}">Admin accounts are reserved for reviewing adoption applications, donation proofs, and pet listings. Use a separate supporter account to apply or donate.</p>
+            <p th:unless="${administrator}">Sign in with a supporter account to apply for adoption or submit a donation.</p>
+            <a class="primary-button" th:if="${administrator}" th:href="@{/admin}">Open admin workspace <span aria-hidden="true">→</span></a>
+            <a class="primary-button" th:unless="${administrator}" th:href="@{/login}">Sign in <span aria-hidden="true">→</span></a>
+            <a class="giving-steps__link" th:if="${administrator}" th:href="@{/register}">Create a separate supporter account</a>
+            <a class="giving-steps__link" th:unless="${administrator}" th:href="@{/pets}">Browse available pets</a>
+        </section>
+    </main>
+    <footer th:replace="~{layout/base :: footer}"></footer>
+</body>
+</html>

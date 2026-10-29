@@ -18,7 +18,8 @@
                 <p class="landing-eyebrow">A LITTLE HELP GOES A LONG WAY</p>
                 <h1 id="giving-title">Help a pet feel cared for while they wait for home.</h1>
                 <p>Your support helps provide the everyday essentials that keep animals safe, comfortable, and ready to meet their future families.</p>
-                <a class="primary-button" th:href="@{/donations/form}">Make a donation <span aria-hidden="true">→</span></a>
+                <a class="primary-button" th:if="${!administrator}" th:href="@{/donations/form}">Make a donation <span aria-hidden="true">→</span></a>
+                <a class="primary-button" th:if="${administrator}" th:href="@{/admin}">Open admin workspace <span aria-hidden="true">→</span></a>
                 <p class="giving-intro__note">Every contribution is appreciated. Thank you for being part of their story.</p>
             </div>
             <aside class="giving-card" aria-label="Ways your support helps">
@@ -44,7 +45,8 @@
                 <li><span>02</span><div><h3>Share the details</h3><p>Enter the amount and date, then attach your proof of donation.</p></div></li>
                 <li><span>03</span><div><h3>We’ll take it from here</h3><p>Our team reviews the details and follows up as needed.</p></div></li>
             </ol>
-            <a class="giving-steps__link" th:href="@{/donations/form}">Continue to donation form <span aria-hidden="true">→</span></a>
+            <a class="giving-steps__link" th:if="${!administrator}" th:href="@{/donations/form}">Continue to donation form <span aria-hidden="true">→</span></a>
+            <a class="giving-steps__link" th:if="${administrator}" th:href="@{/admin}">Return to the admin workspace <span aria-hidden="true">→</span></a>
         </section>
     </main>
 

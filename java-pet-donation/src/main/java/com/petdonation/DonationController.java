@@ -50,7 +50,10 @@ public class DonationController {
     }
 
     @GetMapping("/donations")
-    public String donations() {
+    public String donations(Authentication authentication, Model model) {
+        boolean administrator = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
+        model.addAttribute("administrator", administrator);
         return "donations";
     }
 

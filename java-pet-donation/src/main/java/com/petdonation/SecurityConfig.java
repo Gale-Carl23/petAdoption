@@ -9,6 +9,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableMethodSecurity
@@ -51,6 +52,7 @@ public class SecurityConfig {
                     "/pets/**",
                     "/register",
                     "/login",
+                    "/access-denied",
                     "/donations",
                     "/api/auth/csrf",
                     "/actuator/health",
@@ -71,15 +73,18 @@ public class SecurityConfig {
                     "/admin/**"
                 ).hasRole("ADMIN")
 
-                // Authenticated adopter actions
+                // Donation and adoption records belong to supporter accounts.
                 .requestMatchers(
                     "/donations/form",
                     "/donations/submit",
                     "/donations/thank-you",
+                    "/donations/my-donations",
+                    "/donations/*/survey",
                     "/adoptions/apply/**",
+                    "/adoptions/applications/*/survey",
                     "/adoptions/my-applications",
                     "/adoptions/thank-you"
-                ).authenticated()
+                ).hasRole("ADOPTER")
 
                 // Any other route requires login by default.
                 .anyRequest().authenticated()
@@ -89,7 +94,11 @@ public class SecurityConfig {
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .usernameParameter("email")
-                .defaultSuccessUrl("/", true)
+                .successHandler((request, response, authentication) -> {
+                    boolean administrator = authentication.getAuthorities().contains(
+                            new SimpleGrantedAuthority("ROLE_ADMIN"));
+                    response.sendRedirect(administrator ? "/admin" : "/");
+                })
                 .permitAll()
             )
 
@@ -97,7 +106,9 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
-            );
+            )
+            .exceptionHandling(exceptions -> exceptions
+                    .accessDeniedPage("/access-denied"));
 
         return http.build();
     }
