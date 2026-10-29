@@ -56,6 +56,9 @@
                             <span class="application-status"
                                   th:text="${app.status == 'UNDER_REVIEW' ? 'Under review' : (app.status == 'PENDING' ? 'Pending' : (app.status == 'APPROVED' ? 'Approved' : 'Not approved'))}"
                                   th:classappend="${app.status == 'APPROVED' ? ' application-status--approved' : (app.status == 'REJECTED' ? ' application-status--rejected' : '')}">Pending</span>
+                            <span class="application-outcome" th:if="${app.status == 'APPROVED'}"
+                                  th:text="|You’re approved to adopt ${app.pet.name}.|">You’re approved to adopt this pet.</span>
+                            <span class="application-outcome" th:if="${app.status == 'REJECTED'}">This application was not approved.</span>
                         </td>
                     </tr>
                 </tbody>

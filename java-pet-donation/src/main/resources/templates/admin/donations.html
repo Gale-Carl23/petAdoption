@@ -61,7 +61,7 @@
                             <td data-label="Amount" th:text="|₱${donation.amount}|">₱0.00</td>
                             <td data-label="Date sent" th:text="${#temporals.format(donation.dateSent, 'MMM d, yyyy')}">Date</td>
                             <td data-label="Submitted" th:text="${#temporals.format(donation.submittedAt, 'MMM d, yyyy')}">Date</td>
-                            <td data-label="Status"><span class="application-status" th:classappend="${donation.status == 'VERIFIED' ? ' application-status--approved' : (donation.status == 'REJECTED' ? ' application-status--rejected' : '')}" th:text="${donation.status == 'PENDING_VERIFICATION' ? 'Pending review' : donation.status}">Pending review</span></td>
+                            <td data-label="Status"><span class="application-status" th:classappend="${donation.status == 'VERIFIED' ? ' application-status--approved' : (donation.status == 'REJECTED' ? ' application-status--rejected' : '')}" th:text="${donation.status == 'PENDING_VERIFICATION' ? 'Pending review' : (donation.status == 'VERIFIED' ? 'Verified' : 'Declined')}">Pending review</span></td>
                             <td class="admin-review-reason" data-label="Message" th:text="${donation.message != null and !#strings.isEmpty(donation.message) ? donation.message : '—'}">Message</td>
                             <td data-label="Proof">
                                 <a class="admin-proof-link" th:href="@{/admin/donations/{id}/proof(id=${donation.id})}" target="_blank" rel="noopener">Open proof <span aria-hidden="true">↗</span></a>
@@ -77,7 +77,8 @@
                                         <button class="admin-review-action admin-review-action--reject" type="submit">Decline</button>
                                     </form>
                                 </div>
-                                <span class="admin-review-secondary" th:unless="${donation.status == 'PENDING_VERIFICATION'}">Decision recorded</span>
+                                <span class="admin-review-secondary" th:if="${donation.status == 'VERIFIED'}">Verified</span>
+                                <span class="admin-review-secondary" th:if="${donation.status == 'REJECTED'}">Declined</span>
                             </td>
                         </tr>
                     </tbody>

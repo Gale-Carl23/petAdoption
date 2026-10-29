@@ -3176,6 +3176,14 @@ footer p {
     color: #8a3c31;
 }
 
+.application-outcome {
+    display: block;
+    margin-top: 0.4rem;
+    color: var(--color-text-muted, #68736c);
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
 @media (max-width: 600px) {
     .applications-main {
         width: min(100% - 28px, 1240px);

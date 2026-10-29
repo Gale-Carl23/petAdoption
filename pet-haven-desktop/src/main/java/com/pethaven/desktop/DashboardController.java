@@ -188,6 +188,7 @@ public final class DashboardController {
             table.getColumns().add(textColumn("Applicant", DesktopApiClient.ApplicationRecord::applicantName, 140));
             table.getColumns().add(textColumn("Email", DesktopApiClient.ApplicationRecord::applicantEmail, 190));
             table.getColumns().add(textColumn("Pet", DesktopApiClient.ApplicationRecord::petName, 140));
+            table.getColumns().add(textColumn("Placement", this::applicationPlacement, 190));
             table.getColumns().add(textColumn("Home", DesktopApiClient.ApplicationRecord::housingType, 100));
             table.getColumns().add(textColumn("Experience", DesktopApiClient.ApplicationRecord::petExperience, 130));
             table.getColumns().add(textColumn("Status", DesktopApiClient.ApplicationRecord::status, 110));
@@ -210,7 +211,7 @@ public final class DashboardController {
                 }
                 @Override protected void updateItem(DesktopApiClient.ApplicationRecord item, boolean empty) {
                     super.updateItem(item, empty);
-                    setGraphic(empty ? null : isApplicationPending(item) ? actions : reviewedLabel());
+                    setGraphic(empty ? null : isApplicationPending(item) ? actions : reviewedLabel(item.status()));
                 }
             });
             table.getColumns().add(decision);
@@ -267,7 +268,7 @@ public final class DashboardController {
                 @Override protected void updateItem(DesktopApiClient.DonationRecord item, boolean empty) {
                     super.updateItem(item, empty);
                     setGraphic(empty ? null : "PENDING_VERIFICATION".equals(item.status())
-                            ? actions : reviewedLabel());
+                            ? actions : reviewedLabel(item.status()));
                 }
             });
             table.getColumns().add(decision);
@@ -361,24 +362,47 @@ public final class DashboardController {
 
     private void reviewApplication(DesktopApiClient.ApplicationRecord application, String status) {
         load(() -> apiClient.reviewApplication(application.id(), status), updated -> {
-            showStatus("Application " + status.toLowerCase(Locale.ROOT) + ".", false);
+            String outcome;
+            if ("APPROVED".equals(updated.status())) {
+                outcome = updated.petName() + " is now placed with " + updated.applicantName() + ".";
+            } else {
+                outcome = "Application declined for " + updated.applicantName() + ".";
+            }
             showApplications();
+            showStatus(outcome, false);
         });
     }
 
     private void reviewDonation(DesktopApiClient.DonationRecord donation, String status) {
         load(() -> apiClient.reviewDonation(donation.id(), status), updated -> {
-            showStatus("Donation marked " + status.toLowerCase(Locale.ROOT) + ".", false);
+            String outcome = "VERIFIED".equals(updated.status())
+                    ? "Donation from " + updated.donorName() + " verified."
+                    : "Donation from " + updated.donorName() + " declined.";
             showDonations();
+            showStatus(outcome, false);
         });
+    }
+
+    private static String applicationPlacement(DesktopApiClient.ApplicationRecord application) {
+        return switch (application.status()) {
+            case "APPROVED" -> "Placed with " + application.applicantName();
+            case "REJECTED" -> "Application declined";
+            default -> "Awaiting decision";
+        };
     }
 
     private static boolean isApplicationPending(DesktopApiClient.ApplicationRecord application) {
         return "PENDING".equals(application.status()) || "UNDER_REVIEW".equals(application.status());
     }
 
-    private static Label reviewedLabel() {
-        Label label = new Label("Recorded");
+    private static Label reviewedLabel(String status) {
+        String labelText = switch (status) {
+            case "APPROVED" -> "Approved";
+            case "VERIFIED" -> "Verified";
+            case "REJECTED" -> "Declined";
+            default -> "Recorded";
+        };
+        Label label = new Label(labelText);
         label.getStyleClass().add("panel-copy");
         return label;
     }

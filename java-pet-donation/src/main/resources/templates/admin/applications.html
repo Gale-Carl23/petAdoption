@@ -47,6 +47,7 @@
                             <th scope="col">Home</th>
                             <th scope="col">Experience</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Placement</th>
                             <th scope="col">Why they want to adopt</th>
                             <th scope="col">Decision</th>
                         </tr>
@@ -62,6 +63,12 @@
                             <td data-label="Home" th:text="${application.housingType}">House</td>
                             <td data-label="Experience" th:text="${application.petExperience}">Experience</td>
                             <td data-label="Status"><span class="application-status" th:classappend="${application.status == 'APPROVED' ? ' application-status--approved' : (application.status == 'REJECTED' ? ' application-status--rejected' : '')}" th:text="${application.status == 'UNDER_REVIEW' ? 'Under review' : (application.status == 'PENDING' ? 'Pending' : application.status)}">Pending</span></td>
+                            <td data-label="Placement">
+                                <span th:if="${application.status == 'APPROVED'}"
+                                      th:text="|${application.pet.name} placed with ${application.applicant.fullName}|">Pet placed with applicant</span>
+                                <span th:if="${application.status == 'REJECTED'}">Application declined</span>
+                                <span th:if="${application.status == 'PENDING' or application.status == 'UNDER_REVIEW'}">Awaiting decision</span>
+                            </td>
                             <td class="admin-review-reason" data-label="Reason" th:text="${application.reasonForAdoption}">Reason</td>
                             <td data-label="Decision">
                                 <div class="admin-review-actions" th:if="${application.status == 'PENDING' or application.status == 'UNDER_REVIEW'}">
@@ -74,7 +81,8 @@
                                         <button class="admin-review-action admin-review-action--reject" type="submit">Decline</button>
                                     </form>
                                 </div>
-                                <span class="admin-review-secondary" th:unless="${application.status == 'PENDING' or application.status == 'UNDER_REVIEW'}">Decision recorded</span>
+                                <span class="admin-review-secondary" th:if="${application.status == 'APPROVED'}">Approved</span>
+                                <span class="admin-review-secondary" th:if="${application.status == 'REJECTED'}">Declined</span>
                             </td>
                         </tr>
                     </tbody>
