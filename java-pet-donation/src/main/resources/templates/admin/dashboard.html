@@ -33,13 +33,13 @@
                 <span class="admin-stat-card__icon" aria-hidden="true">♡</span>
                 <p>Adoption applications</p>
                 <strong th:text="${applicationCount}">0</strong>
-                <span class="admin-stat-card__detail">Submitted by prospective adopters</span>
+                <a th:href="@{/admin/applications}">Review applications <span aria-hidden="true">→</span></a>
             </article>
             <article class="admin-stat-card admin-stat-card--donations">
                 <span class="admin-stat-card__icon" aria-hidden="true">✳</span>
                 <p>Donation submissions</p>
                 <strong th:text="${donationCount}">0</strong>
-                <span class="admin-stat-card__detail">Shared to support the pets</span>
+                <a th:href="@{/admin/donations}">Review donations <span aria-hidden="true">→</span></a>
             </article>
         </section>
 
