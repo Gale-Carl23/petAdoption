@@ -155,3 +155,308 @@
     -fx-text-fill: #92998e;
     -fx-font-size: 10px;
 }
+
+/* Desktop sign-in */
+.login-root {
+    -fx-background-color: #e9ece3;
+    -fx-padding: 0;
+}
+
+.login-shell {
+    -fx-background-color: #ffffff;
+}
+
+.login-showcase {
+    -fx-background-color: #344b3b;
+}
+
+.login-logo-mark {
+    -fx-background-color: #dce6cf;
+    -fx-background-radius: 12px;
+}
+
+.login-logo-letter {
+    -fx-text-fill: #344b3b;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.showcase-brand {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.showcase-brand-caption, .showcase-note-title {
+    -fx-text-fill: #bdcdbb;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1.5px;
+}
+
+.showcase-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-line-spacing: 2px;
+}
+
+.showcase-copy {
+    -fx-text-fill: #dce6d9;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 4px;
+}
+
+.showcase-tags {
+    -fx-padding: 12px 0 0 0;
+}
+
+.showcase-tag {
+    -fx-text-fill: #edf2e9;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-padding: 7px 10px;
+    -fx-background-color: #49634c;
+    -fx-background-radius: 20px;
+}
+
+.showcase-note {
+    -fx-padding: 16px 0 0 0;
+    -fx-border-color: #59715a transparent transparent transparent;
+}
+
+.showcase-note-copy {
+    -fx-text-fill: #dce6d9;
+    -fx-font-size: 11px;
+}
+
+.login-form-panel {
+    -fx-background-color: #ffffff;
+}
+
+.login-eyebrow, .topbar-eyebrow {
+    -fx-text-fill: #7d8d68;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1.5px;
+}
+
+.login-title {
+    -fx-text-fill: #26382c;
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+}
+
+.login-description, .login-footnote {
+    -fx-text-fill: #778077;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 3px;
+}
+
+.login-field-label {
+    -fx-text-fill: #344238;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.login-input {
+    -fx-background-color: #fffefa;
+    -fx-border-color: #d8d9ce;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 14px 14px;
+    -fx-font-size: 13px;
+}
+
+.login-input:focused {
+    -fx-border-color: #65734b;
+    -fx-effect: dropshadow(gaussian, rgba(101, 115, 75, 0.17), 5, 0.2, 0, 0);
+}
+
+.login-button, .desktop-action {
+    -fx-background-color: #344b3b;
+    -fx-background-radius: 9px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 14px 18px;
+    -fx-cursor: hand;
+}
+
+.login-button:hover, .desktop-action:hover {
+    -fx-background-color: #61774b;
+}
+
+.login-message {
+    -fx-padding: 11px 13px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 11px;
+}
+
+.login-message-error, .desktop-status-error {
+    -fx-background-color: #fff1ed;
+    -fx-text-fill: #8a3c31;
+}
+
+.login-message-info, .desktop-status-success {
+    -fx-background-color: #f1f5eb;
+    -fx-text-fill: #344b3b;
+}
+
+/* Desktop workspace navigation and panels */
+.topbar-eyebrow {
+    -fx-font-size: 9px;
+}
+
+.nav-button {
+    -fx-alignment: center-left;
+    -fx-background-color: transparent;
+    -fx-background-radius: 9px;
+    -fx-text-fill: #e7eee3;
+    -fx-font-size: 12px;
+    -fx-padding: 12px 11px;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: #415b47;
+}
+
+.nav-button-active, .nav-button-active:hover {
+    -fx-background-color: #506b53;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+.logout-button {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8px;
+    -fx-border-color: #dfe4d8;
+    -fx-border-radius: 8px;
+    -fx-text-fill: #50624f;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 9px 13px;
+    -fx-cursor: hand;
+}
+
+.logout-button:hover, .table-action-button:hover {
+    -fx-background-color: #f0f3eb;
+}
+
+.content-area {
+    -fx-background-color: transparent;
+}
+
+.stats-row {
+    -fx-fill-height: true;
+}
+
+.desktop-panel {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16px;
+    -fx-border-color: #e7e9df;
+    -fx-border-radius: 16px;
+    -fx-padding: 21px;
+}
+
+.panel-title {
+    -fx-text-fill: #2d3d31;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.panel-copy, .loading-label {
+    -fx-text-fill: #778077;
+    -fx-font-size: 11px;
+}
+
+.quick-actions {
+    -fx-padding: 7px 0 0 0;
+}
+
+.data-table {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e7e9df;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+    -fx-fixed-cell-size: 40px;
+}
+
+.data-table .column-header-background {
+    -fx-background-color: #f5f5ee;
+    -fx-background-radius: 9px 9px 0 0;
+}
+
+.data-table .column-header, .data-table .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #e7e9df transparent;
+    -fx-size: 38px;
+}
+
+.data-table .column-header .label {
+    -fx-text-fill: #687466;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.data-table .table-cell {
+    -fx-text-fill: #3e4940;
+    -fx-font-size: 10px;
+    -fx-padding: 8px 10px;
+    -fx-border-color: transparent transparent #eef0e9 transparent;
+}
+
+.data-table .table-row-cell:filled:hover {
+    -fx-background-color: #f8f9f4;
+}
+
+.table-action-button {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 7px;
+    -fx-border-color: #dfe4d8;
+    -fx-border-radius: 7px;
+    -fx-text-fill: #344b3b;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 10px;
+    -fx-cursor: hand;
+}
+
+.desktop-empty-state {
+    -fx-alignment: center;
+    -fx-padding: 52px 20px;
+    -fx-background-color: #f8f8f3;
+    -fx-background-radius: 12px;
+}
+
+.desktop-status {
+    -fx-padding: 9px 13px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 10px;
+}
+
+.pet-editor-grid {
+    -fx-padding: 10px 0 4px 0;
+}
+
+.dialog-pane {
+    -fx-background-color: #f6f5ef;
+}
+
+.dialog-pane .content {
+    -fx-padding: 14px;
+    -fx-text-fill: #48544a;
+}
+
+.dialog-pane .button {
+    -fx-background-radius: 7px;
+    -fx-padding: 8px 13px;
+    -fx-cursor: hand;
+}
+
+.dialog-pane .button:default {
+    -fx-background-color: #344b3b;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
