@@ -37,8 +37,17 @@
                 <p>When someone applies to adopt, their application will appear here.</p>
             </div>
 
+            <div class="admin-table-toolbar" th:unless="${#lists.isEmpty(applications)}">
+                <label class="admin-table-search">
+                    <span>Find an application</span>
+                    <input type="search" data-admin-filter="#applications-table"
+                           data-filter-count="#applications-filter-count"
+                           placeholder="Search applicant, pet, email, or status">
+                </label>
+                <p id="applications-filter-count" class="admin-filter-count" aria-live="polite"></p>
+            </div>
             <div class="admin-table-wrap" th:unless="${#lists.isEmpty(applications)}">
-                <table class="admin-table admin-review-table">
+                <table id="applications-table" class="admin-table admin-review-table">
                     <thead>
                         <tr>
                             <th scope="col">Applicant</th>
@@ -74,11 +83,13 @@
                                 <span class="admin-review-secondary" th:if="${adoptionApp.reviewedAt != null}"
                                       th:text="|${adoptionApp.reviewedBy} · ${#temporals.format(adoptionApp.reviewedAt, 'MMM d, yyyy h:mm a')}|">Reviewed by admin</span>
                                 <div class="admin-review-actions" th:if="${adoptionApp.status == 'PENDING' or adoptionApp.status == 'UNDER_REVIEW'}">
-                                    <form method="post" th:action="@{/admin/applications/{id}/decision(id=${adoptionApp.id})}">
+                                    <form method="post" th:action="@{/admin/applications/{id}/decision(id=${adoptionApp.id})}"
+                                          data-confirm="Approve this adoption application? The pet will be marked as adopted, and the decision will be shown to the applicant.">
                                         <input type="hidden" name="status" value="APPROVED">
                                         <button class="admin-review-action admin-review-action--approve" type="submit">Approve</button>
                                     </form>
-                                    <form method="post" th:action="@{/admin/applications/{id}/decision(id=${adoptionApp.id})}">
+                                    <form method="post" th:action="@{/admin/applications/{id}/decision(id=${adoptionApp.id})}"
+                                          data-confirm="Decline this adoption application? The decision will be recorded and shown to the applicant.">
                                         <input type="hidden" name="status" value="REJECTED">
                                         <button class="admin-review-action admin-review-action--reject" type="submit">Decline</button>
                                     </form>
@@ -94,5 +105,6 @@
     </main>
 
     <footer th:replace="~{layout/base :: footer}"></footer>
+    <script th:src="@{/js/admin-workflow.js}" defer></script>
 </body>
 </html>
