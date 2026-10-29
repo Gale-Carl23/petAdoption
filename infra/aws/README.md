@@ -49,13 +49,17 @@ Create a Secrets Manager JSON secret outside the repository. Encrypt it with the
   "bankName": "",
   "bankAccountName": "",
   "bankAccountNumber": "",
-  "qrPhImageUrl": ""
+  "qrPhImageUrl": "",
+  "paymongoSecretKey": "",
+  "paymongoWebhookSecret": ""
 }
 ```
 
 Set `payment_details_secret_arn` in the untracked `terraform.tfvars` to this secret's ARN. The app displays only complete methods. For QR payments, use the official QR Ph merchant-presented code issued by the merchant's bank or payment service provider; QR Ph is the BSP national standard aligned with EMVCo. Do not generate or alter a payment QR from an account number. The QR image URL may be an HTTPS image URL or a site path such as `/images/qrph-merchant.png`.
 
-The current donation workflow records transfer details and proof for manual review. It does not initiate or automatically settle payments. Never ask donors for wallet PINs, passwords, or one-time codes.
+When PayMongo is activated, `paymongoSecretKey` and `paymongoWebhookSecret` enable a hosted checkout with a per-donation QR Ph code. Register `https://YOUR_DOMAIN/webhooks/paymongo` in PayMongo and subscribe to `checkout_session.payment.paid`. Store the webhook signing secret separately from the API key in the JSON fields above. The server verifies PayMongo's HMAC signature against the untouched request body, matches the paid amount/currency and donation reference, and processes each event only once. The site marks the donation paid only after this server-side notification; a browser return alone never confirms payment. QR Ph scanning works through participating bank and wallet apps; use the hosted unique QR instead of a static account QR when you need automatic matching.
+
+Never ask donors for wallet PINs, passwords, or one-time codes. Test against PayMongo test keys and a test webhook before switching to live credentials. In production, manual transfer options stay disabled unless `MANUAL_TRANSFERS_ENABLED` is explicitly changed; without PayMongo keys or that setting, the app accepts no donation payments.
 
 The ECR repository must exist before the image can be pushed. First create only that repository with Terraform, supplying temporary valid-shaped values for required full-stack variables; this targeted bootstrap does not create the database or load balancer:
 

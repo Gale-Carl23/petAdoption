@@ -38,7 +38,7 @@ variable "admin_email" {
 }
 
 variable "payment_details_secret_arn" {
-  description = "Optional Secrets Manager ARN containing public donation destinations and QR image URL."
+  description = "Optional Secrets Manager ARN containing public donation destinations and private PayMongo API/webhook secrets."
   type        = string
   default     = ""
 }

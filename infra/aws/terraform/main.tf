@@ -536,7 +536,9 @@ resource "aws_ecs_task_definition" "app" {
       { name = "DB_POOL_MIN_IDLE", value = "2" },
       { name = "DONATION_PROOF_BUCKET", value = aws_s3_bucket.proofs.bucket },
       { name = "DONATION_PROOF_PREFIX", value = "donation-proofs" },
-      { name = "AWS_REGION", value = var.aws_region }
+      { name = "AWS_REGION", value = var.aws_region },
+      { name = "PAYMONGO_LIVE_MODE", value = "true" },
+      { name = "MANUAL_TRANSFERS_ENABLED", value = "false" }
     ]
     secrets = concat([
       {
@@ -571,6 +573,14 @@ resource "aws_ecs_task_definition" "app" {
       {
         name      = "QRPH_IMAGE_URL"
         valueFrom = "${var.payment_details_secret_arn}:qrPhImageUrl::"
+      },
+      {
+        name      = "PAYMONGO_SECRET_KEY"
+        valueFrom = "${var.payment_details_secret_arn}:paymongoSecretKey::"
+      },
+      {
+        name      = "PAYMONGO_WEBHOOK_SECRET"
+        valueFrom = "${var.payment_details_secret_arn}:paymongoWebhookSecret::"
       }
     ])
     healthCheck = {
