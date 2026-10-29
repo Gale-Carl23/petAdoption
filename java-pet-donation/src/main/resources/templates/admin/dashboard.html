@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8f5ec">
+    <title>Admin Overview | Pawprints of Hope</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="admin-page admin-dashboard-page">
+    <header th:replace="~{layout/base :: header}"></header>
+
+    <main class="admin-main">
+        <section class="admin-heading admin-dashboard-heading" aria-labelledby="admin-dashboard-title">
+            <div>
+                <p class="landing-eyebrow">PAWPRINTS OF HOPE · ADMIN</p>
+                <h1 id="admin-dashboard-title">Good to see you.</h1>
+                <p>Here’s a quick look at the adoption community today.</p>
+            </div>
+            <a class="admin-primary-action" th:href="@{/admin/pets/new}"><span aria-hidden="true">＋</span> Add a pet</a>
+        </section>
+
+        <section class="admin-overview" aria-label="Site overview">
+            <article class="admin-stat-card admin-stat-card--pets">
+                <span class="admin-stat-card__icon" aria-hidden="true">🐾</span>
+                <p>Pet profiles</p>
+                <strong th:text="${petCount}">0</strong>
+                <a th:href="@{/admin/pets}">Manage pets <span aria-hidden="true">→</span></a>
+            </article>
+            <article class="admin-stat-card admin-stat-card--applications">
+                <span class="admin-stat-card__icon" aria-hidden="true">♡</span>
+                <p>Adoption applications</p>
+                <strong th:text="${applicationCount}">0</strong>
+                <span class="admin-stat-card__detail">Submitted by prospective adopters</span>
+            </article>
+            <article class="admin-stat-card admin-stat-card--donations">
+                <span class="admin-stat-card__icon" aria-hidden="true">✳</span>
+                <p>Donation submissions</p>
+                <strong th:text="${donationCount}">0</strong>
+                <span class="admin-stat-card__detail">Shared to support the pets</span>
+            </article>
+        </section>
+
+        <section class="admin-dashboard-panel">
+            <div class="admin-dashboard-panel__copy">
+                <p class="landing-eyebrow">KEEP PROFILES FRESH</p>
+                <h2>Help every pet make a great first impression.</h2>
+                <p>Update their details and photos so adopters can get to know them before they apply.</p>
+            </div>
+            <div class="admin-dashboard-panel__actions">
+                <a class="admin-primary-action" th:href="@{/admin/pets}">Manage pet profiles <span aria-hidden="true">→</span></a>
+                <a class="admin-dashboard-secondary" th:href="@{/pets}" target="_blank" rel="noopener">Preview the public pet page <span aria-hidden="true">↗</span></a>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+</body>
+</html>
