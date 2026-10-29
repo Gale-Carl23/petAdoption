@@ -24,6 +24,24 @@
                 <span>Submitting an application does not guarantee adoption approval. We’ll share an update when a decision is made.</span>
             </div>
 
+            <div class="referral-survey" th:if="${surveyAvailable and !surveySubmitted}">
+                <p class="landing-eyebrow">ONE QUICK QUESTION</p>
+                <h2>How did you hear about Pawprints of Hope?</h2>
+                <p>Your answer helps us understand how families find pets who need a home.</p>
+                <form method="post" th:action="@{/adoptions/applications/{id}/survey(id=${applicationId})}">
+                    <label for="adoption-referral-source">Choose one answer</label>
+                    <select id="adoption-referral-source" name="source" required>
+                        <option value="">Select a source</option>
+                        <option th:each="option : ${surveyOptions}" th:value="${option.value}" th:text="${option.label}">Friends or family</option>
+                    </select>
+                    <button class="primary-button" type="submit">Send answer <span aria-hidden="true">→</span></button>
+                </form>
+            </div>
+            <div class="referral-survey referral-survey--complete" role="status" th:if="${surveySubmitted}">
+                <strong>Thank you for sharing.</strong>
+                <span>Your answer will help us reach more families and pets.</span>
+            </div>
+
             <div class="adoption-confirmation__actions">
                 <a th:href="@{/adoptions/my-applications}" class="primary-button">View my applications <span aria-hidden="true">→</span></a>
                 <a th:href="@{/pets}" class="adoption-confirmation__link">Meet more pets</a>

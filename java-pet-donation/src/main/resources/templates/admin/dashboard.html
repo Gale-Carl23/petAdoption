@@ -43,6 +43,26 @@
             </article>
         </section>
 
+        <section class="admin-dashboard-panel admin-referral-panel" aria-labelledby="referral-analytics-title">
+            <div class="admin-dashboard-panel__copy">
+                <p class="landing-eyebrow">COMMUNITY OUTREACH</p>
+                <h2 id="referral-analytics-title">How people find us</h2>
+                <p th:text="|${referralResponseCount} survey responses from adoption and donation submissions|">Survey responses</p>
+            </div>
+            <div class="admin-referral-list" th:if="${referralResponseCount > 0}">
+                <div class="admin-referral-row" th:each="source : ${referralSources}">
+                    <div class="admin-referral-row__label">
+                        <span th:text="${source.label}">Friends or family</span>
+                        <strong th:text="${source.count}">0</strong>
+                    </div>
+                    <div class="admin-referral-track" role="img"
+                         th:aria-label="|${source.count} responses from ${source.label}|"><span
+                         th:style="|width: ${(source.count * 100.0 / referralResponseCount)}%|"></span></div>
+                </div>
+            </div>
+            <p class="admin-referral-empty" th:if="${referralResponseCount == 0}">Survey results will appear here as people tell us how they found Pawprints of Hope.</p>
+        </section>
+
         <section class="admin-dashboard-panel">
             <div class="admin-dashboard-panel__copy">
                 <p class="landing-eyebrow">KEEP PROFILES FRESH</p>

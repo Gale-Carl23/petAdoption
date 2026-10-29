@@ -24,6 +24,24 @@
                 <span><strong>Pending verification</strong><br>We’ll review your payment proof before confirming your donation.</span>
             </div>
 
+            <div class="referral-survey" th:if="${surveyAvailable and !surveySubmitted}">
+                <p class="landing-eyebrow">ONE QUICK QUESTION</p>
+                <h2>How did you hear about Pawprints of Hope?</h2>
+                <p>Your answer helps us focus outreach so more people can support the pets.</p>
+                <form method="post" th:action="@{/donations/{id}/survey(id=${donationId})}">
+                    <label for="donation-referral-source">Choose one answer</label>
+                    <select id="donation-referral-source" name="source" required>
+                        <option value="">Select a source</option>
+                        <option th:each="option : ${surveyOptions}" th:value="${option.value}" th:text="${option.label}">Friends or family</option>
+                    </select>
+                    <button class="primary-button" type="submit">Send answer <span aria-hidden="true">→</span></button>
+                </form>
+            </div>
+            <div class="referral-survey referral-survey--complete" role="status" th:if="${surveySubmitted}">
+                <strong>Thank you for sharing.</strong>
+                <span>Your answer will help us reach more people who care.</span>
+            </div>
+
             <div class="donation-confirmation__actions">
                 <a th:href="@{/pets}" class="primary-button">Meet our pets <span aria-hidden="true">→</span></a>
                 <a th:href="@{/}" class="donation-confirmation__home">Back to home</a>
