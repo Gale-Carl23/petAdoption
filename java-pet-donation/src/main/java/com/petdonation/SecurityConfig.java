@@ -75,6 +75,7 @@ public class SecurityConfig {
                     "/livez",
                     "/readyz",
                     "/css/**",
+                    "/js/**",
                     "/images/**"
                 ).permitAll()
 
