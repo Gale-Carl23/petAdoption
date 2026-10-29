@@ -41,7 +41,7 @@
 
                     <p>
                         Status:
-                        <span th:text="${pet.status}">AVAILABLE</span>
+                        <span th:text="${pet.status == 'ADOPTED' ? 'Taken · adoption approved' : (pet.status == 'RESERVED' ? 'Reserved' : (pet.status == 'UNAVAILABLE' ? 'Temporarily unavailable' : 'Available'))}">AVAILABLE</span>
                     </p>
 
                     <div th:if="${pet.status == 'AVAILABLE'}">

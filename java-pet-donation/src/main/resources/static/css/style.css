@@ -3546,6 +3546,22 @@ footer p {
     white-space: nowrap;
 }
 
+.admin-pet-availability {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.5rem;
+}
+
+.admin-pet-availability select {
+    min-width: 7.5rem;
+    padding: 0.4rem 0.55rem;
+    border: 1px solid var(--line, #ddd8cc);
+    border-radius: 0.5rem;
+    background: #fff;
+    color: var(--ink, #2e332c);
+}
+
 .admin-table__action {
     text-align: right;
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,6 +55,18 @@ public class AdminPetApiController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PatchMapping("/{id}/availability")
+    public ResponseEntity<PetResponse> updateAvailability(
+            @PathVariable Long id,
+            @Valid @RequestBody PetAvailabilityRequest request) {
+        return petService.updateAvailability(id, request.status())
+                .map(PetResponse::from)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    public record PetAvailabilityRequest(@NotBlank @Size(max = 30) String status) { }
 
     public record PetRequest(
             @NotBlank @Size(max = 100) String name,

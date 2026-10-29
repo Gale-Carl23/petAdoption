@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -101,6 +102,22 @@ public class AdminPetController {
         redirectAttributes.addFlashAttribute(
                 "successMessage", "Pet updated successfully.");
 
+        return "redirect:/admin/pets";
+    }
+
+    @PostMapping("/admin/pets/{id}/availability")
+    public String updateAvailability(@PathVariable Long id,
+                                    @RequestParam String status,
+                                    RedirectAttributes redirectAttributes) {
+        try {
+            if (petService.updateAvailability(id, status).isEmpty()) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Pet not found.");
+            } else {
+                redirectAttributes.addFlashAttribute("successMessage", "Pet availability updated.");
+            }
+        } catch (org.springframework.web.server.ResponseStatusException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getReason());
+        }
         return "redirect:/admin/pets";
     }
 }

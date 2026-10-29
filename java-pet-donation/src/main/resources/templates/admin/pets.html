@@ -61,7 +61,18 @@
                             </td>
                             <td data-label="Breed" th:text="${pet.breed}">Breed</td>
                             <td data-label="Age" th:text="${pet.age == 1 ? '1 year' : pet.age + ' years'}">1 year</td>
-                            <td data-label="Status"><span class="admin-status" th:text="${pet.status}">AVAILABLE</span></td>
+                            <td data-label="Status">
+                                <span class="admin-status" th:text="${pet.status == 'ADOPTED' ? 'TAKEN · ADOPTED' : (pet.status == 'UNAVAILABLE' ? 'UNAVAILABLE' : (pet.status == 'RESERVED' ? 'RESERVED' : 'AVAILABLE'))}">AVAILABLE</span>
+                                <form class="admin-pet-availability" th:if="${pet.status != 'ADOPTED'}" method="post" th:action="@{/admin/pets/{id}/availability(id=${pet.id})}">
+                                    <select name="status" aria-label="Pet availability" th:value="${pet.status}">
+                                        <option value="AVAILABLE" th:selected="${pet.status == 'AVAILABLE'}">Available</option>
+                                        <option value="RESERVED" th:selected="${pet.status == 'RESERVED'}">Reserved</option>
+                                        <option value="UNAVAILABLE" th:selected="${pet.status == 'UNAVAILABLE'}">Unavailable</option>
+                                    </select>
+                                    <button class="admin-review-action" type="submit">Update</button>
+                                </form>
+                                <span class="admin-review-secondary" th:if="${pet.status == 'ADOPTED'}">Set by approved application</span>
+                            </td>
                             <td class="admin-table__action" data-label="Action">
                                 <a th:href="@{/admin/pets/{id}/edit(id=${pet.id})}">Edit <span aria-hidden="true">→</span></a>
                             </td>

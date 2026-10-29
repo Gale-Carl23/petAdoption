@@ -124,6 +124,11 @@ public final class DesktopApiClient {
         return sendJson("POST", "/api/admin/pets", pet, PetRecord.class);
     }
 
+    public PetRecord updatePetAvailability(long id, String status) throws IOException, InterruptedException {
+        return sendJson("PATCH", "/api/admin/pets/" + id + "/availability",
+                new PetAvailability(status), PetRecord.class);
+    }
+
     public PetRecord updatePet(long id, PetPayload pet) throws IOException, InterruptedException {
         return sendJson("PUT", "/api/admin/pets/" + id, pet, PetRecord.class);
     }
@@ -282,4 +287,5 @@ public final class DesktopApiClient {
     public record ReferralSourceRecord(String source, String label, long count) { }
 
     private record ReviewDecision(String status) { }
+    private record PetAvailability(String status) { }
 }

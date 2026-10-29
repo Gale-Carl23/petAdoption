@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -156,7 +157,21 @@ public final class DashboardController {
         table.getColumns().add(textColumn("Pet", DesktopApiClient.PetRecord::name, 180));
         table.getColumns().add(textColumn("Breed", DesktopApiClient.PetRecord::breed, 150));
         table.getColumns().add(textColumn("Age", pet -> pet.age() == 1 ? "1 year" : pet.age() + " years", 90));
-        table.getColumns().add(textColumn("Status", DesktopApiClient.PetRecord::status, 120));
+        table.getColumns().add(textColumn("Status", pet -> petStatusLabel(pet.status()), 150));
+        TableColumn<DesktopApiClient.PetRecord, DesktopApiClient.PetRecord> availability =
+                objectColumn("Availability", pet -> pet);
+        availability.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
+            private final Button button = new Button("Set status");
+            {
+                button.getStyleClass().add("table-action-button");
+                button.setOnAction(event -> openAvailabilityDialog(getTableView().getItems().get(getIndex())));
+            }
+            @Override protected void updateItem(DesktopApiClient.PetRecord item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty || "ADOPTED".equals(item.status()) ? null : button);
+            }
+        });
+        table.getColumns().add(availability);
         TableColumn<DesktopApiClient.PetRecord, DesktopApiClient.PetRecord> edit =
                 objectColumn("Action", pet -> pet);
         edit.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
@@ -235,10 +250,10 @@ public final class DashboardController {
             table.getColumns().add(textColumn("Donor", DesktopApiClient.DonationRecord::donorName, 130));
             table.getColumns().add(textColumn("Email", DesktopApiClient.DonationRecord::donorEmail, 190));
             table.getColumns().add(textColumn("Amount", donation -> "PHP " + donation.amount().toPlainString(), 110));
-            table.getColumns().add(textColumn("Date sent", DesktopApiClient.DonationRecord::dateSent, 110));
+            table.getColumns().add(textColumn("Date sent", donation -> donation.dateSent() == null ? "Online" : donation.dateSent(), 110));
             table.getColumns().add(textColumn("Payment method", donation -> paymentMethodLabel(donation.paymentMethod()), 130));
             table.getColumns().add(textColumn("Reference", donation -> safe(donation.paymentReference()), 150));
-            table.getColumns().add(textColumn("Status", DesktopApiClient.DonationRecord::status, 150));
+            table.getColumns().add(textColumn("Status", donation -> donationStatusLabel(donation.status()), 150));
             table.getColumns().add(textColumn("Reviewed by", donation ->
                     decisionDetails(donation.reviewedBy(), donation.reviewedAt()), 180));
             table.getColumns().add(textColumn("Message", donation -> safe(donation.message()), 190));
@@ -252,7 +267,8 @@ public final class DashboardController {
                 }
                 @Override protected void updateItem(DesktopApiClient.DonationRecord item, boolean empty) {
                     super.updateItem(item, empty);
-                    setGraphic(empty ? null : button);
+                    setGraphic(empty ? null : item.proofPath() == null || item.proofPath().isBlank()
+                            ? new Label("PAYMONGO_QR".equals(item.paymentMethod()) ? "Online" : "—") : button);
                 }
             });
             table.getColumns().add(proof);
@@ -350,6 +366,23 @@ public final class DashboardController {
         }
     }
 
+    private void openAvailabilityDialog(DesktopApiClient.PetRecord pet) {
+        List<String> choices = List.of("AVAILABLE", "RESERVED", "UNAVAILABLE");
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(pet.status(), choices);
+        dialog.setTitle("Pet availability");
+        dialog.setHeaderText("Update " + pet.name() + "’s adoption status");
+        dialog.setContentText("Choose available, reserved, or unavailable:");
+        dialog.initOwner(contentArea.getScene().getWindow());
+        dialog.getDialogPane().getStylesheets().add(
+                Objects.requireNonNull(getClass().getResource("/css/dashboard.css")).toExternalForm());
+        dialog.showAndWait().ifPresent(status -> load(
+                () -> apiClient.updatePetAvailability(pet.id(), status),
+                updated -> {
+                    showPets();
+                    showStatus(updated.name() + " marked " + updated.status().toLowerCase(Locale.ROOT) + ".", false);
+                }));
+    }
+
     private void openProof(DesktopApiClient.DonationRecord donation) {
         load(() -> {
             byte[] contents = apiClient.donationProof(donation.id());
@@ -402,7 +435,29 @@ public final class DashboardController {
             case "GCASH" -> "GCash";
             case "BANK_TRANSFER" -> "Bank transfer";
             case "QR_PH" -> "QR Ph";
+            case "PAYMONGO_QR" -> "PayMongo · QR Ph";
             default -> "Other";
+        };
+    }
+
+    private static String donationStatusLabel(String status) {
+        return switch (status == null ? "" : status) {
+            case "PENDING_VERIFICATION" -> "Pending review";
+            case "PAYMENT_PENDING" -> "Awaiting payment";
+            case "PAYMENT_FAILED" -> "Checkout failed";
+            case "VERIFIED" -> "Paid · confirmed";
+            case "REJECTED" -> "Declined";
+            default -> "Needs review";
+        };
+    }
+
+    private static String petStatusLabel(String status) {
+        return switch (status == null ? "" : status) {
+            case "AVAILABLE" -> "Available";
+            case "RESERVED" -> "Reserved";
+            case "UNAVAILABLE" -> "Unavailable";
+            case "ADOPTED" -> "Taken · approved placement";
+            default -> "Needs review";
         };
     }
 
