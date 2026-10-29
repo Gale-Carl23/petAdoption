@@ -37,8 +37,17 @@
                 <p>Donation submissions will appear here when supporters share their details.</p>
             </div>
 
+            <div class="admin-table-toolbar" th:unless="${#lists.isEmpty(donations)}">
+                <label class="admin-table-search">
+                    <span>Find a donation</span>
+                    <input type="search" data-admin-filter="#donations-table"
+                           data-filter-count="#donations-filter-count"
+                           placeholder="Search donor, email, status, or reference">
+                </label>
+                <p id="donations-filter-count" class="admin-filter-count" aria-live="polite"></p>
+            </div>
             <div class="admin-table-wrap" th:unless="${#lists.isEmpty(donations)}">
-                <table class="admin-table admin-review-table admin-donation-table">
+                <table id="donations-table" class="admin-table admin-review-table admin-donation-table">
                     <thead>
                         <tr>
                             <th scope="col">Donor</th>
@@ -76,11 +85,13 @@
                             </td>
                             <td data-label="Decision">
                                 <div class="admin-review-actions" th:if="${donation.status == 'PENDING_VERIFICATION'}">
-                                    <form method="post" th:action="@{/admin/donations/{id}/decision(id=${donation.id})}">
+                                    <form method="post" th:action="@{/admin/donations/{id}/decision(id=${donation.id})}"
+                                          data-confirm="Verify this donation after reviewing the submitted payment details and proof?">
                                         <input type="hidden" name="status" value="VERIFIED">
                                         <button class="admin-review-action admin-review-action--approve" type="submit">Verify</button>
                                     </form>
-                                    <form method="post" th:action="@{/admin/donations/{id}/decision(id=${donation.id})}">
+                                    <form method="post" th:action="@{/admin/donations/{id}/decision(id=${donation.id})}"
+                                          data-confirm="Decline this donation? The decision will be recorded and shown to the donor.">
                                         <input type="hidden" name="status" value="REJECTED">
                                         <button class="admin-review-action admin-review-action--reject" type="submit">Decline</button>
                                     </form>
@@ -96,5 +107,6 @@
     </main>
 
     <footer th:replace="~{layout/base :: footer}"></footer>
+    <script th:src="@{/js/admin-workflow.js}" defer></script>
 </body>
 </html>
