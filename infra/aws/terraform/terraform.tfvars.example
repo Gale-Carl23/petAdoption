@@ -1,0 +1,8 @@
+aws_region       = "ap-southeast-1"
+certificate_arn  = "arn:aws:acm:ap-southeast-1:123456789012:certificate/replace-me"
+image_uri        = "123456789012.dkr.ecr.ap-southeast-1.amazonaws.com/pawprints-production@sha256:replace-me"
+alarm_email      = "ops@example.org"
+
+# Keep AWS access credentials outside this file. Use an AWS profile or role.
+# Lower infrastructure costs in a non-production environment by setting
+# ecs_min_tasks = 1 and nat_gateway_count = 1; production defaults span two AZs.
