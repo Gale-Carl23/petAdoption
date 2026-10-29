@@ -6,6 +6,7 @@ import com.petdonation.model.User;
 import com.petdonation.repository.PetRepository;
 import com.petdonation.repository.UserRepository;
 import com.petdonation.service.AdoptionApplicationService;
+import com.petdonation.service.ReferralSurveyService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 
@@ -27,14 +29,17 @@ public class AdoptionController {
     private final AdoptionApplicationService applicationService;
     private final PetRepository petRepository;
     private final UserRepository userRepository;
+    private final ReferralSurveyService referralSurveyService;
 
     public AdoptionController(
             AdoptionApplicationService applicationService,
             PetRepository petRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            ReferralSurveyService referralSurveyService) {
         this.applicationService = applicationService;
         this.petRepository = petRepository;
         this.userRepository = userRepository;
+        this.referralSurveyService = referralSurveyService;
     }
 
     @GetMapping("/adoptions/apply/{petId}")
@@ -92,19 +97,39 @@ public class AdoptionController {
         application.setPetExperience(form.getPetExperience());
 
         try {
-            applicationService.submitApplication(application);
+            application = applicationService.submitApplication(application);
         } catch (IllegalArgumentException ex) {
             model.addAttribute("pet", pet);
             model.addAttribute("applicationError", ex.getMessage());
             return "adoption-form";
         }
 
-        return "redirect:/adoptions/thank-you";
+        return "redirect:/adoptions/thank-you?applicationId=" + application.getId();
     }
 
     @GetMapping("/adoptions/thank-you")
-    public String adoptionThankYou() {
+    public String adoptionThankYou(
+            @RequestParam(required = false) Long applicationId,
+            @RequestParam(required = false) String survey,
+            Authentication authentication,
+            Model model) {
+        boolean surveyAvailable = applicationId != null
+                && authentication != null
+                && referralSurveyService.canAnswerApplication(applicationId, authentication.getName());
+        model.addAttribute("surveyAvailable", surveyAvailable);
+        model.addAttribute("applicationId", applicationId);
+        model.addAttribute("surveySubmitted", "sent".equals(survey));
+        model.addAttribute("surveyOptions", ReferralSurveyService.options());
         return "adoption-thank-you";
+    }
+
+    @PostMapping("/adoptions/applications/{applicationId}/survey")
+    public String submitApplicationSurvey(
+            @PathVariable Long applicationId,
+            @RequestParam String source,
+            Authentication authentication) {
+        referralSurveyService.submitForApplication(applicationId, authentication.getName(), source);
+        return "redirect:/adoptions/thank-you?applicationId=" + applicationId + "&survey=sent";
     }
 
     @GetMapping("/adoptions/my-applications")

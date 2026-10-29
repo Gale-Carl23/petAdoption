@@ -6,6 +6,7 @@ import com.petdonation.model.User;
 import com.petdonation.repository.UserRepository;
 import com.petdonation.service.DonationProofStorageService;
 import com.petdonation.service.DonationService;
+import com.petdonation.service.ReferralSurveyService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
@@ -20,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,14 +36,17 @@ public class DonationController {
     private final DonationService donationService;
     private final UserRepository userRepository;
     private final DonationProofStorageService proofStorageService;
+    private final ReferralSurveyService referralSurveyService;
 
     public DonationController(
             DonationService donationService,
             UserRepository userRepository,
-            DonationProofStorageService proofStorageService) {
+            DonationProofStorageService proofStorageService,
+            ReferralSurveyService referralSurveyService) {
         this.donationService = donationService;
         this.userRepository = userRepository;
         this.proofStorageService = proofStorageService;
+        this.referralSurveyService = referralSurveyService;
     }
 
     @GetMapping("/donations")
@@ -123,14 +128,34 @@ public class DonationController {
         donation.setSubmittedAt(LocalDateTime.now());
 
         // Save the donation before redirecting.
-        donationService.saveDonation(donation);
+        donation = donationService.saveDonation(donation);
 
-        return "redirect:/donations/thank-you";
+        return "redirect:/donations/thank-you?donationId=" + donation.getId();
     }
 
     @GetMapping("/donations/thank-you")
-    public String thankYou() {
+    public String thankYou(
+            @RequestParam(required = false) Long donationId,
+            @RequestParam(required = false) String survey,
+            Authentication authentication,
+            Model model) {
+        boolean surveyAvailable = donationId != null
+                && authentication != null
+                && referralSurveyService.canAnswerDonation(donationId, authentication.getName());
+        model.addAttribute("surveyAvailable", surveyAvailable);
+        model.addAttribute("donationId", donationId);
+        model.addAttribute("surveySubmitted", "sent".equals(survey));
+        model.addAttribute("surveyOptions", ReferralSurveyService.options());
         return "donation-thank-you";
+    }
+
+    @PostMapping("/donations/{donationId}/survey")
+    public String submitDonationSurvey(
+            @PathVariable Long donationId,
+            @RequestParam String source,
+            Authentication authentication) {
+        referralSurveyService.submitForDonation(donationId, authentication.getName(), source);
+        return "redirect:/donations/thank-you?donationId=" + donationId + "&survey=sent";
     }
 
     @GetMapping("/donations/my-donations")
