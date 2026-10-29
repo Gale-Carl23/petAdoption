@@ -8,6 +8,8 @@ import com.petdonation.repository.PetRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,6 +35,7 @@ public class AdminReviewService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public AdoptionApplication reviewApplication(long id, String requestedStatus) {
         AdoptionApplication application = applicationRepository.findByIdWithPetAndApplicant(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -59,10 +62,13 @@ public class AdminReviewService {
             application.setPet(pet);
         }
         application.setStatus(nextStatus);
+        application.setReviewedBy(currentAdministrator());
+        application.setReviewedAt(java.time.LocalDateTime.now());
         return applicationRepository.save(application);
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public Donation reviewDonation(long id, String requestedStatus) {
         Donation donation = donationRepository.findByIdWithDonor(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -74,7 +80,18 @@ public class AdminReviewService {
                     "This donation has already been decided.");
         }
         donation.setStatus(nextStatus);
+        donation.setReviewedBy(currentAdministrator());
+        donation.setReviewedAt(java.time.LocalDateTime.now());
         return donationRepository.save(donation);
+    }
+
+    private static String currentAdministrator() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "An authenticated administrator is required to record a review.");
+        }
+        return authentication.getName();
     }
 
     private static String normalize(String value, String first, String second) {

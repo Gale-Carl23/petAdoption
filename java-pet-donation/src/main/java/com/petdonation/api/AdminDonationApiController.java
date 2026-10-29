@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -36,11 +38,11 @@ public class AdminDonationApiController {
 
     @PatchMapping("/{id}/status")
     public DonationResponse updateStatus(@PathVariable Long id,
-                                         @RequestBody ReviewDecision decision) {
+                                         @Valid @RequestBody ReviewDecision decision) {
         return DonationResponse.from(reviewService.reviewDonation(id, decision.status()));
     }
 
-    public record ReviewDecision(String status) { }
+    public record ReviewDecision(@NotBlank String status) { }
 
     public record DonationResponse(
             Long id,
@@ -51,7 +53,11 @@ public class AdminDonationApiController {
             String status,
             String message,
             LocalDateTime submittedAt,
-            String proofPath) {
+            String proofPath,
+            String reviewedBy,
+            LocalDateTime reviewedAt,
+            String paymentMethod,
+            String paymentReference) {
 
         static DonationResponse from(Donation donation) {
             String donorName = donation.getFullName() == null
@@ -67,7 +73,11 @@ public class AdminDonationApiController {
                     donation.getStatus(),
                     donation.getMessage(),
                     donation.getSubmittedAt(),
-                    "/api/admin/donations/" + donation.getId() + "/proof");
+                    "/api/admin/donations/" + donation.getId() + "/proof",
+                    donation.getReviewedBy(),
+                    donation.getReviewedAt(),
+                    donation.getPaymentMethod(),
+                    donation.getPaymentReference());
         }
     }
 }

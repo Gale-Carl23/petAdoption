@@ -53,36 +53,38 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="application : ${applications}">
+                        <tr th:each="adoptionApp : ${applications}">
                             <td data-label="Applicant">
-                                <span class="admin-review-applicant" th:text="${application.applicant.fullName}">Applicant</span>
-                                <span class="admin-review-secondary" th:text="${application.applicant.email}">email</span>
+                                <span class="admin-review-applicant" th:text="${adoptionApp.applicant.fullName}">Applicant</span>
+                                <span class="admin-review-secondary" th:text="${adoptionApp.applicant.email}">email</span>
                             </td>
-                            <td data-label="Pet" th:text="${application.pet.name}">Pet</td>
-                            <td data-label="Submitted" th:text="${#temporals.format(application.submittedAt, 'MMM d, yyyy')}">Date</td>
-                            <td data-label="Home" th:text="${application.housingType}">House</td>
-                            <td data-label="Experience" th:text="${application.petExperience}">Experience</td>
-                            <td data-label="Status"><span class="application-status" th:classappend="${application.status == 'APPROVED' ? ' application-status--approved' : (application.status == 'REJECTED' ? ' application-status--rejected' : '')}" th:text="${application.status == 'UNDER_REVIEW' ? 'Under review' : (application.status == 'PENDING' ? 'Pending' : application.status)}">Pending</span></td>
+                            <td data-label="Pet" th:text="${adoptionApp.pet.name}">Pet</td>
+                            <td data-label="Submitted" th:text="${#temporals.format(adoptionApp.submittedAt, 'MMM d, yyyy')}">Date</td>
+                            <td data-label="Home" th:text="${adoptionApp.housingType}">House</td>
+                            <td data-label="Experience" th:text="${adoptionApp.petExperience}">Experience</td>
+                            <td data-label="Status"><span class="application-status" th:classappend="${adoptionApp.status == 'APPROVED' ? ' application-status--approved' : (adoptionApp.status == 'REJECTED' ? ' application-status--rejected' : '')}" th:text="${adoptionApp.status == 'UNDER_REVIEW' ? 'Under review' : (adoptionApp.status == 'PENDING' ? 'Pending' : adoptionApp.status)}">Pending</span></td>
                             <td data-label="Placement">
-                                <span th:if="${application.status == 'APPROVED'}"
-                                      th:text="|${application.pet.name} placed with ${application.applicant.fullName}|">Pet placed with applicant</span>
-                                <span th:if="${application.status == 'REJECTED'}">Application declined</span>
-                                <span th:if="${application.status == 'PENDING' or application.status == 'UNDER_REVIEW'}">Awaiting decision</span>
+                                <span th:if="${adoptionApp.status == 'APPROVED'}"
+                                      th:text="|${adoptionApp.pet.name} placed with ${adoptionApp.applicant.fullName}|">Pet placed with applicant</span>
+                                <span th:if="${adoptionApp.status == 'REJECTED'}">Application declined</span>
+                                <span th:if="${adoptionApp.status == 'PENDING' or adoptionApp.status == 'UNDER_REVIEW'}">Awaiting decision</span>
                             </td>
-                            <td class="admin-review-reason" data-label="Reason" th:text="${application.reasonForAdoption}">Reason</td>
+                            <td class="admin-review-reason" data-label="Reason" th:text="${adoptionApp.reasonForAdoption}">Reason</td>
                             <td data-label="Decision">
-                                <div class="admin-review-actions" th:if="${application.status == 'PENDING' or application.status == 'UNDER_REVIEW'}">
-                                    <form method="post" th:action="@{/admin/applications/{id}/decision(id=${application.id})}">
+                                <span class="admin-review-secondary" th:if="${adoptionApp.reviewedAt != null}"
+                                      th:text="|${adoptionApp.reviewedBy} · ${#temporals.format(adoptionApp.reviewedAt, 'MMM d, yyyy h:mm a')}|">Reviewed by admin</span>
+                                <div class="admin-review-actions" th:if="${adoptionApp.status == 'PENDING' or adoptionApp.status == 'UNDER_REVIEW'}">
+                                    <form method="post" th:action="@{/admin/applications/{id}/decision(id=${adoptionApp.id})}">
                                         <input type="hidden" name="status" value="APPROVED">
                                         <button class="admin-review-action admin-review-action--approve" type="submit">Approve</button>
                                     </form>
-                                    <form method="post" th:action="@{/admin/applications/{id}/decision(id=${application.id})}">
+                                    <form method="post" th:action="@{/admin/applications/{id}/decision(id=${adoptionApp.id})}">
                                         <input type="hidden" name="status" value="REJECTED">
                                         <button class="admin-review-action admin-review-action--reject" type="submit">Decline</button>
                                     </form>
                                 </div>
-                                <span class="admin-review-secondary" th:if="${application.status == 'APPROVED'}">Approved</span>
-                                <span class="admin-review-secondary" th:if="${application.status == 'REJECTED'}">Declined</span>
+                                <span class="admin-review-secondary" th:if="${adoptionApp.status == 'APPROVED'}">Approved</span>
+                                <span class="admin-review-secondary" th:if="${adoptionApp.status == 'REJECTED'}">Declined</span>
                             </td>
                         </tr>
                     </tbody>

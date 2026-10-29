@@ -32,7 +32,11 @@
         </section>
 
         <!-- Donation form card -->
-        <section class="donation-form-card">
+        <div class="payment-setup-note" th:if="${#lists.isEmpty(paymentOptions)}" role="alert">
+            Donation payment details are not available yet. Please return when verified destinations are shown on the donations page.
+        </div>
+
+        <section class="donation-form-card" th:unless="${#lists.isEmpty(paymentOptions)}">
 
             <div class="donation-card-heading">
                 <h2>Donation Details</h2>
@@ -60,6 +64,30 @@
                     <p class="field-error"
                        th:if="${#fields.hasErrors('fullName')}"
                        th:errors="*{fullName}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentMethod">How did you send your donation?</label>
+                    <select id="paymentMethod" th:field="*{paymentMethod}" required>
+                        <option value="">Choose a payment method</option>
+                        <option th:each="paymentOption : ${paymentOptions}"
+                                th:value="${paymentOption.code}"
+                                th:text="${paymentOption.label}">Payment method</option>
+                    </select>
+                    <p class="field-error" th:if="${#fields.hasErrors('paymentMethod')}"
+                       th:errors="*{paymentMethod}"></p>
+                    <p class="field-error" th:if="${paymentUnavailable}" role="alert">
+                        That payment destination is not currently configured. Choose one of the available methods.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentReference">Transfer reference <span class="optional-label">(Optional)</span></label>
+                    <input id="paymentReference" type="text" th:field="*{paymentReference}"
+                           maxlength="100" autocomplete="off"
+                           placeholder="Reference from your bank or GCash receipt">
+                    <p class="field-error" th:if="${#fields.hasErrors('paymentReference')}"
+                       th:errors="*{paymentReference}"></p>
                 </div>
 
                 <!-- Donation amount -->
@@ -159,7 +187,7 @@
 
                     <p>
                         Your donation details and payment proof will be
-                        reviewed by the Pawprints of Hope team before verification.
+                        reviewed by the Pawprints of Hope team before verification. We will never ask for your wallet PIN, password, or one-time code.
                     </p>
                 </div>
 

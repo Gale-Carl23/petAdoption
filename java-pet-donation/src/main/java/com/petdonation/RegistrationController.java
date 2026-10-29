@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.stereotype.Controller;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,10 @@ public class RegistrationController {
         } catch (IllegalArgumentException ex) {
             model.addAttribute("registrationError", ex.getMessage());
             return "register";
+        } catch (DataIntegrityViolationException ex) {
+            model.addAttribute("registrationError",
+                    "An account with this email already exists.");
+            return "register";
         }
 
         return "redirect:/login?registered";
@@ -65,8 +70,8 @@ public class RegistrationController {
         private String email;
 
         @NotBlank(message = "Password is required.")
-        @Size(min = 8, max = 72,
-              message = "Password must be between 8 and 72 characters.")
+        @Size(min = 12, max = 72,
+              message = "Password must be between 12 and 72 characters.")
         private String password;
 
         public String getFullName() {

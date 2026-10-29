@@ -6,6 +6,7 @@ import com.petdonation.model.User;
 import com.petdonation.repository.UserRepository;
 import com.petdonation.service.DonationProofStorageService;
 import com.petdonation.service.DonationService;
+import com.petdonation.service.DonationPaymentSettings;
 import com.petdonation.service.ReferralSurveyService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
@@ -13,6 +14,8 @@ import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -37,16 +40,19 @@ public class DonationController {
     private final UserRepository userRepository;
     private final DonationProofStorageService proofStorageService;
     private final ReferralSurveyService referralSurveyService;
+    private final DonationPaymentSettings paymentSettings;
 
     public DonationController(
             DonationService donationService,
             UserRepository userRepository,
             DonationProofStorageService proofStorageService,
-            ReferralSurveyService referralSurveyService) {
+            ReferralSurveyService referralSurveyService,
+            DonationPaymentSettings paymentSettings) {
         this.donationService = donationService;
         this.userRepository = userRepository;
         this.proofStorageService = proofStorageService;
         this.referralSurveyService = referralSurveyService;
+        this.paymentSettings = paymentSettings;
     }
 
     @GetMapping("/donations")
@@ -54,12 +60,14 @@ public class DonationController {
         boolean administrator = authentication != null && authentication.getAuthorities().stream()
                 .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
         model.addAttribute("administrator", administrator);
+        model.addAttribute("paymentOptions", paymentSettings.options());
         return "donations";
     }
 
     @GetMapping("/donations/form")
     public String showDonationForm(Model model) {
         model.addAttribute("donationForm", new DonationForm());
+        model.addAttribute("paymentOptions", paymentSettings.options());
         return "donation-form";
     }
 
@@ -73,6 +81,13 @@ public class DonationController {
             Model model) {
 
         if (result.hasErrors()) {
+            model.addAttribute("paymentOptions", paymentSettings.options());
+            return "donation-form";
+        }
+
+        if (!paymentSettings.isConfiguredMethod(form.getPaymentMethod())) {
+            model.addAttribute("paymentOptions", paymentSettings.options());
+            model.addAttribute("paymentUnavailable", true);
             return "donation-form";
         }
 
@@ -86,6 +101,7 @@ public class DonationController {
             model.addAttribute(
                     "proofError",
                     "Proof of donation is required.");
+            model.addAttribute("paymentOptions", paymentSettings.options());
             return "donation-form";
         }
 
@@ -100,11 +116,13 @@ public class DonationController {
             storedFilename = proofStorageService.store(proof);
         } catch (IllegalArgumentException ex) {
             model.addAttribute("proofError", ex.getMessage());
+            model.addAttribute("paymentOptions", paymentSettings.options());
             return "donation-form";
         } catch (IOException ex) {
             model.addAttribute(
                     "proofError",
                     "The proof file could not be saved. Please try again.");
+            model.addAttribute("paymentOptions", paymentSettings.options());
             return "donation-form";
         }
 
@@ -120,6 +138,10 @@ public class DonationController {
         donation.setAmount(form.getAmount());
         donation.setDateSent(form.getDateSent());
         donation.setProofFilePath(storedFilename);
+        donation.setPaymentMethod(form.getPaymentMethod());
+        String paymentReference = form.getPaymentReference();
+        donation.setPaymentReference(paymentReference == null || paymentReference.isBlank()
+                ? null : paymentReference.trim());
 
         String message = form.getMessage();
         donation.setMessage(
@@ -176,6 +198,14 @@ public class DonationController {
                 message = "Name must not exceed 100 characters.")
         private String fullName;
 
+        @NotBlank(message = "Choose the payment method you used.")
+        @Pattern(regexp = "GCASH|BANK_TRANSFER|QR_PH",
+                message = "Choose one of the listed payment methods.")
+        private String paymentMethod;
+
+        @Size(max = 100, message = "Payment reference must not exceed 100 characters.")
+        private String paymentReference;
+
         @NotNull(message = "Amount is required.")
         @DecimalMin(value = "0.01",
                 message = "Amount must be greater than zero.")
@@ -195,6 +225,11 @@ public class DonationController {
         public String getFullName() {
             return fullName;
         }
+
+        public String getPaymentMethod() { return paymentMethod; }
+        public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+        public String getPaymentReference() { return paymentReference; }
+        public void setPaymentReference(String paymentReference) { this.paymentReference = paymentReference; }
 
         public void setFullName(String fullName) {
             this.fullName = fullName;

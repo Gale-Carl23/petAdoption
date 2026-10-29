@@ -33,6 +33,8 @@
                 <thead>
                     <tr>
                         <th>Amount</th>
+                        <th>Payment method</th>
+                        <th>Reference</th>
                         <th>Date sent</th>
                         <th>Submitted</th>
                         <th>Message</th>
@@ -42,6 +44,8 @@
                 <tbody>
                     <tr th:each="donation : ${donations}">
                         <td th:text="|₱${donation.amount}|">₱0.00</td>
+                        <td th:text="${donation.paymentMethod == 'BANK_TRANSFER' ? 'Bank transfer' : (donation.paymentMethod == 'QR_PH' ? 'QR Ph' : (donation.paymentMethod == 'GCASH' ? 'GCash' : 'Other'))}">Payment method</td>
+                        <td th:text="${donation.paymentReference != null and !#strings.isEmpty(donation.paymentReference) ? donation.paymentReference : '—'}">—</td>
                         <td th:text="${#temporals.format(donation.dateSent, 'MMM d, yyyy')}">Date sent</td>
                         <td th:text="${#temporals.format(donation.submittedAt, 'MMM d, yyyy HH:mm')}">Submitted</td>
                         <td th:text="${donation.message != null and !#strings.isEmpty(donation.message) ? donation.message : '—'}">Message</td>

@@ -34,6 +34,11 @@ public class AdoptionApplication {
     @Column(nullable = false)
     private LocalDateTime submittedAt;
 
+    @Column(length = 150)
+    private String reviewedBy;
+
+    private LocalDateTime reviewedAt;
+
     public AdoptionApplication() {
     }
 
@@ -95,5 +100,21 @@ public class AdoptionApplication {
 
     public void setSubmittedAt(LocalDateTime submittedAt) {
         this.submittedAt = submittedAt;
+    }
+
+    public String getReviewedBy() {
+        return reviewedBy;
+    }
+
+    public void setReviewedBy(String reviewedBy) {
+        this.reviewedBy = reviewedBy;
+    }
+
+    public LocalDateTime getReviewedAt() {
+        return reviewedAt;
+    }
+
+    public void setReviewedAt(LocalDateTime reviewedAt) {
+        this.reviewedAt = reviewedAt;
     }
 }

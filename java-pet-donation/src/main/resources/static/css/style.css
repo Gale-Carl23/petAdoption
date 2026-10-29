@@ -3184,6 +3184,60 @@ footer p {
     line-height: 1.45;
 }
 
+.donation-payment-options {
+    width: min(1120px, calc(100% - 2rem));
+    margin: 2rem auto 4rem;
+}
+
+.payment-option-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.payment-option-card {
+    padding: 1.5rem;
+    border: 1px solid rgba(38, 74, 54, 0.14);
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: 0 12px 32px rgba(40, 56, 44, 0.06);
+}
+
+.payment-option-card h3 {
+    margin: 0.4rem 0 0.8rem;
+}
+
+.payment-option-account {
+    display: inline-block;
+    margin: 0.2rem 0 0.8rem;
+    padding: 0.55rem 0.7rem;
+    border-radius: 0.55rem;
+    background: #f4f5ef;
+    color: #24392b;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.payment-option-qr {
+    display: block;
+    width: min(100%, 240px);
+    aspect-ratio: 1;
+    object-fit: contain;
+    margin: 0.75rem auto;
+    border-radius: 0.75rem;
+}
+
+.payment-setup-note {
+    margin: 1rem 0;
+    padding: 1rem 1.2rem;
+    border: 1px solid #dec98f;
+    border-radius: 0.9rem;
+    background: #fff9e9;
+    color: #51431f;
+}
+
 @media (max-width: 600px) {
     .applications-main {
         width: min(100% - 28px, 1240px);

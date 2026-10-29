@@ -188,10 +188,12 @@ public final class DashboardController {
             table.getColumns().add(textColumn("Applicant", DesktopApiClient.ApplicationRecord::applicantName, 140));
             table.getColumns().add(textColumn("Email", DesktopApiClient.ApplicationRecord::applicantEmail, 190));
             table.getColumns().add(textColumn("Pet", DesktopApiClient.ApplicationRecord::petName, 140));
-            table.getColumns().add(textColumn("Placement", this::applicationPlacement, 190));
+            table.getColumns().add(textColumn("Placement", DashboardController::applicationPlacement, 190));
             table.getColumns().add(textColumn("Home", DesktopApiClient.ApplicationRecord::housingType, 100));
             table.getColumns().add(textColumn("Experience", DesktopApiClient.ApplicationRecord::petExperience, 130));
             table.getColumns().add(textColumn("Status", DesktopApiClient.ApplicationRecord::status, 110));
+            table.getColumns().add(textColumn("Reviewed by", application ->
+                    decisionDetails(application.reviewedBy(), application.reviewedAt()), 180));
             table.getColumns().add(textColumn("Submitted", this::dateOnly, 120));
             table.getColumns().add(textColumn("Reason", DesktopApiClient.ApplicationRecord::reason, 260));
             TableColumn<DesktopApiClient.ApplicationRecord, DesktopApiClient.ApplicationRecord> decision =
@@ -234,7 +236,11 @@ public final class DashboardController {
             table.getColumns().add(textColumn("Email", DesktopApiClient.DonationRecord::donorEmail, 190));
             table.getColumns().add(textColumn("Amount", donation -> "PHP " + donation.amount().toPlainString(), 110));
             table.getColumns().add(textColumn("Date sent", DesktopApiClient.DonationRecord::dateSent, 110));
+            table.getColumns().add(textColumn("Payment method", donation -> paymentMethodLabel(donation.paymentMethod()), 130));
+            table.getColumns().add(textColumn("Reference", donation -> safe(donation.paymentReference()), 150));
             table.getColumns().add(textColumn("Status", DesktopApiClient.DonationRecord::status, 150));
+            table.getColumns().add(textColumn("Reviewed by", donation ->
+                    decisionDetails(donation.reviewedBy(), donation.reviewedAt()), 180));
             table.getColumns().add(textColumn("Message", donation -> safe(donation.message()), 190));
             TableColumn<DesktopApiClient.DonationRecord, DesktopApiClient.DonationRecord> proof =
                     objectColumn("Payment proof", donation -> donation);
@@ -391,6 +397,15 @@ public final class DashboardController {
         };
     }
 
+    private static String paymentMethodLabel(String method) {
+        return switch (method == null ? "" : method) {
+            case "GCASH" -> "GCash";
+            case "BANK_TRANSFER" -> "Bank transfer";
+            case "QR_PH" -> "QR Ph";
+            default -> "Other";
+        };
+    }
+
     private static boolean isApplicationPending(DesktopApiClient.ApplicationRecord application) {
         return "PENDING".equals(application.status()) || "UNDER_REVIEW".equals(application.status());
     }
@@ -524,6 +539,11 @@ public final class DashboardController {
 
     private String dateOnly(DesktopApiClient.ApplicationRecord application) {
         return formatDate(application.submittedAt());
+    }
+
+    private String decisionDetails(String reviewer, String reviewedAt) {
+        if (reviewedAt == null || reviewedAt.isBlank()) return "—";
+        return safe(reviewer) + " · " + formatDate(reviewedAt);
     }
 
     private static String formatDate(String value) {

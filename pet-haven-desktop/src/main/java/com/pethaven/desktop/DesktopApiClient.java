@@ -270,11 +270,14 @@ public final class DesktopApiClient {
     public record ApplicationRecord(Long id, String applicantName, String applicantEmail,
                                     Long petId, String petName, String reason,
                                     String housingType, String petExperience,
-                                    String status, String submittedAt) { }
+                                    String status, String submittedAt,
+                                    String reviewedBy, String reviewedAt) { }
 
     public record DonationRecord(Long id, String donorName, String donorEmail,
                                  BigDecimal amount, String dateSent, String status,
-                                 String message, String submittedAt, String proofPath) { }
+                                 String message, String submittedAt, String proofPath,
+                                 String reviewedBy, String reviewedAt,
+                                 String paymentMethod, String paymentReference) { }
 
     public record ReferralSourceRecord(String source, String label, long count) { }
 

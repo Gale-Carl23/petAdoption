@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,12 +37,12 @@ public class AdminApplicationApiController {
 
     @PatchMapping("/{id}/status")
     public ApplicationResponse updateStatus(@PathVariable Long id,
-                                            @RequestBody ReviewDecision decision) {
+                                            @Valid @RequestBody ReviewDecision decision) {
         return ApplicationResponse.from(
                 reviewService.reviewApplication(id, decision.status()));
     }
 
-    public record ReviewDecision(String status) { }
+    public record ReviewDecision(@NotBlank String status) { }
 
     public record ApplicationResponse(
             Long id,
@@ -52,7 +54,9 @@ public class AdminApplicationApiController {
             String housingType,
             String petExperience,
             String status,
-            LocalDateTime submittedAt) {
+            LocalDateTime submittedAt,
+            String reviewedBy,
+            LocalDateTime reviewedAt) {
 
         static ApplicationResponse from(AdoptionApplication application) {
             return new ApplicationResponse(
@@ -65,7 +69,9 @@ public class AdminApplicationApiController {
                     application.getHousingType(),
                     application.getPetExperience(),
                     application.getStatus(),
-                    application.getSubmittedAt());
+                    application.getSubmittedAt(),
+                    application.getReviewedBy(),
+                    application.getReviewedAt());
         }
     }
 }

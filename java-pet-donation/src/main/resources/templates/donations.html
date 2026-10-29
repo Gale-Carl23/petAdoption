@@ -34,6 +34,29 @@
             </aside>
         </section>
 
+        <section class="donation-payment-options" aria-labelledby="payment-options-title">
+            <div class="about-section-heading">
+                <p class="landing-eyebrow">PAYMENT METHODS</p>
+                <h2 id="payment-options-title">Choose a way to support the pets.</h2>
+                <p>Send your contribution using one of the verified destinations below. We confirm every transfer before marking it complete.</p>
+            </div>
+            <p class="payment-setup-note" th:if="${#lists.isEmpty(paymentOptions)}" role="status">
+                Donation destinations are being configured. Please do not send money until the verified details appear here.
+            </p>
+            <div class="payment-option-grid" th:unless="${#lists.isEmpty(paymentOptions)}">
+                <article class="payment-option-card" th:each="paymentOption : ${paymentOptions}">
+                    <p class="landing-eyebrow" th:text="${paymentOption.label}">Payment method</p>
+                    <h3 th:text="${paymentOption.recipientName}">Recipient</h3>
+                    <img class="payment-option-qr" th:if="${paymentOption.qrCode()}"
+                         th:src="${paymentOption.accountOrImage}"
+                         alt="Official QR Ph merchant payment code">
+                    <code class="payment-option-account" th:unless="${paymentOption.qrCode()}"
+                          th:text="${paymentOption.accountOrImage}">Account number</code>
+                    <p th:text="${paymentOption.instructions}">Payment instructions</p>
+                </article>
+            </div>
+        </section>
+
         <section class="giving-steps" aria-labelledby="giving-steps-title">
             <div class="about-section-heading">
                 <p class="landing-eyebrow">HOW TO GIVE</p>

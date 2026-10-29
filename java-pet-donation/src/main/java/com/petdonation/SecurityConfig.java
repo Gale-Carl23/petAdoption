@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,6 +43,7 @@ public class SecurityConfig {
 
         http
             .authenticationProvider(authenticationProvider)
+            .csrf(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
 
                 // Public pages and static resources
@@ -108,7 +110,17 @@ public class SecurityConfig {
                 .permitAll()
             )
             .exceptionHandling(exceptions -> exceptions
-                    .accessDeniedPage("/access-denied"));
+                    .accessDeniedHandler((request, response, denied) -> {
+                        if (request.getRequestURI().startsWith(
+                                request.getContextPath() + "/api/")) {
+                            response.setStatus(403);
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+                            response.getWriter().write("{\"error\":\"forbidden\"}");
+                        } else {
+                            response.sendRedirect(request.getContextPath() + "/access-denied");
+                        }
+                    }));
 
         return http.build();
     }

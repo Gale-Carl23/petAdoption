@@ -2,8 +2,11 @@ package com.petdonation.service;
 
 import com.petdonation.model.AdoptionApplication;
 import com.petdonation.repository.AdoptionApplicationRepository;
+import com.petdonation.repository.PetRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,10 +15,13 @@ import java.util.List;
 public class AdoptionApplicationService {
 
     private final AdoptionApplicationRepository applicationRepository;
+    private final PetRepository petRepository;
 
     public AdoptionApplicationService(
-            AdoptionApplicationRepository applicationRepository) {
+            AdoptionApplicationRepository applicationRepository,
+            PetRepository petRepository) {
         this.applicationRepository = applicationRepository;
+        this.petRepository = petRepository;
     }
 
     @Transactional
@@ -53,6 +59,15 @@ public class AdoptionApplicationService {
 
         Long applicantId = application.getApplicant().getId();
         Long petId = application.getPet().getId();
+        // Serialize new applications with each other and with admin approvals for this pet.
+        var pet = petRepository.findByIdForUpdate(petId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "This pet profile is no longer available."));
+        if (!"AVAILABLE".equals(pet.getStatus())) {
+            throw new IllegalArgumentException(
+                    "This pet is no longer available for adoption.");
+        }
+        application.setPet(pet);
 
         boolean duplicate = applicationRepository
                 .existsByApplicantIdAndPetIdAndStatusIn(

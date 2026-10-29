@@ -5,6 +5,7 @@ import com.petdonation.model.Pet;
 import com.petdonation.repository.PetRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class PetService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public Pet createPet(Pet pet) {
         pet.setId(null);
         pet.setStatus("AVAILABLE");
@@ -35,6 +37,7 @@ public class PetService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public Optional<Pet> updatePet(Long id, Pet updatedPet) {
         return petRepository.findById(id)
                 .map(existingPet -> {

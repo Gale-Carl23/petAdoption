@@ -38,6 +38,12 @@ public class Donation {
     @Column(nullable = false, length = 500)
     private String proofFilePath;
 
+    @Column(nullable = false, length = 30)
+    private String paymentMethod = "OTHER";
+
+    @Column(length = 100)
+    private String paymentReference;
+
     @Column(length = 1000)
     private String message;
 
@@ -46,6 +52,11 @@ public class Donation {
 
     @Column(nullable = false)
     private LocalDateTime submittedAt;
+
+    @Column(length = 150)
+    private String reviewedBy;
+
+    private LocalDateTime reviewedAt;
 
     public Donation() {
     }
@@ -94,6 +105,22 @@ public class Donation {
         this.proofFilePath = proofFilePath;
     }
 
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentReference() {
+        return paymentReference;
+    }
+
+    public void setPaymentReference(String paymentReference) {
+        this.paymentReference = paymentReference;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -116,5 +143,21 @@ public class Donation {
 
     public void setSubmittedAt(LocalDateTime submittedAt) {
         this.submittedAt = submittedAt;
+    }
+
+    public String getReviewedBy() {
+        return reviewedBy;
+    }
+
+    public void setReviewedBy(String reviewedBy) {
+        this.reviewedBy = reviewedBy;
+    }
+
+    public LocalDateTime getReviewedAt() {
+        return reviewedAt;
+    }
+
+    public void setReviewedAt(LocalDateTime reviewedAt) {
+        this.reviewedAt = reviewedAt;
     }
 }

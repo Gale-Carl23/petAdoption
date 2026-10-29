@@ -46,6 +46,9 @@
                             <th scope="col">Date sent</th>
                             <th scope="col">Submitted</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Reviewed</th>
+                            <th scope="col">Payment method</th>
+                            <th scope="col">Transfer reference</th>
                             <th scope="col">Message</th>
                             <th scope="col">Proof</th>
                             <th scope="col">Decision</th>
@@ -62,6 +65,9 @@
                             <td data-label="Date sent" th:text="${#temporals.format(donation.dateSent, 'MMM d, yyyy')}">Date</td>
                             <td data-label="Submitted" th:text="${#temporals.format(donation.submittedAt, 'MMM d, yyyy')}">Date</td>
                             <td data-label="Status"><span class="application-status" th:classappend="${donation.status == 'VERIFIED' ? ' application-status--approved' : (donation.status == 'REJECTED' ? ' application-status--rejected' : '')}" th:text="${donation.status == 'PENDING_VERIFICATION' ? 'Pending review' : (donation.status == 'VERIFIED' ? 'Verified' : 'Declined')}">Pending review</span></td>
+                            <td data-label="Reviewed" th:text="${donation.reviewedAt != null ? donation.reviewedBy + ' · ' + #temporals.format(donation.reviewedAt, 'MMM d, yyyy h:mm a') : '—'}">—</td>
+                            <td data-label="Payment method" th:text="${donation.paymentMethod == 'BANK_TRANSFER' ? 'Bank transfer' : (donation.paymentMethod == 'QR_PH' ? 'QR Ph' : (donation.paymentMethod == 'GCASH' ? 'GCash' : 'Other'))}">Payment method</td>
+                            <td data-label="Transfer reference" th:text="${donation.paymentReference != null and !#strings.isEmpty(donation.paymentReference) ? donation.paymentReference : '—'}">—</td>
                             <td class="admin-review-reason" data-label="Message" th:text="${donation.message != null and !#strings.isEmpty(donation.message) ? donation.message : '—'}">Message</td>
                             <td data-label="Proof">
                                 <a class="admin-proof-link" th:href="@{/admin/donations/{id}/proof(id=${donation.id})}" target="_blank" rel="noopener">Open proof <span aria-hidden="true">↗</span></a>
