@@ -390,6 +390,17 @@
     -fx-font-size: 11px;
 }
 
+.referral-source-label {
+    -fx-text-fill: #344238;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.referral-progress {
+    -fx-accent: #65734b;
+    -fx-pref-height: 8px;
+}
+
 .quick-actions {
     -fx-padding: 7px 0 0 0;
 }

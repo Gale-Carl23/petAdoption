@@ -24,6 +24,7 @@ public final class DesktopApiClient {
     private static final TypeReference<List<PetRecord>> PET_LIST = new TypeReference<>() { };
     private static final TypeReference<List<ApplicationRecord>> APPLICATION_LIST = new TypeReference<>() { };
     private static final TypeReference<List<DonationRecord>> DONATION_LIST = new TypeReference<>() { };
+    private static final TypeReference<List<ReferralSourceRecord>> REFERRAL_LIST = new TypeReference<>() { };
 
     private final String baseUrl;
     private final CookieManager cookieManager;
@@ -101,6 +102,10 @@ public final class DesktopApiClient {
 
     public List<DonationRecord> donations() throws IOException, InterruptedException {
         return getList("/api/admin/donations", DONATION_LIST);
+    }
+
+    public List<ReferralSourceRecord> referralAnalytics() throws IOException, InterruptedException {
+        return getList("/api/admin/dashboard/referrals", REFERRAL_LIST);
     }
 
     public ApplicationRecord reviewApplication(long id, String status)
@@ -270,6 +275,8 @@ public final class DesktopApiClient {
     public record DonationRecord(Long id, String donorName, String donorEmail,
                                  BigDecimal amount, String dateSent, String status,
                                  String message, String submittedAt, String proofPath) { }
+
+    public record ReferralSourceRecord(String source, String label, long count) { }
 
     private record ReviewDecision(String status) { }
 }

@@ -9,6 +9,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -88,8 +89,31 @@ public final class DashboardController {
                     actionButton("Review donations", this::showDonations));
             actions.getStyleClass().add("quick-actions");
             quickActions.getChildren().addAll(title, note, actions);
-            setContent(stats, quickActions);
-            showStatus("Connected to the secure admin API.", false);
+            load(apiClient::referralAnalytics, sources -> {
+                long totalResponses = sources.stream()
+                        .mapToLong(DesktopApiClient.ReferralSourceRecord::count).sum();
+                VBox outreach = panel("How people find us",
+                        totalResponses + " survey responses from adoption and donation submissions");
+                if (sources.isEmpty()) {
+                    outreach.getChildren().add(emptyState("No survey responses yet",
+                            "Responses from the thank-you page will appear here."));
+                } else {
+                    for (DesktopApiClient.ReferralSourceRecord source : sources) {
+                        Label sourceLabel = new Label(source.label());
+                        sourceLabel.getStyleClass().add("referral-source-label");
+                        Label countLabel = new Label(Long.toString(source.count()));
+                        countLabel.getStyleClass().add("panel-copy");
+                        HBox row = new HBox(12, sourceLabel, countLabel);
+                        HBox.setHgrow(sourceLabel, Priority.ALWAYS);
+                        ProgressBar progress = new ProgressBar((double) source.count() / totalResponses);
+                        progress.getStyleClass().add("referral-progress");
+                        progress.setMaxWidth(Double.MAX_VALUE);
+                        outreach.getChildren().addAll(row, progress);
+                    }
+                }
+                setContent(stats, quickActions, outreach);
+                showStatus("Connected to the secure admin API.", false);
+            });
         });
     }
 
