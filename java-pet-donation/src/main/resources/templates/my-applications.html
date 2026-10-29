@@ -54,8 +54,8 @@
                         </td>
                         <td>
                             <span class="application-status"
-                                  th:text="${app.status == 'UNDER_REVIEW' ? 'Under review' : (app.status == 'PENDING' ? 'Pending' : 'Approved')}"
-                                  th:classappend="${app.status == 'APPROVED' ? ' application-status--approved' : ''}">Pending</span>
+                                  th:text="${app.status == 'UNDER_REVIEW' ? 'Under review' : (app.status == 'PENDING' ? 'Pending' : (app.status == 'APPROVED' ? 'Approved' : 'Not approved'))}"
+                                  th:classappend="${app.status == 'APPROVED' ? ' application-status--approved' : (app.status == 'REJECTED' ? ' application-status--rejected' : '')}">Pending</span>
                         </td>
                     </tr>
                 </tbody>

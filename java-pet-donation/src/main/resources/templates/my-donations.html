@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8f5ec">
+    <title>My Donations | Pawprints of Hope</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body class="applications-page">
+    <header th:replace="~{layout/base :: header}"></header>
+
+    <main class="applications-main">
+        <div class="applications-heading">
+            <p class="landing-eyebrow">YOUR KINDNESS IN ACTION</p>
+            <h1>My donations</h1>
+            <p>See the review status of the support you’ve shared with the pets.</p>
+        </div>
+
+        <div class="applications-empty" th:if="${donations.isEmpty()}">
+            <span aria-hidden="true">♡</span>
+            <h2>Your support makes a difference.</h2>
+            <p>You haven’t submitted a donation yet. Every contribution helps provide care while pets wait for a home.</p>
+            <a class="primary-button" th:href="@{/donations/form}">
+                Make a donation <span aria-hidden="true">→</span>
+            </a>
+        </div>
+
+        <div class="applications-table-wrap table-container" th:unless="${donations.isEmpty()}">
+            <table class="applications-table">
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Date sent</th>
+                        <th>Submitted</th>
+                        <th>Message</th>
+                        <th>Review status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="donation : ${donations}">
+                        <td th:text="|₱${donation.amount}|">₱0.00</td>
+                        <td th:text="${#temporals.format(donation.dateSent, 'MMM d, yyyy')}">Date sent</td>
+                        <td th:text="${#temporals.format(donation.submittedAt, 'MMM d, yyyy HH:mm')}">Submitted</td>
+                        <td th:text="${donation.message != null and !#strings.isEmpty(donation.message) ? donation.message : '—'}">Message</td>
+                        <td>
+                            <span class="application-status"
+                                  th:text="${donation.status == 'PENDING_VERIFICATION' ? 'Pending review' : (donation.status == 'VERIFIED' ? 'Verified' : 'Not verified')}"
+                                  th:classappend="${donation.status == 'VERIFIED' ? ' application-status--approved' : (donation.status == 'REJECTED' ? ' application-status--rejected' : '')}">Pending review</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer th:replace="~{layout/base :: footer}"></footer>
+</body>
+</html>

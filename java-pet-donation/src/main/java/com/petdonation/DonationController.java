@@ -133,6 +133,15 @@ public class DonationController {
         return "donation-thank-you";
     }
 
+    @GetMapping("/donations/my-donations")
+    public String myDonations(Authentication authentication, Model model) {
+        User donor = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalStateException(
+                        "Authenticated account not found."));
+        model.addAttribute("donations", donationService.getDonationsByDonor(donor.getId()));
+        return "my-donations";
+    }
+
     public static class DonationForm {
 
         @Size(max = 100,
