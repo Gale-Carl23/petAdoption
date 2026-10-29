@@ -23,6 +23,7 @@
         </section>
 
         <section class="admin-panel" aria-labelledby="applications-list-title">
+            <div class="admin-review-notice" role="status" th:if="${reviewMessage}" th:text="${reviewMessage}"></div>
             <div class="admin-panel__heading">
                 <div>
                     <h2 id="applications-list-title">Submitted applications</h2>
@@ -47,6 +48,7 @@
                             <th scope="col">Experience</th>
                             <th scope="col">Status</th>
                             <th scope="col">Why they want to adopt</th>
+                            <th scope="col">Decision</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,8 +61,21 @@
                             <td data-label="Submitted" th:text="${#temporals.format(application.submittedAt, 'MMM d, yyyy')}">Date</td>
                             <td data-label="Home" th:text="${application.housingType}">House</td>
                             <td data-label="Experience" th:text="${application.petExperience}">Experience</td>
-                            <td data-label="Status"><span class="application-status" th:text="${application.status == 'UNDER_REVIEW' ? 'Under review' : (application.status == 'PENDING' ? 'Pending' : application.status)}">Pending</span></td>
+                            <td data-label="Status"><span class="application-status" th:classappend="${application.status == 'APPROVED' ? ' application-status--approved' : (application.status == 'REJECTED' ? ' application-status--rejected' : '')}" th:text="${application.status == 'UNDER_REVIEW' ? 'Under review' : (application.status == 'PENDING' ? 'Pending' : application.status)}">Pending</span></td>
                             <td class="admin-review-reason" data-label="Reason" th:text="${application.reasonForAdoption}">Reason</td>
+                            <td data-label="Decision">
+                                <div class="admin-review-actions" th:if="${application.status == 'PENDING' or application.status == 'UNDER_REVIEW'}">
+                                    <form method="post" th:action="@{/admin/applications/{id}/decision(id=${application.id})}">
+                                        <input type="hidden" name="status" value="APPROVED">
+                                        <button class="admin-review-action admin-review-action--approve" type="submit">Approve</button>
+                                    </form>
+                                    <form method="post" th:action="@{/admin/applications/{id}/decision(id=${application.id})}">
+                                        <input type="hidden" name="status" value="REJECTED">
+                                        <button class="admin-review-action admin-review-action--reject" type="submit">Decline</button>
+                                    </form>
+                                </div>
+                                <span class="admin-review-secondary" th:unless="${application.status == 'PENDING' or application.status == 'UNDER_REVIEW'}">Decision recorded</span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

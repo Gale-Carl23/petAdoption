@@ -3170,6 +3170,12 @@ footer p {
     color: var(--olive-dark);
 }
 
+.application-status--rejected {
+    border-color: #eed2ca;
+    background: #fff1ed;
+    color: #8a3c31;
+}
+
 @media (max-width: 600px) {
     .applications-main {
         width: min(100% - 28px, 1240px);
@@ -3988,6 +3994,63 @@ footer p {
     max-width: 340px;
     line-height: 1.6;
     overflow-wrap: anywhere;
+}
+
+.admin-review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.admin-review-notice {
+    padding: 12px 15px;
+    margin-bottom: 14px;
+    border: 1px solid #d8e2c9;
+    border-radius: 12px;
+    background: #f1f5eb;
+    color: var(--olive-dark);
+    font-size: .88rem;
+    font-weight: 700;
+}
+
+.admin-review-actions form {
+    margin: 0;
+}
+
+.admin-review-action {
+    min-height: 34px;
+    padding: 7px 11px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font: inherit;
+    font-size: .76rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.admin-review-action--approve {
+    border-color: #d8e2c9;
+    background: #f1f5eb;
+    color: var(--olive-dark);
+}
+
+.admin-review-action--approve:hover {
+    background: #e5edda;
+}
+
+.admin-review-action--reject {
+    border-color: #eed2ca;
+    background: #fff8f5;
+    color: #8a3c31;
+}
+
+.admin-review-action--reject:hover {
+    background: #fff1ed;
+}
+
+.admin-review-action:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: 2px;
 }
 
 @media (max-width: 720px) {
